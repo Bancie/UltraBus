@@ -1,0 +1,21 @@
+@startuml
+title Xem danh sách học sinh cần đón
+|Tài xế|
+start
+:Chọn danh sách;
+if (Chọn) then
+:Danh sách địa điểm;
+|Hệ thống|
+:Hiển thị danh sách địa điểm;
+else
+|Tài xế|
+:Danh sách học sinh;
+|Hệ thống|
+:Hiển thị danh sách;
+:foo3;
+|Tài xế|
+:foo4;
+|Hệ thống|
+:foo5;
+stop
+@enduml
