@@ -33,11 +33,23 @@ entity HocSinh {
 }
 
 entity LichLamViec {
-
+    - maLichLamViec
+    - tenLichLamViec
+    - ngayLamViec
+    - caLamViec
+    - gioBatDau
+    - gioKetThuc
+    - ghiChu
+    - trangThai
 }
 
 entity DanhSachDon {
-
+    - maDanhSach
+    - tenDanhSach
+    - moTa
+    - ngayTao
+    - nguoiTao
+    - trangThai
 }
 
 abstract LichTrinh {
@@ -50,11 +62,21 @@ abstract LichTrinh {
 }
 
 entity LichTrinhXe {
-
+    - maLichTrinhXe
+    - loaiLichTrinh
+    - tuyenDuong
+    - quangDuong
+    - chuKyLapLai
+    - ghiChu
 }
 
 entity LichTrinhHocSinh {
-
+    - maLichTrinhHocSinh
+    - tenTuyen
+    - diemDon
+    - diemTra
+    - thoiGianChoToiDa
+    - ghiChu
 }
 
 entity Xe {
@@ -81,11 +103,15 @@ abstract Tracking {
 }
 
 entity TrackingTaiXe {
-
+    - maTrackingTaiXe
+    - maTaiXe
+    - trangThaiTaiXe
 }
 
 entity TrackingHocSinh {
-
+    - maTrackingHocSinh
+    - maHocSinh
+    - trangThaiHocSinh
 }
 
 entity LichXeChay {
@@ -93,7 +119,12 @@ entity LichXeChay {
 }
 
 entity LichDonHocSinh {
-
+    - maHocSinh
+    - maLichTrinh
+    - thoiGianDon
+    - thoiGianTra
+    - trangThaiDon
+    - ghiChu
 }
 
 entity TaiXe
@@ -106,12 +137,26 @@ abstract DiaDiem {
     - viDo
     - loaiDiaDiem
 }
-entity DiaDiemRuoc
-entity DiaDiemXuong
+entity DiaDiemRuoc {
+    - thoiGianDon
+    - nguoiPhuTrach
+    - ghiChuDon
+}
+entity DiaDiemXuong {
+    - thoiGianTra
+    - nguoiPhuTrach
+    - ghiChuTra
+}
 
 entity TaiXeDiaDiem
+entity TaiXeDiaDiem
 
-entity DiaDiemLichTrinh
+entity DiaDiemLichTrinh {
+    - maDiaDiem
+    - maLichTrinh
+    - thoiGianDuKien
+    - ghiChu
+}
 
 ' Association
 
