@@ -1,0 +1,84 @@
+@startuml
+title Triển khai module "Bus Schedule & Tracking"
+
+' --- Tùy chỉnh giao diện ---
+skinparam backgroundColor #FAFAFA
+skinparam node {
+    BackgroundColor #E3F2FD
+    BorderColor #1E88E5
+    FontColor black
+    FontSize 13
+    FontStyle bold
+}
+skinparam artifact {
+    BackgroundColor #FFFDE7
+    BorderColor #F57C00
+    FontColor black
+}
+skinparam database {
+    BackgroundColor #E8F5E9
+    BorderColor #43A047
+}
+skinparam component {
+    BackgroundColor #FFF3E0
+    BorderColor #FB8C00
+}
+skinparam cloud {
+    BackgroundColor #E1F5FE
+    BorderColor #0277BD
+}
+
+' --- Các nút triển khai ---
+node "User Devices" as user {
+    node "Mobile App\n(Android/iOS)" as mobile {
+        artifact "UI Module"
+        artifact "Trip Tracking\n& Notification Service"
+        artifact "API Client"
+    }
+}
+
+node "Driver Devices" as driver {
+    node "Driver App\n(Android)" {
+        artifact "Route Management"
+        artifact "GPS Sender"
+        artifact "Trip Status Updater"
+    }
+    node "Onboard GPS Device" as gps
+}
+
+cloud "Internet / API Gateway" as cloud {
+    component "RESTful API\n(JSON over HTTPS)" as api
+}
+
+node "Application Server" as appServer {
+    component "Trip Management Service"
+    component "Bus Scheduling Engine"
+    component "Notification Service"
+    component "Exception Handler"
+}
+
+database "Central Database" as db {
+    artifact "BusSchedule"
+    artifact "TripHistory"
+    artifact "Driver"
+    artifact "Passenger"
+    artifact "PerformanceReports"
+}
+
+node "Admin / Operator Workstation" as admin {
+    artifact "Web Dashboard"
+    artifact "Trip Assignment Interface"
+}
+
+' --- Quan hệ ---
+mobile --> api : Gửi yêu cầu\n(trạng thái chuyến, định vị)
+driver --> api : Cập nhật vị trí GPS
+gps --> api : Gửi tọa độ định kỳ
+admin --> api : Quản lý, phân công chuyến
+api --> appServer : Xử lý nghiệp vụ\n& đồng bộ dữ liệu
+appServer --> db : Đọc/ghi dữ liệu
+appServer --> cloud : Gửi thông báo\n(Push / SMS / Email)
+api --> mobile : Trả thông tin chuyến & cập nhật
+api --> driver : Cập nhật lịch trình, khách
+
+@enduml
