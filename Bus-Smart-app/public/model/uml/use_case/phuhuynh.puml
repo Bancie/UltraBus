@@ -26,6 +26,6 @@ rectangle "Bus Schedule & Tracking" {
     UC14 ..> UC16 : <<include>>
 }
 
-ph ---> UC10
-ph ---> UC5
+ph --- UC10
+ph --- UC5
 @enduml

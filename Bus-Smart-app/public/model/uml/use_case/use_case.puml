@@ -18,17 +18,17 @@ rectangle "Bus Schedule & Tracking" {
     usecase "Nhận thông báo" as UC10
 }
 
-ql -----> UC1
-ql -----> UC2
-ql -----> UC3
-ql -----> UC4
-ql -----> UC5
+ql ----- UC1
+ql ----- UC2
+ql ----- UC3
+ql ----- UC4
+ql ----- UC5
 
-tx -----> UC6
-tx -----> UC7
-tx -----> UC8
-tx -----> UC9
+tx ----- UC6
+tx ----- UC7
+tx ----- UC8
+tx ----- UC9
 
-UC10 <----- ph
-UC5 <----- ph
+UC10 ----- ph
+UC5 ----- ph
 @enduml

@@ -66,11 +66,11 @@ rectangle "Bus Schedule & Tracking" {
 
 }
 
-ql ---> UC1
-ql ---> UC2
-ql ---> UC3
-ql ---> UC4
-ql ---> UC5
+ql --- UC1
+ql --- UC2
+ql --- UC3
+ql --- UC4
+ql --- UC5
 
 
 
