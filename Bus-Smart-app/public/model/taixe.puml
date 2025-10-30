@@ -1,0 +1,41 @@
+@startuml
+title Sơ đồ use case riêng (tài xế)
+left to right direction
+actor "Tài xế" as tx
+
+rectangle "Bus Schedule & Tracking" {
+    usecase "Xem lịch làm việc" as UC6
+    usecase "Xem danh sách học sinh cần đón" as UC7
+    usecase "Báo cáo tình trạng đón/trả" as UC8
+    usecase "Gửi thông báo sự cố" as UC9
+    
+    usecase "Xem danh sách điểm đón" as UC10
+    usecase "Xem thông tin chi tiết học sinh" as UC11
+    
+    usecase "Tự động gửi thông báo đến phụ huynh/nhà trường" as UC12
+    usecase "Xác nhận thông tin học sinh" as UC13
+    usecase "Cập nhật dữ liệu hành trình" as UC14
+    usecase "Ghi nhận tình trạng trả học sinh" as UC15
+    usecase "Ghi nhận tình trạng đón học sinh" as UC16
+
+    usecase "Xem chi tiết công việc" as UC17
+    usecase "Truy xuất dữ liệu lịch làm việc" as UC18
+    
+    UC7 ..> UC10 : <<include>>
+    UC7 ..> UC11 : <<include>>
+
+    UC8 ..> UC12 : <<include>>
+    UC8 ..> UC13 : <<include>>
+    UC8 ..> UC14 : <<include>>
+    UC8 ..> UC15 : <<include>>
+    UC8 ..> UC16 : <<include>>
+
+    UC6 ..> UC17 : <<include>>
+    UC6 ..> UC18 : <<include>>
+}
+
+tx ---> UC6
+tx ---> UC7
+tx ---> UC8
+tx ---> UC9
+@enduml
