@@ -1,0 +1,31 @@
+@startuml
+title Sơ đồ use case riêng (phụ huynh)
+left to right direction
+actor "Phụ huynh" as ph
+
+rectangle "Bus Schedule & Tracking" {
+    usecase "Theo dõi" as UC5
+    usecase "Nhận thông báo" as UC10
+    
+    usecase "Xác định học sinh cần theo dõi" as UC11
+    usecase "Truy xuất dữ liệu GPS xe buýt" as UC12
+    usecase "Xem thông tin hành trình" as UC13
+    usecase "Nhận thông báo xe đến gần" as UC14
+    usecase "Nhận thông báo nếu xe bị trễ" as UC15
+    
+    usecase "Kiểm tra điều kiện khoảng cách/thời gian" as UC16
+
+    UC5 ..> UC11 : <<include>>
+    UC5 ..> UC12 : <<include>>
+    UC5 ..> UC13 : <<include>>
+
+    UC10 ..> UC14 : <<include>>
+    UC10 ..> UC15 : <<include>>
+
+    UC15 ..> UC16 : <<include>>
+    UC14 ..> UC16 : <<include>>
+}
+
+ph ---> UC10
+ph ---> UC5
+@enduml

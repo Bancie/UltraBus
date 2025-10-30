@@ -1,0 +1,14 @@
+@startuml
+title Xem lịch làm việc
+|Tài xế|
+start
+:Chọn lịch làm việc;
+|Hệ thống|
+:Hiển thị lịch làm việc;
+:foo3;
+|Tài xế|
+:foo4;
+|Hệ thống|
+:foo5;
+stop
+@enduml

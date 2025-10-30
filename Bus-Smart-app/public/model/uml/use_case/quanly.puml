@@ -1,0 +1,77 @@
+@startuml
+title Sơ đồ use case riêng (quản lý)
+left to right direction
+actor "Quản lý xe buýt" as ql
+
+rectangle "Bus Schedule & Tracking" {
+    usecase "Hiển thị danh sách tổng quan" as UC1
+    usecase "Tạo và cập nhật lịch trình xe" as UC2
+    usecase "Phân công" as UC3
+    usecase "Gửi tin nhắn" as UC4
+    usecase "Theo dõi" as UC5
+
+    usecase "Hiển thị danh sách học sinh" as UC8
+    usecase "Hiển thị danh sách tài xế" as UC9
+    usecase "Hiển thị danh sách xe buýt" as UC10
+    usecase "Hiển thị danh sách tuyến đường" as UC11
+    
+    usecase "Tạo & cập nhật lịch trình xe" as UC2
+    usecase "Chọn xe buýt" as UC_Bus
+    usecase "Chọn tài xế" as UC_Driver
+    usecase "Chọn tuyến đường" as UC_Route
+    usecase "Chọn ngày giờ/ca" as UC_Time
+    usecase "Cập nhật thay đổi" as UC_Update
+    usecase "Lưu & đồng bộ lịch trình" as UC_Save
+
+    usecase "Gửi tin nhắn cho tài xế" as UC12
+    usecase "Gửi tin nhắn cho phụ huynh" as UC13
+    usecase "Truy xuất dữ liệu tổng hợp" as UC14
+    usecase "Lựa chọn" as UC15
+    usecase "Chọn tuyến đường" as UC21
+    usecase "Chọn tài xế" as UC22
+    usecase "Chọn xe buýt" as UC23
+    usecase "Lưu & đồng bộ phân công" as UC24
+    usecase "Lựa chọn" as UC25
+    usecase "Cập nhật thay đổi" as UC26
+    usecase "Xác định xe buýt cần theo dõi" as UC27
+    usecase "Truy xuất dữ liệu GPS xe buýt" as UC28
+    usecase "Xem thông tin hành trình" as UC29
+
+    UC3 ..> UC25 : <<include>>
+    UC3 ..> UC24 : <<include>>
+    UC25 ...> UC21 : <<include>>
+    UC25 ...> UC22 : <<include>>
+    UC25 ...> UC23 : <<include>>
+
+    UC1 ..> UC8 : <<include>>
+    UC1 ..> UC9 : <<include>>
+    UC1 ..> UC10 : <<include>>
+    UC1 ..> UC11 : <<include>>
+    UC4 ..> UC12 : <<include>>
+    UC4 ..> UC13 : <<include>>
+    UC1 ..> UC14 : <<include>>
+    
+    UC15 ...> UC_Bus : <<include>>
+    UC15 ...> UC_Driver : <<include>>
+    UC15 ...> UC_Route : <<include>>
+    UC15 ...> UC_Time : <<include>>
+    UC2 ..> UC_Update : <<include>>
+    UC2 ..> UC_Save : <<include>>
+    UC2 ..> UC15 : <<include>>
+
+    UC3 ..> UC26 : <<include>>
+    UC5 ..> UC27 : <<include>>
+    UC5 ..> UC28 : <<include>>
+    UC5 ..> UC29 : <<include>>
+
+}
+
+ql ---> UC1
+ql ---> UC2
+ql ---> UC3
+ql ---> UC4
+ql ---> UC5
+
+
+
+@enduml

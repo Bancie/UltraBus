@@ -1,0 +1,148 @@
+@startuml
+' Entity
+entity TaiXe {
+    - maTaiXe
+    - hoTen
+    - soDienThoai
+    - email
+    - diaChi
+    - soGiayPhep
+    - ngayHetHanGiayPhep
+    - ngaySinh
+    - trangThai
+}
+
+entity PhuHuynh {
+    - maPhuHuynh
+    - hoTen
+    - soDienThoai
+    - email
+    - diaChi
+    - trangThai
+}
+
+entity HocSinh {
+    - maHocSinh
+    - hoTen
+    - ngaySinh
+    - gioiTinh
+    - lopHoc
+    - truongHoc
+    - soDienThoaiLienHe
+    - trangThai
+}
+
+entity LichLamViec {
+
+}
+
+entity DanhSachDon {
+
+}
+
+abstract LichTrinh {
+    - maLichTrinh
+    - tenLichTrinh
+    - thoiGianDi
+    - thoiGianDen
+    - ngayApDung
+    - trangThai
+}
+
+entity LichTrinhXe {
+
+}
+
+entity LichTrinhHocSinh {
+
+}
+
+entity Xe {
+    - bienSo
+    - maXe
+    - loaiXe
+    - sucChua
+    - hangXe
+    - namSanXuat
+    - mauSac
+    - trangThaiXe
+}
+
+entity PhanCong {
+
+}
+
+abstract Tracking {
+    - hienDien
+    - thoiGianCapNhat
+    - kinhDo
+    - viDo
+    - ghiChu
+}
+
+entity TrackingTaiXe {
+
+}
+
+entity TrackingHocSinh {
+
+}
+
+entity LichXeChay {
+
+}
+
+entity LichDonHocSinh {
+
+}
+
+entity TaiXe
+
+abstract DiaDiem {
+    - maDiaDiem
+    - tenDiaDiem
+    - diaChi
+    - kinhDo
+    - viDo
+    - loaiDiaDiem
+}
+entity DiaDiemRuoc
+entity DiaDiemXuong
+
+entity TaiXeDiaDiem
+
+entity DiaDiemLichTrinh
+
+' Association
+
+TaiXe"0..*" -- "0..1"LichLamViec : Chua <
+
+LichTrinh <|- LichTrinhXe
+LichTrinh <|-- LichTrinhHocSinh
+
+HocSinh"0..*" -- "0..*"LichTrinh : Chua <
+HocSinh"0..*" - "0..1"DanhSachDon : Chua <
+
+Xe"0..*" -- "0..*"LichTrinh : Chua <
+Xe"0..*" -- "0..*"TaiXe : Lai <
+(Xe, TaiXe) . PhanCong
+
+PhuHuynh"1..1" -- "1..*"HocSinh : Co >
+
+Tracking <|- TrackingTaiXe
+Tracking <|-- TrackingHocSinh
+Tracking"1..1" -- "0..*"TaiXe : theo doi >
+Tracking"1..1" -- "0..*"HocSinh : theo doi >
+
+(Xe, LichTrinh) . LichXeChay
+(HocSinh, LichTrinh) . LichDonHocSinh
+
+DiaDiem <|- DiaDiemRuoc
+DiaDiem <|-- DiaDiemXuong
+HocSinh"0..*" --- "1..1"DiaDiem : Den >
+TaiXe"0..*" -- "1..*"DiaDiem : Den >
+(DiaDiem, TaiXe) . TaiXeDiaDiem
+
+LichTrinh"0..*" - "0..*"DiaDiem
+(LichTrinh, DiaDiem) . DiaDiemLichTrinh
+@enduml

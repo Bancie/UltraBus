@@ -1,0 +1,32 @@
+@startuml
+' Entity
+entity Driver {
+    - String id
+    - String name
+}
+
+entity Student {
+    - String id
+    - String name
+}
+
+
+
+abstract SendNotice {
+    +SendNotice()
+}
+
+entity SendNoticeToPH
+
+entity SendNoticeToQL
+
+entity NoticeDetail
+
+' Association
+SendNotice <|-- SendNoticeToPH
+SendNotice <|-- SendNoticeToQL
+Driver"0..1" -- "1..*"Student : Take >
+Driver"0..*" -- "0..*"SendNotice : Send >
+(Driver, SendNotice) . NoticeDetail
+
+@enduml
