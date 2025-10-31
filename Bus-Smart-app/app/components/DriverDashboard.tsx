@@ -1,4 +1,5 @@
 import * as React from "react";
+import GoogleMapCard from "../components/GoogleMap";
 
 type Stop = {
   id: number;
@@ -147,6 +148,14 @@ export default function DriverDashboard() {
               </div>
             </li>
           </ul>
+        </article>
+        <article className="driver-card driver-card--map">
+          <GoogleMapCard
+            title="Bản đồ trường học"
+            center={{ lat: 10.7862, lng: 106.695 }}
+            zoom={14}
+            height={420}
+          />
         </article>
       </div>
     </section>

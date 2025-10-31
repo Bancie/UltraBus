@@ -316,6 +316,14 @@ footer { border-top: 1px solid color-mix(in oklab, var(--fg) 8%, transparent); p
   box-shadow: 0 0 0 4px color-mix(in oklab, #facc15 20%, transparent);
 }
 
+.driver-card--map {
+  grid-column: 1 / -1;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
 @media (max-width: 900px) {
   .driver-header {
     flex-direction: column;

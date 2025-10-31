@@ -1,24 +1,15 @@
 import type { Route } from "./+types/home";
 import { MiniDrawer } from "~/components/Drawer";
 
-// export default function Home() {
-//   return (
-//     <div>
-//       a
-//     <MiniDrawer />
-//     </div>
-//   );
-// }
-
 import * as React from "react";
 import stylesHref from "../styles/home.css?url";
 import { NavLink } from "react-router";
 import DriverDashboard from "~/components/DriverDashboard";
 
-export function meta({}: Route.MetaArgs) {
+export function meta({ }: Route.MetaArgs) {
   return [
     { title: "Bus Smart 1.0" },
-    { name: "description", content: "Welcome to LearningDB!" },
+    { name: "description", content: "Welcome to Bus Smart 1.0!" },
   ];
 }
 
@@ -30,7 +21,7 @@ export default function Home() {
 
   const scrollToFeatures = React.useCallback(() => {
     document.getElementById("features")?.scrollIntoView({ behavior: "smooth" });
-  }, []); 
+  }, []);
 
   return (
     <>
@@ -83,14 +74,14 @@ export default function Home() {
       <main>
         <section className="hero container">
           <h1>Bus Smart 1.0</h1>
-          <h1>Bancie Nguyen, Nghien, LuaGa - Group 06</h1>
+          <h1>Bằng Nguyễn, Vũ, Phúc Khôi - Group 06</h1>
           <p>
             A Bus smart web app.
           </p>
           <button className="cta" onClick={scrollToFeatures}>
             Dùng thử →
           </button>
-          <h1><br/>Chọn vai trò của bạn</h1>
+          <h1><br />Chọn vai trò của bạn</h1>
         </section>
 
         <section id="features" className="container">
@@ -104,10 +95,10 @@ export default function Home() {
 
             <button className="card card-select">
               <NavLink to="/TaiXe" end>
-              <h3>Tài xế</h3>
-              <p className="muted">
-                Nhận lộ trình hằng ngày, quản lý điểm đón trả và cập nhật trạng thái chuyến đi.
-              </p>
+                <h3>Tài xế</h3>
+                <p className="muted">
+                  Nhận lộ trình hằng ngày, quản lý điểm đón trả và cập nhật trạng thái chuyến đi.
+                </p>
               </NavLink>
             </button>
 
@@ -123,10 +114,10 @@ export default function Home() {
         <DriverDashboard />
 
         <section id="about" className="container">
-          <h2><b><br/>About</b></h2>
+          <h2><b><br />About</b></h2>
           <p className="muted">
             <b>Smart Bus Web App giúp kết nối học sinh, phụ huynh, tài xế và nhà trường trong một hệ thống quản lý xe buýt thông minh.</b>
-            <br/>
+            <br />
             Theo dõi lộ trình theo thời gian thực, đảm bảo an toàn và tối ưu vận hành dễ dàng trên một nền tảng duy nhất.
           </p>
         </section>
@@ -134,7 +125,7 @@ export default function Home() {
         <section id="contact" className="container">
           <h2><b>Contact</b></h2>
           <p className="muted">
-            Liên hệ Lùa gà qua link dưới
+            Liên hệ nhóm 6 qua link dưới
           </p>
           <p>
             <a href="mailto:you@example.com" className="cta" style={{ display: "inline-flex", textDecoration: "none" }}>
