@@ -151,7 +151,7 @@ export default function DriverDashboard() {
         </article>
         <article className="driver-card driver-card--map">
           <GoogleMapCard
-            title="Bản đồ trường học"
+            title="Bản đồ chuyến đi"
             center={{ lat: 10.7862, lng: 106.695 }}
             zoom={14}
             height={420}

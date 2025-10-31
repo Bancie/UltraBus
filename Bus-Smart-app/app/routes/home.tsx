@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import { MiniDrawer } from "~/components/Drawer";
+import { MiniDrawer } from "~/components/khoi/Drawer";
 
 import * as React from "react";
 import stylesHref from "../styles/home.css?url";
