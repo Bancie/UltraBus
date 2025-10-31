@@ -28,10 +28,6 @@ export default function Home() {
       <header>
         <div className="container nav">
           <a className="brand" href="#">
-            <span className="brand-logo">◎</span>
-            <span>Bus Smart 1.0</span>
-          </a>
-          <a className="brand" href="#">
             <img
               src="/buslogo.ico"
               alt="Bus Smart Logo"
