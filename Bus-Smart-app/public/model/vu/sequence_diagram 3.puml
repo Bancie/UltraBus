@@ -1,0 +1,57 @@
+@startuml
+title Sơ đồ tuần tự chi tiết - Theo dõi vị trí xe buýt thời gian thực (SSB 1.0)
+
+actor "Tài xế / Thiết bị GPS" as TX
+boundary "API Gateway" as GATEWAY
+control "Xác thực" as AUTH
+control "Máy chủ ứng dụng" as APP
+entity "Bộ nhớ đệm" as MEM
+entity "Cơ sở dữ liệu" as CSDl
+control "Dịch vụ thông báo" as NOTI
+boundary "Máy chủ thời gian thực tế" as SV
+actor "Ứng dụng Phụ huynh / Nhà trường" as USER
+
+TX -> GATEWAY: Gửi yêu cầu đăng nhập
+GATEWAY -> AUTH: Kiểm tra thông tin xác thực
+AUTH --> GATEWAY: Truy cập hợp lệ
+GATEWAY --> TX: Xác thực thành công
+
+TX -> APP: Gửi yêu cầu "Bắt đầu chuyến xe"
+APP -> CSDl: Cập nhật trạng thái chuyến đi thành "Đang hoạt động"
+APP --> TX: Xác nhận khởi động chuyến xe thành công
+
+loop Mỗi 2-3 giây
+    TX -> GATEWAY: Gửi dữ liệu vị trí
+    GATEWAY -> AUTH: Kiểm tra vị trí xác thực
+    AUTH --> GATEWAY: Vị trí hợp lệ
+    GATEWAY -> APP: Gửi dữ liệu vị trí hợp lệ
+    APP -> MEM: Lưu vị trí mới nhất
+    APP -> CSDl: Ghi log hành trình
+    APP -> SV: Phát sự kiện "Cập nhật vị trí xe buýt"
+    SV -> USER: Gửi dữ liệu mới
+    USER -> USER: Cập nhật biểu tượng xe trên bản đồ
+end
+
+APP -> NOTI: Kiểm tra khoảng cách đến điểm đón kế tiếp
+NOTI -> CSDl: Truy xuất danh sách học sinh ở điểm đón đó
+CSDl --> NOTI: Trả về danh sách học sinh và phụ huynh tương ứng
+NOTI -> USER: Gửi thông báo "Xe sắp đến điểm đón học sinh A"
+
+alt Mất kết nối GPS hoặc mạng
+    TX -> APP: Không gửi được vị trí trong 10s
+    APP -> MEM: Ghi trạng thái "Mất tín hiệu"
+    APP -> NOTI: Phát cảnh báo "Xe mất kết nối GPS"
+    NOTI -> USER: Gửi cảnh báo tới quản lý nhà trường
+else Xe bị trễ giờ > 5 phút
+    APP -> CSDl: So sánh thời gian thực tế và lịch trình
+    APP -> NOTI: Phát cảnh báo "Xe bị trễ"
+    NOTI -> USER: Gửi thông báo cho phụ huynh và quản lý
+end
+
+TX -> APP: Gửi yêu cầu "Kết thúc chuyến"
+APP -> CSDl: Cập nhật trạng thái chuyến đi thành "Hoàn thành"
+APP -> SV: Gửi sự kiện "Xe buýt hoàn thành chuyến đi"
+SV -> USER: Cập nhật giao diện, hiển thị "Chuyến đi đã hoàn tất"
+APP -> NOTI: Gửi thông báo tổng kết hành trình cho phụ huynh
+
+@enduml
