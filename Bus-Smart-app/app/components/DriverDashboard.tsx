@@ -9,10 +9,10 @@ type Stop = {
 };
 
 const upcomingStops: Stop[] = [
-  { id: 1, name: "Cổng chính Trường A", eta: "07:05", status: "arrived" },
+  { id: 1, name: "Cổng chính Trường Đại học Sài Gòn", eta: "07:05", status: "arrived" },
   { id: 2, name: "Ngã tư Lê Lợi", eta: "07:15", status: "upcoming" },
-  { id: 3, name: "KTX Khu B", eta: "07:25", status: "upcoming" },
-  { id: 4, name: "Trung tâm TDTT", eta: "07:32", status: "missed" },
+  { id: 3, name: "Cổng chính Trường Đại học Sài Gòn Cơ sở 2", eta: "07:25", status: "upcoming" },
+  { id: 4, name: "Cổng chính Trường Đại học Sài Gòn Cơ sở 1", eta: "07:32", status: "missed" },
 ];
 
 export default function DriverDashboard() {
@@ -137,7 +137,7 @@ export default function DriverDashboard() {
               <span className="timeline-dot timeline-dot--success" aria-hidden />
               <div>
                 <strong>07:05</strong>
-                <span className="muted"> Đón học sinh tại Cổng chính Trường A</span>
+                <span className="muted"> Đón học sinh tại 95 Trần Hưng Đạo</span>
               </div>
             </li>
             <li>
