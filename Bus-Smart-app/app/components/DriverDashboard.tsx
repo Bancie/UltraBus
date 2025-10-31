@@ -74,7 +74,7 @@ export default function DriverDashboard() {
               <li key={stop.id} data-status={stop.status}>
                 <div>
                   <strong>{stop.name}</strong>
-                  <span className="muted">ETA {stop.eta}</span>
+                  <span className="muted"> - {stop.eta}</span>
                 </div>
                 <span className="driver-stops__badge">
                   {stop.status === "arrived" && "Đã đón"}
@@ -96,7 +96,7 @@ export default function DriverDashboard() {
             >
               <span>{doorLocked ? "🔒" : "🔓"}</span>
               <div>
-                <strong>Cửa xe</strong>
+                <strong>Cửa xe </strong>
                 <span className="muted">{doorLocked ? "Đã khóa" : "Đang mở"}</span>
               </div>
             </button>
@@ -107,7 +107,7 @@ export default function DriverDashboard() {
             >
               <span>{attendanceChecked ? "✅" : "📝"}</span>
               <div>
-                <strong>Điểm danh</strong>
+                <strong>Điểm danh </strong>
                 <span className="muted">
                   {attendanceChecked ? "Đã hoàn thành" : "Chưa thực hiện"}
                 </span>
@@ -117,7 +117,7 @@ export default function DriverDashboard() {
               <span>📡</span>
               <div>
                 <strong>Báo sự cố</strong>
-                <span className="muted">Thông báo ngay cho điều phối</span>
+                <span className="muted"> Thông báo ngay cho điều phối</span>
               </div>
             </button>
           </div>
@@ -130,21 +130,21 @@ export default function DriverDashboard() {
               <span className="timeline-dot timeline-dot--success" aria-hidden />
               <div>
                 <strong>06:45</strong>
-                <span className="muted">Khởi hành tại bãi xe</span>
+                <span className="muted"> Khởi hành tại bãi xe</span>
               </div>
             </li>
             <li>
               <span className="timeline-dot timeline-dot--success" aria-hidden />
               <div>
                 <strong>07:05</strong>
-                <span className="muted">Đón học sinh tại Cổng chính Trường A</span>
+                <span className="muted"> Đón học sinh tại Cổng chính Trường A</span>
               </div>
             </li>
             <li>
               <span className="timeline-dot timeline-dot--pending" aria-hidden />
               <div>
                 <strong>07:15</strong>
-                <span className="muted">Đang di chuyển tới Ngã tư Lê Lợi</span>
+                <span className="muted"> Đang di chuyển tới Ngã tư Lê Lợi</span>
               </div>
             </li>
           </ul>
