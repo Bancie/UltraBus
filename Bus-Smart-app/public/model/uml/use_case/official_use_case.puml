@@ -1,0 +1,57 @@
+@startuml
+title Sơ đồ use case Bus Smart 1.0
+left to right direction
+actor "Tài xế" as tx
+actor "Quản lý xe buýt" as ql
+actor "Phụ huynh" as ph
+
+rectangle "Quản lý" {
+    usecase "Phân công" as UC3
+    usecase "Tạo và cập nhật lịch trình" as UC2
+    usecase "Xem lịch trình" as UC7
+    usecase "Danh sách thông tin" as UC1
+        usecase "Quản lý và cập nhật" as UC18
+        usecase "Xem thông tin chi tiết học sinh" as UC11
+        usecase "Xem thông tin chi tiết phụ huynh/tài xế" as UC19
+}
+rectangle "Thông báo & Liên lạc" {
+    usecase "Theo dõi" as UC5
+    usecase "Báo cáo tình trạng đón/trả" as UC8
+        usecase "Tự động gửi thông báo đến phụ huynh/nhà trường" as UC12
+        usecase "Xác nhận thông tin học sinh" as UC13
+        usecase "Cập nhật dữ liệu hành trình GPS" as UC14
+        usecase "Ghi nhận tình trạng đón/trả học sinh" as UC16
+    usecase "Gửi/Nhận tin nhắn" as UC4
+    usecase "Gửi/Nhận thông báo" as UC9
+    usecase "Gửi/Nhận thông báo xe đến gần" as UC15
+    usecase "Gửi/Nhận thông báo nếu xe bị trễ" as UC17
+}
+
+UC1 ----- ql
+UC2 ----- ql
+UC3 ----- ql
+UC4 ----- ql
+UC5 ----- ql
+
+tx ----- UC8
+tx ----- UC9
+tx -- UC4
+tx -- UC7
+
+ph -- UC5
+ph -- UC9
+ph -- UC4
+
+UC7 <.. UC11 : <<extend>>
+UC8 ..> UC12 : <<include>>
+UC8 ..> UC13 : <<include>>
+UC8 ..> UC14 : <<include>>
+UC8 ..> UC16 : <<include>>
+UC5 <.. UC14 : <<extend>>
+UC9 ..> UC15 : <<include>>
+UC9 ..> UC17 : <<include>>
+UC1 ..> UC18 : <<include>>
+UC1 ..> UC11 : <<include>>
+UC1 ..> UC19 : <<include>>
+
+@enduml

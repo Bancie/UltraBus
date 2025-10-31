@@ -1,6 +1,6 @@
 @startuml
-' Entity
-entity TaiXe {
+' Class
+Class TaiXe {
     - maTaiXe
     - hoTen
     - soDienThoai
@@ -10,18 +10,26 @@ entity TaiXe {
     - ngayHetHanGiayPhep
     - ngaySinh
     - trangThai
+
+    +capNhatThongTinTaiXe(hoTenMoi, soDienThoaiMoi, emailMoi, diaChiMoi)
+    +dangKyLichLamViec(maLichLamViec)
+    +capNhatTrangThai(trangThaiMoi)
 }
 
-entity PhuHuynh {
+Class PhuHuynh {
     - maPhuHuynh
     - hoTen
     - soDienThoai
     - email
     - diaChi
     - trangThai
+
+    +capNhatThongTinLienHe(soDienThoaiMoi, emailMoi)
+    +nhanThongBao(noiDung)
+    +xacNhanTinhTrangHocSinh(maHocSinh, trangThai)
 }
 
-entity HocSinh {
+Class HocSinh {
     - maHocSinh
     - hoTen
     - ngaySinh
@@ -30,102 +38,200 @@ entity HocSinh {
     - truongHoc
     - soDienThoaiLienHe
     - trangThai
+
+    +capNhatThongTinLienHe(soDienThoaiMoi)
+    +dangKyDanhSachDon(maDanhSach)
+    +capNhatTrangThai(trangThaiMoi)
 }
 
-entity LichLamViec {
+Class LichLamViec {
+    - maLichLamViec
+    - tenLichLamViec
+    - ngayLamViec
+    - caLamViec
+    - gioBatDau
+    - gioKetThuc
+    - ghiChu
+    - trangThai
 
+    +capNhatKhungGio(gioBatDauMoi, gioKetThucMoi)
+    +themCongViec(ghiChuMoi)
+    +phanCongTaiXe(maTaiXe)
 }
 
-entity DanhSachDon {
+Class DanhSachDon {
+    - maDanhSach
+    - tenDanhSach
+    - moTa
+    - ngayTao
+    - nguoiTao
+    - trangThai
 
+    +themHocSinh(maHocSinh)
+    +xoaHocSinh(maHocSinh)
+    +layDanhSachHocSinh()
 }
 
-abstract LichTrinh {
+Abstract LichTrinh {
     - maLichTrinh
     - tenLichTrinh
     - thoiGianDi
     - thoiGianDen
     - ngayApDung
     - trangThai
+
+    +capNhatThoiGian(thoiGianDiMoi, thoiGianDenMoi)
+    +themDiaDiem(maDiaDiem)
+    +tinhTongThoiGian()
 }
 
-entity LichTrinhXe {
+Class LichTrinhXe {
+    - maLichTrinhXe
+    - loaiLichTrinh
+    - tuyenDuong
+    - quangDuong
+    - chuKyLapLai
+    - ghiChu
 
+    +capNhatQuangDuong(quangDuongMoi)
+    +datChuKyLapLai(chuKyMoi)
+    +capNhatGhiChu(ghiChuMoi)
 }
 
-entity LichTrinhHocSinh {
+Class LichTrinhHocSinh {
+    - maLichTrinhHocSinh
+    - tenTuyen
+    - diemDon
+    - diemTra
+    - thoiGianChoToiDa
+    - ghiChu
 
+    +themHocSinh(maHocSinh)
+    +capNhatDiemDon(diemDonMoi, diemTraMoi)
+    +capNhatThoiGianCho(thoiGianChoMoi)
 }
 
-entity Xe {
-    - bienSo
-    - maXe
+Class Xe {
+    - bienSoXe
     - loaiXe
     - sucChua
     - hangXe
     - namSanXuat
     - mauSac
     - trangThaiXe
+
+    +capNhatTrangThaiXe(trangThaiMoi)
+    +dangKyBaoDuong(ngayBaoDuong)
+    +kiemTraKhaDung()
 }
 
-entity PhanCong {
+Class PhanCongXe {
+    - maTaiXe
+    - bienSoXe
+    - ngayPhanCong
+    - trangThai
+    - ghiChu
 
+    +phanBoTaiXe(maTaiXe, maLichTrinh)
+    +capNhatCaLamViec(caLamViecMoi)
+    +huyPhanCong()
 }
 
-abstract Tracking {
+Abstract Tracking {
     - hienDien
     - thoiGianCapNhat
     - kinhDo
     - viDo
     - ghiChu
+
+    +capNhatViTri(kinhDoMoi, viDoMoi)
+    +capNhatTrangThaiTheoDoi(trangThaiMoi)
+    +layBanGhiGanNhat()
 }
 
-entity TrackingTaiXe {
+Class TrackingTaiXe {
+    - maTrackingTaiXe
+    - maTaiXe
+    - trangThaiTaiXe
 
+    +capNhatTrangThaiTaiXe(trangThaiMoi)
+    +layThongTinTaiXe()
+    +ghiChuTheoDoi(ghiChuMoi)
 }
 
-entity TrackingHocSinh {
+Class TrackingHocSinh {
+    - maTrackingHocSinh
+    - maHocSinh
+    - trangThaiHocSinh
 
+    +capNhatTrangThaiHocSinh(trangThaiMoi)
+    +layThongTinHocSinh()
+    +ghiChuTheoDoi(ghiChuMoi)
 }
 
-entity LichXeChay {
+Class LichDonHocSinh {
+    - maHocSinh
+    - maLichTrinh
+    - thoiGianDon
+    - thoiGianTra
+    - trangThaiDon
+    - ghiChu
 
+    +xacNhanDon(maHocSinh)
+    +xacNhanTra(maHocSinh)
+    +capNhatTrangThaiDon(trangThaiMoi)
 }
 
-entity LichDonHocSinh {
-
-}
-
-entity TaiXe
-
-abstract DiaDiem {
+Class DiaDiem {
     - maDiaDiem
     - tenDiaDiem
     - diaChi
     - kinhDo
     - viDo
     - loaiDiaDiem
+
+    +capNhatToaDo(kinhDoMoi, viDoMoi)
+    +capNhatLoaiDiaDiem(loaiMoi)
+    +layThongTinDiaDiem()
 }
-entity DiaDiemRuoc
-entity DiaDiemXuong
 
-entity TaiXeDiaDiem
+Class TaiXeDiaDiem {
+    - maTaiXe
+    - maDiaDiem
+    - thoiGianDen
+    - thoiGianRoi
+    - trangThai
+    - ghiChu
 
-entity DiaDiemLichTrinh
+    +ghiNhanDen(thoiGianDenMoi)
+    +ghiNhanRoi(thoiGianRoiMoi)
+    +capNhatTrangThai(trangThaiMoi)
+}
+
+Class DiaDiemLichTrinh {
+    - maDiaDiem
+    - maLichTrinh
+    - thoiGianDuKien
+    - ghiChu
+
+    +sapXepThuTu(thuTu)
+    +capNhatThoiGianDuKien(thoiGianMoi)
+    +layThongTinDiemDung()
+}
 
 ' Association
 
 TaiXe"0..*" -- "0..1"LichLamViec : Chua <
+LichLamViec "1" o-- "0..*" PhanCongXe : Gom >
 
 LichTrinh <|- LichTrinhXe
 LichTrinh <|-- LichTrinhHocSinh
 
 HocSinh"0..*" -- "0..*"LichTrinh : Chua <
-HocSinh"0..*" - "0..1"DanhSachDon : Chua <
+DanhSachDon "1" o-- "0..*" HocSinh : Chua >
 
-Xe"0..*" -- "0..*"LichTrinh : Chua <
 Xe"0..*" -- "0..*"TaiXe : Lai <
-(Xe, TaiXe) . PhanCong
+(Xe, TaiXe) . PhanCongXe
 
 PhuHuynh"1..1" -- "1..*"HocSinh : Co >
 
@@ -134,15 +240,12 @@ Tracking <|-- TrackingHocSinh
 Tracking"1..1" -- "0..*"TaiXe : theo doi >
 Tracking"1..1" -- "0..*"HocSinh : theo doi >
 
-(Xe, LichTrinh) . LichXeChay
 (HocSinh, LichTrinh) . LichDonHocSinh
 
-DiaDiem <|- DiaDiemRuoc
-DiaDiem <|-- DiaDiemXuong
 HocSinh"0..*" --- "1..1"DiaDiem : Den >
 TaiXe"0..*" -- "1..*"DiaDiem : Den >
 (DiaDiem, TaiXe) . TaiXeDiaDiem
 
-LichTrinh"0..*" - "0..*"DiaDiem
+LichTrinh "1" o-- "0..*" DiaDiem : Di qua >
 (LichTrinh, DiaDiem) . DiaDiemLichTrinh
 @enduml
