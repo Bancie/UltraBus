@@ -1,0 +1,46 @@
+@startuml
+
+title Kiến trúc hệ thống SSB 1.0
+
+package "Giao diện Người dùng" {
+  [Web Dashboard (Quản lý)] as WebApp
+  [Ứng dụng người dùng (Tài xế, Phụ huynh)] as App
+}
+
+package "Hệ thống Máy chủ" {
+  
+  [Cổng API (API Gateway)] as Gateway
+
+  package "Các dịch vụ" {
+    [Dịch vụ người dùng] as User
+    [Dịch vụ lập lịch] as Schedule
+    [Dịch vụ theo dõi] as Tracking
+    [Dịch vụ thông báo] as Notify
+  }
+
+  database "Cơ sở dữ liệu" {
+    [CSDL người dùng] as UserDB
+    [CSDL lịch trình] as ScheduleDB
+    [CSDL vị trí] as LocationDB
+  }
+}
+
+WebApp --> Gateway
+App --> Gateway
+
+Gateway --> User
+Gateway --> Schedule
+Gateway --> Tracking
+Gateway --> Notify
+
+User -- UserDB
+Schedule -- ScheduleDB
+Tracking -- LocationDB
+
+Tracking ..> Notify : "Thông báo xe gần đến"
+Schedule ..> Notify : "Tạo lịch mới"
+Notify ..> User : "Lấy token"
+
+App ..> Tracking : "Gửi GPS (thời gian thực)"
+
+@enduml
