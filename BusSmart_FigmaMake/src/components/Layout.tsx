@@ -16,11 +16,7 @@ import {
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Badge } from "./ui/badge";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "./ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -135,11 +131,7 @@ export default function Layout({
             </div>
 
             <div className="flex items-center gap-2 lg:gap-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="relative"
-              >
+              <Button variant="ghost" size="icon" className="relative">
                 <Bell className="w-5 h-5" />
                 <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-red-500">
                   3

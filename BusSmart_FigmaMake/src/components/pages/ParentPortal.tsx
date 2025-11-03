@@ -17,11 +17,7 @@ import {
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "../ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 export default function ParentPortal() {
   const childInfo = {
@@ -105,13 +101,10 @@ export default function ParentPortal() {
       {/* Active Alert */}
       <Alert className="border-blue-500 bg-blue-50">
         <Navigation className="h-4 w-4 text-blue-600" />
-        <AlertTitle className="text-blue-900">
-          Bus is on the way!
-        </AlertTitle>
+        <AlertTitle className="text-blue-900">Bus is on the way!</AlertTitle>
         <AlertDescription className="text-blue-700">
-          Bus #{busInfo.driver.split(" ")[0]} is approaching
-          your pickup location. Estimated arrival in{" "}
-          {busInfo.eta}.
+          Bus #{busInfo.driver.split(" ")[0]} is approaching your pickup
+          location. Estimated arrival in {busInfo.eta}.
         </AlertDescription>
       </Alert>
 
@@ -139,41 +132,27 @@ export default function ParentPortal() {
                 <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <p className="text-gray-600">Name</p>
-                    <p className="text-gray-900">
-                      {childInfo.name}
-                    </p>
+                    <p className="text-gray-900">{childInfo.name}</p>
                   </div>
                   <div>
                     <p className="text-gray-600">Grade</p>
-                    <p className="text-gray-900">
-                      {childInfo.grade}
-                    </p>
+                    <p className="text-gray-900">{childInfo.grade}</p>
                   </div>
                   <div>
                     <p className="text-gray-600">Student ID</p>
-                    <p className="text-gray-900">
-                      {childInfo.studentId}
-                    </p>
+                    <p className="text-gray-900">{childInfo.studentId}</p>
                   </div>
                   <div>
                     <p className="text-gray-600">School</p>
-                    <p className="text-gray-900">
-                      {childInfo.school}
-                    </p>
+                    <p className="text-gray-900">{childInfo.school}</p>
                   </div>
                   <div>
-                    <p className="text-gray-600">
-                      Assigned Bus
-                    </p>
-                    <p className="text-gray-900">
-                      {childInfo.bus}
-                    </p>
+                    <p className="text-gray-600">Assigned Bus</p>
+                    <p className="text-gray-900">{childInfo.bus}</p>
                   </div>
                   <div>
                     <p className="text-gray-600">Route</p>
-                    <p className="text-gray-900">
-                      {childInfo.route}
-                    </p>
+                    <p className="text-gray-900">{childInfo.route}</p>
                   </div>
                 </div>
               </div>
@@ -220,9 +199,7 @@ export default function ParentPortal() {
                     <Navigation className="w-6 h-6 text-white" />
                   </div>
                   <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white rounded px-2 py-1 shadow-lg whitespace-nowrap">
-                    <p className="text-gray-900">
-                      {childInfo.bus}
-                    </p>
+                    <p className="text-gray-900">{childInfo.bus}</p>
                   </div>
                 </div>
 
@@ -232,9 +209,7 @@ export default function ParentPortal() {
                     <MapPin className="w-5 h-5 text-white" />
                   </div>
                   <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white rounded px-2 py-1 shadow-lg whitespace-nowrap">
-                    <p className="text-gray-900">
-                      Your Location
-                    </p>
+                    <p className="text-gray-900">Your Location</p>
                   </div>
                 </div>
 
@@ -254,23 +229,15 @@ export default function ParentPortal() {
                 <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
                   <MapPin className="w-5 h-5 text-blue-600" />
                   <div>
-                    <p className="text-gray-600">
-                      Current Location
-                    </p>
-                    <p className="text-gray-900">
-                      {busInfo.currentLocation}
-                    </p>
+                    <p className="text-gray-600">Current Location</p>
+                    <p className="text-gray-900">{busInfo.currentLocation}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
                   <Clock className="w-5 h-5 text-green-600" />
                   <div>
-                    <p className="text-gray-600">
-                      Estimated Arrival
-                    </p>
-                    <p className="text-gray-900">
-                      {busInfo.eta}
-                    </p>
+                    <p className="text-gray-600">Estimated Arrival</p>
+                    <p className="text-gray-900">{busInfo.eta}</p>
                   </div>
                 </div>
               </div>
@@ -309,9 +276,7 @@ export default function ParentPortal() {
                     </div>
                     <Badge
                       variant={
-                        trip.status === "on-time"
-                          ? "default"
-                          : "secondary"
+                        trip.status === "on-time" ? "default" : "secondary"
                       }
                       className={
                         trip.status === "on-time"
@@ -319,9 +284,7 @@ export default function ParentPortal() {
                           : "bg-orange-500"
                       }
                     >
-                      {trip.status === "on-time"
-                        ? "On Time"
-                        : "Delayed"}
+                      {trip.status === "on-time" ? "On Time" : "Delayed"}
                     </Badge>
                   </div>
                 ))}
@@ -336,9 +299,7 @@ export default function ParentPortal() {
           <Card className="border-gray-200">
             <CardHeader>
               <CardTitle>Driver Information</CardTitle>
-              <CardDescription>
-                Contact your bus driver
-              </CardDescription>
+              <CardDescription>Contact your bus driver</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center gap-3">
@@ -351,12 +312,8 @@ export default function ParentPortal() {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="text-gray-900">
-                    {busInfo.driver}
-                  </p>
-                  <p className="text-gray-600">
-                    {busInfo.license}
-                  </p>
+                  <p className="text-gray-900">{busInfo.driver}</p>
+                  <p className="text-gray-600">{busInfo.license}</p>
                 </div>
               </div>
               <Button className="w-full bg-blue-600 hover:bg-blue-700">
@@ -370,17 +327,13 @@ export default function ParentPortal() {
           <Card className="border-gray-200">
             <CardHeader>
               <CardTitle>Today's Schedule</CardTitle>
-              <CardDescription>
-                Pickup and dropoff times
-              </CardDescription>
+              <CardDescription>Pickup and dropoff times</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="p-3 rounded-lg bg-blue-50 border border-blue-200">
                 <div className="flex items-center gap-2 mb-2">
                   <Clock className="w-4 h-4 text-blue-600" />
-                  <span className="text-blue-900">
-                    Morning Route
-                  </span>
+                  <span className="text-blue-900">Morning Route</span>
                 </div>
                 <div className="space-y-1 text-gray-700">
                   <div className="flex justify-between">
@@ -397,9 +350,7 @@ export default function ParentPortal() {
                   </div>
                   <div className="flex items-start gap-1 pt-1">
                     <MapPin className="w-3 h-3 mt-0.5" />
-                    <span className="flex-1">
-                      {schedule.morning.location}
-                    </span>
+                    <span className="flex-1">{schedule.morning.location}</span>
                   </div>
                 </div>
               </div>
@@ -407,9 +358,7 @@ export default function ParentPortal() {
               <div className="p-3 rounded-lg bg-orange-50 border border-orange-200">
                 <div className="flex items-center gap-2 mb-2">
                   <Clock className="w-4 h-4 text-orange-600" />
-                  <span className="text-orange-900">
-                    Afternoon Route
-                  </span>
+                  <span className="text-orange-900">Afternoon Route</span>
                 </div>
                 <div className="space-y-1 text-gray-700">
                   <div className="flex justify-between">
@@ -441,17 +390,11 @@ export default function ParentPortal() {
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <Button
-                variant="outline"
-                className="w-full justify-start"
-              >
+              <Button variant="outline" className="w-full justify-start">
                 <AlertCircle className="w-4 h-4 mr-2" />
                 Report an Issue
               </Button>
-              <Button
-                variant="outline"
-                className="w-full justify-start"
-              >
+              <Button variant="outline" className="w-full justify-start">
                 <User className="w-4 h-4 mr-2" />
                 Update Contact Info
               </Button>

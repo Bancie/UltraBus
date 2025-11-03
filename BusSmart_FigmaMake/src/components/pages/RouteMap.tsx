@@ -109,9 +109,7 @@ export default function RouteMap() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-gray-900 mb-1">
-            Route Map & Tracking
-          </h1>
+          <h1 className="text-gray-900 mb-1">Route Map & Tracking</h1>
           <p className="text-gray-600">
             Real-time location tracking for all active buses
           </p>
@@ -138,9 +136,7 @@ export default function RouteMap() {
         <Card className="lg:col-span-2 border-gray-200">
           <CardHeader>
             <CardTitle>Live Map View</CardTitle>
-            <CardDescription>
-              Current bus positions and routes
-            </CardDescription>
+            <CardDescription>Current bus positions and routes</CardDescription>
           </CardHeader>
           <CardContent>
             {/* Map Placeholder - Google Maps style */}
@@ -181,12 +177,8 @@ export default function RouteMap() {
                       </div>
                       <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                         <div className="bg-white rounded-lg shadow-lg p-3 whitespace-nowrap">
-                          <p className="text-gray-900">
-                            {bus.name}
-                          </p>
-                          <p className="text-gray-600">
-                            {bus.currentStop}
-                          </p>
+                          <p className="text-gray-900">{bus.name}</p>
+                          <p className="text-gray-600">{bus.currentStop}</p>
                         </div>
                       </div>
                     </div>
@@ -217,32 +209,20 @@ export default function RouteMap() {
                 <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg p-3 space-y-2">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 bg-blue-600 rounded-full" />
-                    <span className="text-gray-700">
-                      Active Bus
-                    </span>
+                    <span className="text-gray-700">Active Bus</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 bg-green-600 rounded-full" />
-                    <span className="text-gray-700">
-                      At Stop
-                    </span>
+                    <span className="text-gray-700">At Stop</span>
                   </div>
                 </div>
 
                 {/* Zoom Controls */}
                 <div className="absolute bottom-4 right-4 flex flex-col gap-2">
-                  <Button
-                    size="icon"
-                    variant="secondary"
-                    className="bg-white"
-                  >
+                  <Button size="icon" variant="secondary" className="bg-white">
                     +
                   </Button>
-                  <Button
-                    size="icon"
-                    variant="secondary"
-                    className="bg-white"
-                  >
+                  <Button size="icon" variant="secondary" className="bg-white">
                     -
                   </Button>
                 </div>
@@ -256,9 +236,7 @@ export default function RouteMap() {
           <Card className="border-gray-200">
             <CardHeader>
               <CardTitle>Active Buses</CardTitle>
-              <CardDescription>
-                {buses.length} buses on route
-              </CardDescription>
+              <CardDescription>{buses.length} buses on route</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {buses.map((bus) => (
@@ -268,16 +246,10 @@ export default function RouteMap() {
                 >
                   <div className="flex items-start justify-between mb-2">
                     <div>
-                      <p className="text-gray-900">
-                        {bus.name}
-                      </p>
-                      <p className="text-gray-600">
-                        {bus.driver}
-                      </p>
+                      <p className="text-gray-900">{bus.name}</p>
+                      <p className="text-gray-600">{bus.driver}</p>
                     </div>
-                    <Badge className="bg-green-500">
-                      Active
-                    </Badge>
+                    <Badge className="bg-green-500">Active</Badge>
                   </div>
                   <div className="space-y-1.5 text-gray-600">
                     <div className="flex items-center gap-2">
@@ -293,11 +265,7 @@ export default function RouteMap() {
                       <span>{bus.students} students</span>
                     </div>
                   </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-full mt-3"
-                  >
+                  <Button variant="outline" size="sm" className="w-full mt-3">
                     Track Bus
                   </Button>
                 </div>
@@ -311,9 +279,7 @@ export default function RouteMap() {
       <Card className="border-gray-200">
         <CardHeader>
           <CardTitle>Bus #12 - Upcoming Stops</CardTitle>
-          <CardDescription>
-            Route A - North District schedule
-          </CardDescription>
+          <CardDescription>Route A - North District schedule</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -342,18 +308,12 @@ export default function RouteMap() {
                       {index + 1}
                     </div>
                     <div>
-                      <p className="text-gray-900">
-                        {stop.name}
-                      </p>
-                      <p className="text-gray-600">
-                        {stop.time}
-                      </p>
+                      <p className="text-gray-900">{stop.name}</p>
+                      <p className="text-gray-600">{stop.time}</p>
                     </div>
                   </div>
                   {stop.status === "current" && (
-                    <Badge className="bg-blue-600">
-                      Current
-                    </Badge>
+                    <Badge className="bg-blue-600">Current</Badge>
                   )}
                   {stop.status === "completed" && (
                     <Badge className="bg-green-600">Done</Badge>

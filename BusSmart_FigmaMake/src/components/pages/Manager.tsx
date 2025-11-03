@@ -24,12 +24,7 @@ import {
   TableRow,
 } from "../ui/table";
 import { Badge } from "../ui/badge";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import {
   Dialog,
   DialogContent,
@@ -169,9 +164,7 @@ export default function Manager() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-gray-900 mb-1">
-            Manager Console
-          </h1>
+          <h1 className="text-gray-900 mb-1">Manager Console</h1>
           <p className="text-gray-600">
             Manage assignments, routes, and monitor attendance
           </p>
@@ -188,8 +181,7 @@ export default function Manager() {
               <DialogHeader>
                 <DialogTitle>Create New Assignment</DialogTitle>
                 <DialogDescription>
-                  Assign a driver and students to a bus and
-                  route
+                  Assign a driver and students to a bus and route
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
@@ -200,15 +192,9 @@ export default function Manager() {
                       <SelectValue placeholder="Choose a bus" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="12">
-                        Bus #12
-                      </SelectItem>
-                      <SelectItem value="07">
-                        Bus #07
-                      </SelectItem>
-                      <SelectItem value="19">
-                        Bus #19
-                      </SelectItem>
+                      <SelectItem value="12">Bus #12</SelectItem>
+                      <SelectItem value="07">Bus #07</SelectItem>
+                      <SelectItem value="19">Bus #19</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -219,15 +205,9 @@ export default function Manager() {
                       <SelectValue placeholder="Choose a driver" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="john">
-                        John Smith
-                      </SelectItem>
-                      <SelectItem value="sarah">
-                        Sarah Johnson
-                      </SelectItem>
-                      <SelectItem value="mike">
-                        Mike Brown
-                      </SelectItem>
+                      <SelectItem value="john">John Smith</SelectItem>
+                      <SelectItem value="sarah">Sarah Johnson</SelectItem>
+                      <SelectItem value="mike">Mike Brown</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -241,9 +221,7 @@ export default function Manager() {
                       <SelectItem value="a">
                         Route A - North District
                       </SelectItem>
-                      <SelectItem value="b">
-                        Route B - East District
-                      </SelectItem>
+                      <SelectItem value="b">Route B - East District</SelectItem>
                       <SelectItem value="c">
                         Route C - South District
                       </SelectItem>
@@ -262,13 +240,9 @@ export default function Manager() {
       {/* Management Tabs */}
       <Tabs value={selectedTab} onValueChange={setSelectedTab}>
         <TabsList className="grid w-full grid-cols-3 lg:w-auto">
-          <TabsTrigger value="assignments">
-            Assignments
-          </TabsTrigger>
+          <TabsTrigger value="assignments">Assignments</TabsTrigger>
           <TabsTrigger value="routes">Routes</TabsTrigger>
-          <TabsTrigger value="attendance">
-            Attendance
-          </TabsTrigger>
+          <TabsTrigger value="attendance">Attendance</TabsTrigger>
         </TabsList>
 
         {/* Assignments Tab */}
@@ -277,8 +251,7 @@ export default function Manager() {
             <CardHeader>
               <CardTitle>Bus & Driver Assignments</CardTitle>
               <CardDescription>
-                Current assignments for buses, drivers, and
-                routes
+                Current assignments for buses, drivers, and routes
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -299,9 +272,7 @@ export default function Manager() {
                       <TableCell>{assignment.bus}</TableCell>
                       <TableCell>{assignment.driver}</TableCell>
                       <TableCell>{assignment.route}</TableCell>
-                      <TableCell>
-                        {assignment.students}
-                      </TableCell>
+                      <TableCell>{assignment.students}</TableCell>
                       <TableCell>
                         <Badge
                           variant={
@@ -351,41 +322,26 @@ export default function Manager() {
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>
-                        Create New Route
-                      </DialogTitle>
+                      <DialogTitle>Create New Route</DialogTitle>
                       <DialogDescription>
                         Define a new bus route with stops
                       </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
                       <div className="space-y-2">
-                        <Label htmlFor="routeName">
-                          Route Name
-                        </Label>
+                        <Label htmlFor="routeName">Route Name</Label>
                         <Input
                           id="routeName"
                           placeholder="e.g., Route E - Central District"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="stops">
-                          Number of Stops
-                        </Label>
-                        <Input
-                          id="stops"
-                          type="number"
-                          placeholder="12"
-                        />
+                        <Label htmlFor="stops">Number of Stops</Label>
+                        <Input id="stops" type="number" placeholder="12" />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="distance">
-                          Distance (km)
-                        </Label>
-                        <Input
-                          id="distance"
-                          placeholder="18.5"
-                        />
+                        <Label htmlFor="distance">Distance (km)</Label>
+                        <Input id="distance" placeholder="18.5" />
                       </div>
                       <Button className="w-full bg-blue-600 hover:bg-blue-700">
                         Create Route
@@ -402,39 +358,26 @@ export default function Manager() {
                     key={route.id}
                     className="p-4 rounded-lg border border-gray-200 bg-white"
                   >
-                    <h3 className="text-gray-900 mb-3">
-                      {route.name}
-                    </h3>
+                    <h3 className="text-gray-900 mb-3">{route.name}</h3>
                     <div className="space-y-2 text-gray-600">
                       <div className="flex items-center justify-between">
                         <span>Stops:</span>
-                        <span className="text-gray-900">
-                          {route.stops}
-                        </span>
+                        <span className="text-gray-900">{route.stops}</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span>Distance:</span>
-                        <span className="text-gray-900">
-                          {route.distance}
-                        </span>
+                        <span className="text-gray-900">{route.distance}</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span>Avg Time:</span>
-                        <span className="text-gray-900">
-                          {route.avgTime}
-                        </span>
+                        <span className="text-gray-900">{route.avgTime}</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span>Assigned Buses:</span>
-                        <span className="text-gray-900">
-                          {route.buses}
-                        </span>
+                        <span className="text-gray-900">{route.buses}</span>
                       </div>
                     </div>
-                    <Button
-                      variant="outline"
-                      className="w-full mt-4"
-                    >
+                    <Button variant="outline" className="w-full mt-4">
                       View Details
                     </Button>
                   </div>
@@ -487,9 +430,7 @@ export default function Manager() {
                         <Badge
                           variant="default"
                           className={
-                            record.rate >= 93
-                              ? "bg-green-500"
-                              : "bg-orange-500"
+                            record.rate >= 93 ? "bg-green-500" : "bg-orange-500"
                           }
                         >
                           {record.rate >= 93 ? "Good" : "Fair"}

@@ -118,12 +118,9 @@ export default function Dashboard() {
     <div className="space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-gray-900 mb-1">
-          Dashboard Overview
-        </h1>
+        <h1 className="text-gray-900 mb-1">Dashboard Overview</h1>
         <p className="text-gray-600">
-          Welcome back! Here's what's happening with your fleet
-          today.
+          Welcome back! Here's what's happening with your fleet today.
         </p>
       </div>
 
@@ -136,19 +133,11 @@ export default function Dashboard() {
               <CardContent className="p-6">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <p className="text-gray-600 mb-1">
-                      {stat.title}
-                    </p>
-                    <p className="text-gray-900 mb-1">
-                      {stat.value}
-                    </p>
-                    <p className="text-gray-500">
-                      {stat.subtitle}
-                    </p>
+                    <p className="text-gray-600 mb-1">{stat.title}</p>
+                    <p className="text-gray-900 mb-1">{stat.value}</p>
+                    <p className="text-gray-500">{stat.subtitle}</p>
                   </div>
-                  <div
-                    className={`${stat.color} p-3 rounded-lg`}
-                  >
+                  <div className={`${stat.color} p-3 rounded-lg`}>
                     <Icon className="w-6 h-6 text-white" />
                   </div>
                 </div>
@@ -189,16 +178,10 @@ export default function Dashboard() {
                   />
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-gray-900">
-                        {alert.bus}
-                      </span>
-                      <span className="text-gray-500">
-                        {alert.time}
-                      </span>
+                      <span className="text-gray-900">{alert.bus}</span>
+                      <span className="text-gray-500">{alert.time}</span>
                     </div>
-                    <p className="text-gray-600">
-                      {alert.message}
-                    </p>
+                    <p className="text-gray-600">{alert.message}</p>
                   </div>
                 </div>
               ))}
@@ -210,26 +193,17 @@ export default function Dashboard() {
         <Card className="border-gray-200">
           <CardHeader>
             <CardTitle>Route Performance</CardTitle>
-            <CardDescription>
-              On-time delivery rates
-            </CardDescription>
+            <CardDescription>On-time delivery rates</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {busPerformance.map((item, index) => (
                 <div key={index}>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-gray-700">
-                      {item.route}
-                    </span>
-                    <span className="text-gray-900">
-                      {item.onTime}%
-                    </span>
+                    <span className="text-gray-700">{item.route}</span>
+                    <span className="text-gray-900">{item.onTime}%</span>
                   </div>
-                  <Progress
-                    value={item.onTime}
-                    className="h-2"
-                  />
+                  <Progress value={item.onTime} className="h-2" />
                 </div>
               ))}
             </div>
@@ -241,9 +215,7 @@ export default function Dashboard() {
       <Card className="border-gray-200">
         <CardHeader>
           <CardTitle>Today's Schedule</CardTitle>
-          <CardDescription>
-            Upcoming routes and departure times
-          </CardDescription>
+          <CardDescription>Upcoming routes and departure times</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -254,27 +226,17 @@ export default function Dashboard() {
               >
                 <div className="flex items-center gap-2 mb-2">
                   <Clock className="w-4 h-4 text-blue-600" />
-                  <span className="text-gray-900">
-                    {schedule.time}
-                  </span>
+                  <span className="text-gray-900">{schedule.time}</span>
                 </div>
-                <p className="text-gray-700 mb-2">
-                  {schedule.route}
-                </p>
+                <p className="text-gray-700 mb-2">{schedule.route}</p>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-600">
-                    {schedule.buses} buses
-                  </span>
+                  <span className="text-gray-600">{schedule.buses} buses</span>
                   <Badge
                     variant={
-                      schedule.status === "On Time"
-                        ? "default"
-                        : "secondary"
+                      schedule.status === "On Time" ? "default" : "secondary"
                     }
                     className={
-                      schedule.status === "On Time"
-                        ? "bg-green-500"
-                        : ""
+                      schedule.status === "On Time" ? "bg-green-500" : ""
                     }
                   >
                     {schedule.status}

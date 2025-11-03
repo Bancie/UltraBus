@@ -124,9 +124,7 @@ export default function Students() {
   ];
 
   const filteredStudents = students.filter((student) =>
-    student.name
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase()),
+    student.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
@@ -134,18 +132,14 @@ export default function Students() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-gray-900 mb-1">
-            Student Management
-          </h1>
+          <h1 className="text-gray-900 mb-1">Student Management</h1>
           <p className="text-gray-600">
             View and manage all registered students
           </p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">Export List</Button>
-          <Button className="bg-blue-600 hover:bg-blue-700">
-            Add Student
-          </Button>
+          <Button className="bg-blue-600 hover:bg-blue-700">Add Student</Button>
         </div>
       </div>
 
@@ -171,9 +165,7 @@ export default function Students() {
         </Card>
         <Card className="border-gray-200">
           <CardContent className="p-4">
-            <p className="text-gray-600 mb-1">
-              Attendance Rate
-            </p>
+            <p className="text-gray-600 mb-1">Attendance Rate</p>
             <p className="text-gray-900">92.4%</p>
           </CardContent>
         </Card>
@@ -183,9 +175,7 @@ export default function Students() {
       <Card className="border-gray-200">
         <CardHeader>
           <CardTitle>Student Directory</CardTitle>
-          <CardDescription>
-            Search and manage student records
-          </CardDescription>
+          <CardDescription>Search and manage student records</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="mb-4">
@@ -234,9 +224,7 @@ export default function Students() {
                     <TableCell>
                       <div>
                         <div>{student.bus}</div>
-                        <div className="text-gray-500">
-                          {student.route}
-                        </div>
+                        <div className="text-gray-500">{student.route}</div>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -248,9 +236,7 @@ export default function Students() {
                     <TableCell>
                       <div>
                         <div>{student.parent}</div>
-                        <div className="text-gray-500">
-                          {student.phone}
-                        </div>
+                        <div className="text-gray-500">{student.phone}</div>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -280,21 +266,13 @@ export default function Students() {
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="text-gray-900">
-                        {student.name}
-                      </p>
-                      <p className="text-gray-600">
-                        {student.grade}
-                      </p>
+                      <p className="text-gray-900">{student.name}</p>
+                      <p className="text-gray-600">{student.grade}</p>
                     </div>
                   </div>
                   <Badge
-                    variant={
-                      student.present ? "default" : "secondary"
-                    }
-                    className={
-                      student.present ? "bg-green-500" : ""
-                    }
+                    variant={student.present ? "default" : "secondary"}
+                    className={student.present ? "bg-green-500" : ""}
                   >
                     {student.present ? "Present" : "Absent"}
                   </Badge>

@@ -91,18 +91,14 @@ export default function Drivers() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-gray-900 mb-1">
-            Driver Management
-          </h1>
+          <h1 className="text-gray-900 mb-1">Driver Management</h1>
           <p className="text-gray-600">
             View and manage all registered drivers
           </p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">Export List</Button>
-          <Button className="bg-blue-600 hover:bg-blue-700">
-            Add Driver
-          </Button>
+          <Button className="bg-blue-600 hover:bg-blue-700">Add Driver</Button>
         </div>
       </div>
 
@@ -153,26 +149,18 @@ export default function Drivers() {
                     <CardTitle className="text-gray-900">
                       {driver.name}
                     </CardTitle>
-                    <CardDescription>
-                      {driver.license}
-                    </CardDescription>
+                    <CardDescription>{driver.license}</CardDescription>
                   </div>
                 </div>
                 <Badge
                   variant={
-                    driver.status === "on-duty"
-                      ? "default"
-                      : "secondary"
+                    driver.status === "on-duty" ? "default" : "secondary"
                   }
                   className={
-                    driver.status === "on-duty"
-                      ? "bg-green-500"
-                      : "bg-gray-500"
+                    driver.status === "on-duty" ? "bg-green-500" : "bg-gray-500"
                   }
                 >
-                  {driver.status === "on-duty"
-                    ? "On Duty"
-                    : "Off Duty"}
+                  {driver.status === "on-duty" ? "On Duty" : "Off Duty"}
                 </Badge>
               </div>
             </CardHeader>
@@ -193,19 +181,11 @@ export default function Drivers() {
                 <span>Rating: {driver.rating} ⭐</span>
               </div>
               <div className="pt-3 flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1"
-                >
+                <Button variant="outline" size="sm" className="flex-1">
                   <Phone className="w-4 h-4 mr-1" />
                   Call
                 </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1"
-                >
+                <Button variant="outline" size="sm" className="flex-1">
                   <Mail className="w-4 h-4 mr-1" />
                   Email
                 </Button>

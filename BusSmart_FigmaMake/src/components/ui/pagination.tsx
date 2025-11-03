@@ -8,19 +8,13 @@ import {
 import { cn } from "./utils";
 import { Button, buttonVariants } from "./button";
 
-function Pagination({
-  className,
-  ...props
-}: React.ComponentProps<"nav">) {
+function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   return (
     <nav
       role="navigation"
       aria-label="pagination"
       data-slot="pagination"
-      className={cn(
-        "mx-auto flex w-full justify-center",
-        className,
-      )}
+      className={cn("mx-auto flex w-full justify-center", className)}
       {...props}
     />
   );
@@ -33,18 +27,13 @@ function PaginationContent({
   return (
     <ul
       data-slot="pagination-content"
-      className={cn(
-        "flex flex-row items-center gap-1",
-        className,
-      )}
+      className={cn("flex flex-row items-center gap-1", className)}
       {...props}
     />
   );
 }
 
-function PaginationItem({
-  ...props
-}: React.ComponentProps<"li">) {
+function PaginationItem({ ...props }: React.ComponentProps<"li">) {
   return <li data-slot="pagination-item" {...props} />;
 }
 
@@ -118,10 +107,7 @@ function PaginationEllipsis({
     <span
       aria-hidden
       data-slot="pagination-ellipsis"
-      className={cn(
-        "flex size-9 items-center justify-center",
-        className,
-      )}
+      className={cn("flex size-9 items-center justify-center", className)}
       {...props}
     >
       <MoreHorizontalIcon className="size-4" />
