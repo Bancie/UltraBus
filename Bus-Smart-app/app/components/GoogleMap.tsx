@@ -1,6 +1,6 @@
-import * as React from "react";
-import { Card, CardHeader, CardContent, Box, Typography } from "@mui/material";
-import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from "@react-google-maps/api";
+import * as React from 'react';
+import { Card, CardHeader, CardContent, Box, Typography } from '@mui/material';
+import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
 
 type GoogleMapCardProps = {
   title?: string;
@@ -10,7 +10,7 @@ type GoogleMapCardProps = {
 };
 
 export default function GoogleMapCard({
-  title = "Vị trí",
+  title = 'Vị trí',
   center = { lat: 10.776889, lng: 106.700806 },
   zoom = 13,
   height = 400,
@@ -26,20 +26,22 @@ export default function GoogleMapCard({
       <Card>
         <CardHeader title={title} />
         <CardContent>
-          <Typography color="error">Không tải được Google Maps. Kiểm tra API key & billing.</Typography>
+          <Typography color="error">
+            Không tải được Google Maps. Kiểm tra API key & billing.
+          </Typography>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card sx={{ overflow: "hidden", borderRadius: 3 }}>
+    <Card sx={{ overflow: 'hidden', borderRadius: 3 }}>
       <CardHeader title={title} />
       <CardContent sx={{ p: 0 }}>
-        <Box sx={{ height, width: "100%" }}>
+        <Box sx={{ height, width: '100%' }}>
           {isLoaded ? (
             <GoogleMap
-              mapContainerStyle={{ width: "100%", height: "100%" }}
+              mapContainerStyle={{ width: '100%', height: '100%' }}
               center={center}
               zoom={zoom}
               options={{
@@ -47,7 +49,7 @@ export default function GoogleMapCard({
                 mapTypeControl: false,
                 streetViewControl: false,
                 zoomControl: true,
-                gestureHandling: "greedy",
+                gestureHandling: 'greedy',
               }}
             >
               <Marker position={center} onClick={() => setInfoOpen(true)} />

@@ -82,30 +82,28 @@ const AppBar = styled(MuiAppBar, {
   ],
 }));
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme }) => ({
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-    boxSizing: 'border-box',
-    variants: [
-      {
-        props: ({ open }) => open,
-        style: {
-          ...openedMixin(theme),
-          '& .MuiDrawer-paper': openedMixin(theme),
-        },
+const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(({ theme }) => ({
+  width: drawerWidth,
+  flexShrink: 0,
+  whiteSpace: 'nowrap',
+  boxSizing: 'border-box',
+  variants: [
+    {
+      props: ({ open }) => open,
+      style: {
+        ...openedMixin(theme),
+        '& .MuiDrawer-paper': openedMixin(theme),
       },
-      {
-        props: ({ open }) => !open,
-        style: {
-          ...closedMixin(theme),
-          '& .MuiDrawer-paper': closedMixin(theme),
-        },
+    },
+    {
+      props: ({ open }) => !open,
+      style: {
+        ...closedMixin(theme),
+        '& .MuiDrawer-paper': closedMixin(theme),
       },
-    ],
-  }),
-);
+    },
+  ],
+}));
 
 export function MiniDrawer() {
   const theme = useTheme();
@@ -122,11 +120,7 @@ export function MiniDrawer() {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar
-        position="fixed" 
-        open={open}
-        sx={{ backgroundColor: "#2F5755" }}
-        >
+      <AppBar position="fixed" open={open} sx={{ backgroundColor: '#2F5755' }}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -260,7 +254,7 @@ export function MiniDrawer() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 4, p: 3 }}>
         <DrawerHeader />
-          <BasicGrid />
+        <BasicGrid />
       </Box>
     </Box>
   );
