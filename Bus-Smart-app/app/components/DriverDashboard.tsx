@@ -1,25 +1,25 @@
-import * as React from "react";
-import GoogleMapCard from "../components/GoogleMap";
+import * as React from 'react';
+import GoogleMapCard from '../components/GoogleMap';
 
 type Stop = {
   id: number;
   name: string;
   eta: string;
-  status: "upcoming" | "arrived" | "missed";
+  status: 'upcoming' | 'arrived' | 'missed';
 };
 
 const upcomingStops: Stop[] = [
-  { id: 1, name: "Cổng chính Trường Đại học Sài Gòn", eta: "07:05", status: "arrived" },
-  { id: 2, name: "Ngã tư Lê Lợi", eta: "07:15", status: "upcoming" },
-  { id: 3, name: "Cổng chính Trường Đại học Sài Gòn Cơ sở 2", eta: "07:25", status: "upcoming" },
-  { id: 4, name: "Cổng chính Trường Đại học Sài Gòn Cơ sở 1", eta: "07:32", status: "missed" },
+  { id: 1, name: 'Cổng chính Trường Đại học Sài Gòn', eta: '07:05', status: 'arrived' },
+  { id: 2, name: 'Ngã tư Lê Lợi', eta: '07:15', status: 'upcoming' },
+  { id: 3, name: 'Cổng chính Trường Đại học Sài Gòn Cơ sở 2', eta: '07:25', status: 'upcoming' },
+  { id: 4, name: 'Cổng chính Trường Đại học Sài Gòn Cơ sở 1', eta: '07:32', status: 'missed' },
 ];
 
 export default function DriverDashboard() {
   const [doorLocked, setDoorLocked] = React.useState(true);
   const [attendanceChecked, setAttendanceChecked] = React.useState(false);
 
-  const completedStops = upcomingStops.filter((stop) => stop.status === "arrived").length;
+  const completedStops = upcomingStops.filter((stop) => stop.status === 'arrived').length;
   const totalStops = upcomingStops.length;
 
   return (
@@ -77,9 +77,9 @@ export default function DriverDashboard() {
                   <span className="muted"> - {stop.eta}</span>
                 </div>
                 <span className="driver-stops__badge">
-                  {stop.status === "arrived" && "Đã đón"}
-                  {stop.status === "upcoming" && "Sắp tới"}
-                  {stop.status === "missed" && "Chưa đến"}
+                  {stop.status === 'arrived' && 'Đã đón'}
+                  {stop.status === 'upcoming' && 'Sắp tới'}
+                  {stop.status === 'missed' && 'Chưa đến'}
                 </span>
               </li>
             ))}
@@ -94,10 +94,10 @@ export default function DriverDashboard() {
               className="driver-action"
               onClick={() => setDoorLocked((prev) => !prev)}
             >
-              <span>{doorLocked ? "🔒" : "🔓"}</span>
+              <span>{doorLocked ? '🔒' : '🔓'}</span>
               <div>
                 <strong>Cửa xe </strong>
-                <span className="muted">{doorLocked ? "Đã khóa" : "Đang mở"}</span>
+                <span className="muted">{doorLocked ? 'Đã khóa' : 'Đang mở'}</span>
               </div>
             </button>
             <button
@@ -105,11 +105,11 @@ export default function DriverDashboard() {
               className="driver-action"
               onClick={() => setAttendanceChecked((prev) => !prev)}
             >
-              <span>{attendanceChecked ? "✅" : "📝"}</span>
+              <span>{attendanceChecked ? '✅' : '📝'}</span>
               <div>
                 <strong>Điểm danh </strong>
                 <span className="muted">
-                  {attendanceChecked ? "Đã hoàn thành" : "Chưa thực hiện"}
+                  {attendanceChecked ? 'Đã hoàn thành' : 'Chưa thực hiện'}
                 </span>
               </div>
             </button>
