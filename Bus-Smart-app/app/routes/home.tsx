@@ -103,24 +103,24 @@ export default function Home() {
             </button>
 
             <button className="card card-select">
-              <NavLink to="/TaiXe" end>
-                <h3>Tài xế</h3>
-                <p className="muted">
-                  Nhận lộ trình hằng ngày, quản lý điểm đón trả và cập nhật trạng thái chuyến đi.
-                </p>
-              </NavLink>
+              <h3>Tài xế</h3>
+              <p className="muted">
+                Nhận lộ trình hằng ngày, quản lý điểm đón trả và cập nhật trạng thái chuyến đi.
+              </p>
             </button>
 
             <button className="card card-select">
-              <h3>Quản lý</h3>
-              <p className="muted">
-                Quản lý tuyến xe, tài xế, học sinh và giám sát hoạt động vận hành.
-              </p>
+              <NavLink to="/QuanLy" end>
+                <h3>Quản lý</h3>
+                <p className="muted">
+                  Quản lý tuyến xe, tài xế, học sinh và giám sát hoạt động vận hành.
+                </p>
+              </NavLink>
             </button>
           </div>
         </section>
 
-        <DriverDashboard />
+        {/* <DriverDashboard /> */}
 
         <section id="about" className="container">
           <h2>
