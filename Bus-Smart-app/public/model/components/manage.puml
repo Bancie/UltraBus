@@ -1,0 +1,177 @@
+@startuml
+left to right direction
+skinparam componentStyle rectangle
+skinparam defaultFontName Courier
+
+component "App.tsx" as App
+component "components/Layout.tsx" as Layout
+component "pages/Dashboard.tsx" as Dashboard
+component "pages/Manager.tsx" as Manager
+component "pages/Drivers.tsx" as Drivers
+component "pages/Students.tsx" as Students
+component "pages/RouteMap.tsx" as RouteMap
+component "pages/ParentPortal.tsx" as ParentPortal
+component "Inline Settings Panel" as SettingsView
+
+package "Shared UI" {
+  component "ui/button.tsx::Button" as Button
+  component "ui/input.tsx::Input" as Input
+  component "ui/badge.tsx::Badge" as Badge
+  component "ui/avatar.tsx::Avatar" as Avatar
+  component "ui/avatar.tsx::AvatarImage" as AvatarImage
+  component "ui/avatar.tsx::AvatarFallback" as AvatarFallback
+
+  component "ui/card.tsx::Card" as Card
+  component "ui/card.tsx::CardHeader" as CardHeader
+  component "ui/card.tsx::CardTitle" as CardTitle
+  component "ui/card.tsx::CardDescription" as CardDescription
+  component "ui/card.tsx::CardContent" as CardContent
+
+  component "ui/table.tsx::Table" as Table
+  component "ui/table.tsx::TableHeader" as TableHeader
+  component "ui/table.tsx::TableHead" as TableHead
+  component "ui/table.tsx::TableRow" as TableRow
+  component "ui/table.tsx::TableBody" as TableBody
+  component "ui/table.tsx::TableCell" as TableCell
+
+  component "ui/tabs.tsx::Tabs" as Tabs
+  component "ui/tabs.tsx::TabsList" as TabsList
+  component "ui/tabs.tsx::TabsTrigger" as TabsTrigger
+  component "ui/tabs.tsx::TabsContent" as TabsContent
+
+  component "ui/dialog.tsx::Dialog" as Dialog
+  component "ui/dialog.tsx::DialogTrigger" as DialogTrigger
+  component "ui/dialog.tsx::DialogContent" as DialogContent
+  component "ui/dialog.tsx::DialogHeader" as DialogHeader
+  component "ui/dialog.tsx::DialogTitle" as DialogTitle
+  component "ui/dialog.tsx::DialogDescription" as DialogDescription
+
+  component "ui/label.tsx::Label" as Label
+
+  component "ui/select.tsx::Select" as Select
+  component "ui/select.tsx::SelectTrigger" as SelectTrigger
+  component "ui/select.tsx::SelectValue" as SelectValue
+  component "ui/select.tsx::SelectContent" as SelectContent
+  component "ui/select.tsx::SelectItem" as SelectItem
+
+  component "ui/progress.tsx::Progress" as Progress
+  component "ui/switch.tsx::Switch" as Switch
+  component "ui/alert.tsx::Alert" as Alert
+  component "ui/alert.tsx::AlertTitle" as AlertTitle
+  component "ui/alert.tsx::AlertDescription" as AlertDescription
+}
+
+App --> Layout : wraps shell
+App --> Dashboard : currentPage="dashboard"
+App --> Manager : currentPage="manager"
+App --> Drivers : currentPage="drivers"
+App --> Students : currentPage="students"
+App --> RouteMap : currentPage="routes"
+App --> ParentPortal : currentPage="parents"
+App --> SettingsView : currentPage="settings"
+
+Layout --> Button : sidebar toggle & header actions
+Layout --> Input : search field
+Layout --> Badge : notification count
+Layout --> Avatar : user avatar
+Layout --> AvatarImage : user photo
+Layout --> AvatarFallback : initials fallback
+
+Dashboard --> Card : stats & panels
+Dashboard --> CardHeader
+Dashboard --> CardTitle
+Dashboard --> CardDescription
+Dashboard --> CardContent
+Dashboard --> Badge : schedule status
+Dashboard --> Progress : performance bars
+
+Manager --> Card : tab cards & stats
+Manager --> CardHeader
+Manager --> CardTitle
+Manager --> CardDescription
+Manager --> CardContent
+Manager --> Button : actions
+Manager --> Table
+Manager --> TableHeader
+Manager --> TableHead
+Manager --> TableRow
+Manager --> TableBody
+Manager --> TableCell
+Manager --> Badge : status chips
+Manager --> Tabs
+Manager --> TabsList
+Manager --> TabsTrigger
+Manager --> TabsContent
+Manager --> Dialog
+Manager --> DialogTrigger
+Manager --> DialogContent
+Manager --> DialogHeader
+Manager --> DialogTitle
+Manager --> DialogDescription
+Manager --> Input : dialog fields
+Manager --> Label : form labels
+Manager --> Select
+Manager --> SelectTrigger
+Manager --> SelectValue
+Manager --> SelectContent
+Manager --> SelectItem
+
+Drivers --> Card : driver cards
+Drivers --> CardHeader
+Drivers --> CardTitle
+Drivers --> CardDescription
+Drivers --> CardContent
+Drivers --> Badge : duty status
+Drivers --> Button : quick actions
+Drivers --> Avatar
+Drivers --> AvatarFallback
+
+Students --> Card : stats & directory
+Students --> CardHeader
+Students --> CardTitle
+Students --> CardDescription
+Students --> CardContent
+Students --> Button : export/add
+Students --> Input : search box
+Students --> Badge : attendance state
+Students --> Table
+Students --> TableHeader
+Students --> TableHead
+Students --> TableRow
+Students --> TableBody
+Students --> TableCell
+Students --> Switch : present toggle
+Students --> Avatar
+Students --> AvatarFallback
+
+RouteMap --> Card : map & activity panels
+RouteMap --> CardHeader
+RouteMap --> CardTitle
+RouteMap --> CardDescription
+RouteMap --> CardContent
+RouteMap --> Badge : active markers
+RouteMap --> Button : refresh & controls
+RouteMap --> Select
+RouteMap --> SelectTrigger
+RouteMap --> SelectValue
+RouteMap --> SelectContent
+RouteMap --> SelectItem
+
+ParentPortal --> Card : info panels
+ParentPortal --> CardHeader
+ParentPortal --> CardTitle
+ParentPortal --> CardDescription
+ParentPortal --> CardContent
+ParentPortal --> Badge : status labels
+ParentPortal --> Button : contact & actions
+ParentPortal --> Avatar
+ParentPortal --> AvatarFallback
+ParentPortal --> Alert : live bus status
+ParentPortal --> AlertTitle
+ParentPortal --> AlertDescription
+
+note right of SettingsView
+  Inline JSX placeholder (div, h1, p)
+end note
+
+@enduml
