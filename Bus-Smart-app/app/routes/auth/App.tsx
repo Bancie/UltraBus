@@ -6,11 +6,13 @@ import { FeatureCard } from '~/components/login/FeatureCard';
 import { RolePickerModal } from '~/components/login/RolePickerModal';
 import { LoginForm } from '~/components/login/LoginForm';
 import { Footer } from '~/components/login/Footer';
+import { useNavigate } from 'react-router';
 
 type Page = 'home' | 'login';
 type Role = 'manager' | 'driver' | 'parent' | 'student' | null;
 
 export default function App() {
+  const navigate = useNavigate();
   const [page, setPage] = useState<Page>('home');
   const [selectedRole, setSelectedRole] = useState<Role>(null);
   const [showRolePicker, setShowRolePicker] = useState(false);
@@ -34,7 +36,7 @@ export default function App() {
   const handleLogin = () => {
     // For manager role, navigate to /manager (not designed yet)
     if (selectedRole === 'manager') {
-      window.location.href = '/manager';
+      navigate('/home');
     } else {
       // For other roles, would navigate to their respective dashboards
       alert(`Login successful for ${selectedRole}`);
