@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { MapPin, Smartphone, Settings } from 'lucide-react';
-import { NavBar } from '~/components/components/NavBar';
-import { Hero } from '~/components/components/Hero';
-import { FeatureCard } from '~/components/components/FeatureCard';
-import { RolePickerModal } from '~/components/components/RolePickerModal';
-import { LoginForm } from '~/components/components/LoginForm';
-import { Footer } from '~/components/components/Footer';
+import { NavBar } from '~/components/login/NavBar';
+import { Hero } from '~/components/login/Hero';
+import { FeatureCard } from '~/components/login/FeatureCard';
+import { RolePickerModal } from '~/components/login/RolePickerModal';
+import { LoginForm } from '~/components/login/LoginForm';
+import { Footer } from '~/components/login/Footer';
 
 type Page = 'home' | 'login';
 type Role = 'manager' | 'driver' | 'parent' | 'student' | null;
