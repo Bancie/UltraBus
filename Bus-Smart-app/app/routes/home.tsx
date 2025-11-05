@@ -1,11 +1,10 @@
 import type { Route } from './+types/home';
 import { MiniDrawer } from '~/components/khoi/Drawer';
-
+import { useState } from 'react';
 import * as React from 'react';
 import stylesHref from '../styles/home.css?url';
 import { NavLink } from 'react-router';
 import DriverDashboard from '~/components/DriverDashboard';
-import Trang from './QuanLyApp';
 import { useNavigate } from 'react-router';
 
 export function meta({}: Route.MetaArgs) {
@@ -112,12 +111,10 @@ export default function Home() {
             </button>
 
             <button className="card card-select">
-              <NavLink to="Bus-Smart-app/app/routes/QuanLyApp.tsx" end>
-                <h3>Quản lý</h3>
-                <p className="muted">
-                  Quản lý tuyến xe, tài xế, học sinh và giám sát hoạt động vận hành.
-                </p>
-              </NavLink>
+              <h3>Quản lý</h3>
+              <p className="muted">
+                Quản lý tuyến xe, tài xế, học sinh và giám sát hoạt động vận hành.
+              </p>
             </button>
           </div>
         </section>
