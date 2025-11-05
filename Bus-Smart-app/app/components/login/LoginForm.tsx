@@ -6,11 +6,11 @@ import { Label } from './ui/label';
 import { Checkbox } from './ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 
-interface LoginFormProps {
+type LoginFormProps = {
   role: 'manager' | 'driver' | 'parent' | 'student';
   onBack: () => void;
   onLogin: () => void;
-}
+};
 
 const roleConfig = {
   manager: {
