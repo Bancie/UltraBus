@@ -2,12 +2,12 @@ import { type LucideIcon } from 'lucide-react';
 import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 
-interface RoleCardProps {
+type RoleCardProps = {
   icon: LucideIcon;
   title: string;
   description: string;
   onSelect: () => void;
-}
+};
 
 export function RoleCard({ icon: Icon, title, description, onSelect }: RoleCardProps) {
   return (

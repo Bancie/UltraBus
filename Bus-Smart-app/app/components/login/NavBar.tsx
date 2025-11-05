@@ -1,9 +1,7 @@
-import { Bus } from "lucide-react";
-import { Button } from "./ui/button";
+import { Bus } from 'lucide-react';
+import { Button } from './ui/button';
 
-interface NavBarProps {
-  onLoginClick: () => void;
-}
+type NavBarProps = { onLoginClick: () => void };
 
 export function NavBar({ onLoginClick }: NavBarProps) {
   return (

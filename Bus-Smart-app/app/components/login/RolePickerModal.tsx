@@ -1,57 +1,38 @@
-import {
-  Briefcase,
-  Car,
-  Users,
-  GraduationCap,
-} from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "./ui/dialog";
-import { RoleCard } from "./RoleCard";
+import { Briefcase, Car, Users, GraduationCap } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
+import { RoleCard } from './RoleCard';
 
-interface RolePickerModalProps {
+type RolePickerModalProps = {
   open: boolean;
   onClose: () => void;
-  onSelectRole: (
-    role: "manager" | "driver" | "parent" | "student",
-  ) => void;
-}
+  onSelectRole: (role: 'manager' | 'driver' | 'parent' | 'student') => void;
+};
 
-export function RolePickerModal({
-  open,
-  onClose,
-  onSelectRole,
-}: RolePickerModalProps) {
+export function RolePickerModal({ open, onClose, onSelectRole }: RolePickerModalProps) {
   const roles = [
     {
-      id: "manager" as const,
+      id: 'manager' as const,
       icon: Briefcase,
-      title: "Manager",
-      description: "Manage routes, buses, drivers, students.",
+      title: 'Manager',
+      description: 'Manage routes, buses, drivers, students.',
     },
     {
-      id: "driver" as const,
+      id: 'driver' as const,
       icon: Car,
-      title: "Driver",
-      description:
-        "View assigned routes, start/stop trips, report issues.",
+      title: 'Driver',
+      description: 'View assigned routes, start/stop trips, report issues.',
     },
     {
-      id: "parent" as const,
+      id: 'parent' as const,
       icon: Users,
-      title: "Parent",
-      description:
-        "Track child's bus and receive notifications.",
+      title: 'Parent',
+      description: "Track child's bus and receive notifications.",
     },
     {
-      id: "student" as const,
+      id: 'student' as const,
       icon: GraduationCap,
-      title: "Student",
-      description: "Check schedule and stop information.",
+      title: 'Student',
+      description: 'Check schedule and stop information.',
     },
   ];
 
@@ -59,9 +40,7 @@ export function RolePickerModal({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto rounded-xl">
         <DialogHeader>
-          <DialogTitle className="text-indigo-900">
-            Choose your role
-          </DialogTitle>
+          <DialogTitle className="text-indigo-900">Choose your role</DialogTitle>
           <DialogDescription className="text-gray-600">
             Select the role that best describes you to continue.
           </DialogDescription>
