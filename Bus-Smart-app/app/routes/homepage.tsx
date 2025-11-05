@@ -36,7 +36,7 @@ export default function App() {
   const handleLogin = () => {
     // For manager role, navigate to /manager (not designed yet)
     if (selectedRole === 'manager') {
-      navigate('/home');
+      navigate('/App');
     } else {
       // For other roles, would navigate to their respective dashboards
       alert(`Login successful for ${selectedRole}`);
