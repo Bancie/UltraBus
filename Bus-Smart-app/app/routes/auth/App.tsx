@@ -1,17 +1,17 @@
-import { useState } from "react";
-import { MapPin, Smartphone, Settings } from "lucide-react";
-import { NavBar } from "./components/NavBar";
-import { Hero } from "./components/Hero";
-import { FeatureCard } from "./components/FeatureCard";
-import { RolePickerModal } from "./components/RolePickerModal";
-import { LoginForm } from "./components/LoginForm";
-import { Footer } from "./components/Footer";
+import { useState } from 'react';
+import { MapPin, Smartphone, Settings } from 'lucide-react';
+import { NavBar } from '~/components/components/NavBar';
+import { Hero } from '~/components/components/Hero';
+import { FeatureCard } from '~/components/components/FeatureCard';
+import { RolePickerModal } from '~/components/components/RolePickerModal';
+import { LoginForm } from '~/components/components/LoginForm';
+import { Footer } from '~/components/components/Footer';
 
-type Page = "home" | "login";
-type Role = "manager" | "driver" | "parent" | "student" | null;
+type Page = 'home' | 'login';
+type Role = 'manager' | 'driver' | 'parent' | 'student' | null;
 
 export default function App() {
-  const [page, setPage] = useState<Page>("home");
+  const [page, setPage] = useState<Page>('home');
   const [selectedRole, setSelectedRole] = useState<Role>(null);
   const [showRolePicker, setShowRolePicker] = useState(false);
 
@@ -19,38 +19,30 @@ export default function App() {
     setShowRolePicker(true);
   };
 
-  const handleRoleSelect = (
-    role: "manager" | "driver" | "parent" | "student",
-  ) => {
+  const handleRoleSelect = (role: 'manager' | 'driver' | 'parent' | 'student') => {
     setSelectedRole(role);
     setShowRolePicker(false);
-    setPage("login");
+    setPage('login');
   };
 
   const handleBackToRolePicker = () => {
     setSelectedRole(null);
-    setPage("home");
+    setPage('home');
     setShowRolePicker(true);
   };
 
   const handleLogin = () => {
     // For manager role, navigate to /manager (not designed yet)
-    if (selectedRole === "manager") {
-      window.location.href = "/manager";
+    if (selectedRole === 'manager') {
+      window.location.href = '/manager';
     } else {
       // For other roles, would navigate to their respective dashboards
       alert(`Login successful for ${selectedRole}`);
     }
   };
 
-  if (page === "login" && selectedRole) {
-    return (
-      <LoginForm
-        role={selectedRole}
-        onBack={handleBackToRolePicker}
-        onLogin={handleLogin}
-      />
-    );
+  if (page === 'login' && selectedRole) {
+    return <LoginForm role={selectedRole} onBack={handleBackToRolePicker} onLogin={handleLogin} />;
   }
 
   return (
@@ -64,18 +56,13 @@ export default function App() {
         <Hero onLoginClick={handleLoginClick} />
 
         {/* Features Section */}
-        <section
-          id="features"
-          className="w-full py-16 sm:py-20 lg:py-24 bg-white"
-        >
+        <section id="features" className="w-full py-16 sm:py-20 lg:py-24 bg-white">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-indigo-900 mb-4">
-                Everything you need
-              </h2>
+              <h2 className="text-indigo-900 mb-4">Everything you need</h2>
               <p className="text-gray-600 max-w-2xl mx-auto">
-                Bus Smart brings together drivers, parents, and
-                administrators on one simple platform.
+                Bus Smart brings together drivers, parents, and administrators on one simple
+                platform.
               </p>
             </div>
 

@@ -1,5 +1,5 @@
-import { LucideIcon } from "lucide-react";
-import { Card, CardContent } from "./ui/card";
+import { type LucideIcon } from 'lucide-react';
+import { Card, CardContent } from './ui/card';
 
 interface FeatureCardProps {
   icon: LucideIcon;
@@ -7,11 +7,7 @@ interface FeatureCardProps {
   description: string;
 }
 
-export function FeatureCard({
-  icon: Icon,
-  title,
-  description,
-}: FeatureCardProps) {
+export function FeatureCard({ icon: Icon, title, description }: FeatureCardProps) {
   return (
     <Card className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-100">
       <CardContent className="p-6 sm:p-8 text-center">
