@@ -1,10 +1,11 @@
 import type { Route } from './+types/home';
 import { MiniDrawer } from '~/components/khoi/Drawer';
-
+import { useState } from 'react';
 import * as React from 'react';
 import stylesHref from '../styles/home.css?url';
 import { NavLink } from 'react-router';
 import DriverDashboard from '~/components/DriverDashboard';
+import { useNavigate } from 'react-router';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -103,12 +104,10 @@ export default function Home() {
             </button>
 
             <button className="card card-select">
-              <NavLink to="/TaiXe" end>
-                <h3>Tài xế</h3>
-                <p className="muted">
-                  Nhận lộ trình hằng ngày, quản lý điểm đón trả và cập nhật trạng thái chuyến đi.
-                </p>
-              </NavLink>
+              <h3>Tài xế</h3>
+              <p className="muted">
+                Nhận lộ trình hằng ngày, quản lý điểm đón trả và cập nhật trạng thái chuyến đi.
+              </p>
             </button>
 
             <button className="card card-select">
@@ -120,7 +119,7 @@ export default function Home() {
           </div>
         </section>
 
-        <DriverDashboard />
+        {/* <DriverDashboard /> */}
 
         <section id="about" className="container">
           <h2>
