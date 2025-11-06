@@ -1,3 +1,4 @@
+import type { Route } from './+types/App';
 import { useState } from 'react';
 import Layout from '~/components/components/Layout';
 import Dashboard from '~/components/components/pages/Dashboard';
@@ -6,6 +7,13 @@ import Drivers from '~/components/components/pages/Drivers';
 import Students from '~/components/components/pages/Students';
 import RouteMap from '~/components/components/pages/RouteMap';
 import ParentPortal from '~/components/components/pages/ParentPortal';
+import indexStylesHref from '~/index.css?url';
+import globalStylesHref from '~/styles/globals.css?url';
+
+export const links: Route.LinksFunction = () => [
+  { rel: 'stylesheet', href: indexStylesHref },
+  { rel: 'stylesheet', href: globalStylesHref },
+];
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
