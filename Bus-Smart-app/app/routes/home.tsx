@@ -1,4 +1,4 @@
-import type { Route } from './+types/home';
+// import type { Route } from './+types/home';
 import { MiniDrawer } from '~/components/khoi/Drawer';
 import { useState } from 'react';
 import * as React from 'react';
@@ -6,13 +6,6 @@ import stylesHref from '../styles/home.css?url';
 import { NavLink } from 'react-router';
 import DriverDashboard from '~/components/DriverDashboard';
 import { useNavigate } from 'react-router';
-
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: 'Bus Smart 1.0' },
-    { name: 'description', content: 'Welcome to Bus Smart 1.0!' },
-  ];
-}
 
 export const links = () => [{ rel: 'stylesheet', href: stylesHref }];
 

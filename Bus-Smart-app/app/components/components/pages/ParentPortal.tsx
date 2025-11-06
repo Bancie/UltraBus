@@ -1,76 +1,90 @@
-import { MapPin, Clock, Phone, AlertCircle, User, Navigation, CheckCircle } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { Button } from '../ui/button';
-import { Avatar, AvatarFallback } from '../ui/avatar';
-import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import {
+  MapPin,
+  Clock,
+  Phone,
+  AlertCircle,
+  User,
+  Navigation,
+  CheckCircle,
+} from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Avatar, AvatarFallback } from "../ui/avatar";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 export default function ParentPortal() {
   const childInfo = {
-    name: 'Nguyễn Minh Anh',
-    grade: 'Lớp 5',
-    studentId: 'ST-2847',
-    school: 'Lincoln Elementary School',
-    bus: 'Bus #12',
-    route: 'Route A - North District',
+    name: "Emma Wilson",
+    grade: "5th Grade",
+    studentId: "ST-2847",
+    school: "Lincoln Elementary School",
+    bus: "Bus #12",
+    route: "Route A - North District",
   };
 
   const busInfo = {
-    driver: 'Nguyễn Văn An',
-    phone: '+1 (555) 123-4567',
-    license: 'DL-28475',
-    currentLocation: 'Cedar Lane & Oak Street',
-    nextStop: 'Your Pickup Location',
-    eta: '8 minutes',
-    status: 'on-time',
-    speed: '35 km/h',
+    driver: "John Smith",
+    phone: "+1 (555) 123-4567",
+    license: "DL-28475",
+    currentLocation: "Cedar Lane & Oak Street",
+    nextStop: "Your Pickup Location",
+    eta: "8 minutes",
+    status: "on-time",
+    speed: "35 km/h",
   };
 
   const schedule = {
     morning: {
-      pickup: '7:18 AM',
-      arrival: '7:45 AM',
-      location: '123 Oak Street',
+      pickup: "7:18 AM",
+      arrival: "7:45 AM",
+      location: "123 Oak Street",
     },
     afternoon: {
-      departure: '2:30 PM',
-      dropoff: '2:58 PM',
-      location: '123 Oak Street',
+      departure: "2:30 PM",
+      dropoff: "2:58 PM",
+      location: "123 Oak Street",
     },
   };
 
   const recentTrips = [
     {
       id: 1,
-      date: '2025-11-02',
-      type: 'Morning',
-      status: 'on-time',
-      pickup: '7:18 AM',
-      arrival: '7:43 AM',
+      date: "2025-11-02",
+      type: "Morning",
+      status: "on-time",
+      pickup: "7:18 AM",
+      arrival: "7:43 AM",
     },
     {
       id: 2,
-      date: '2025-11-01',
-      type: 'Afternoon',
-      status: 'on-time',
-      departure: '2:30 PM',
-      dropoff: '2:56 PM',
+      date: "2025-11-01",
+      type: "Afternoon",
+      status: "on-time",
+      departure: "2:30 PM",
+      dropoff: "2:56 PM",
     },
     {
       id: 3,
-      date: '2025-11-01',
-      type: 'Morning',
-      status: 'delayed',
-      pickup: '7:18 AM',
-      arrival: '7:52 AM',
+      date: "2025-11-01",
+      type: "Morning",
+      status: "delayed",
+      pickup: "7:18 AM",
+      arrival: "7:52 AM",
     },
     {
       id: 4,
-      date: '2025-10-31',
-      type: 'Afternoon',
-      status: 'on-time',
-      departure: '2:30 PM',
-      dropoff: '2:58 PM',
+      date: "2025-10-31",
+      type: "Afternoon",
+      status: "on-time",
+      departure: "2:30 PM",
+      dropoff: "2:58 PM",
     },
   ];
 
@@ -79,7 +93,9 @@ export default function ParentPortal() {
       {/* Page Header */}
       <div>
         <h1 className="text-gray-900 mb-1">Parent Portal</h1>
-        <p className="text-gray-600">Track your child's bus location and schedule</p>
+        <p className="text-gray-600">
+          Track your child's bus location and schedule
+        </p>
       </div>
 
       {/* Active Alert */}
@@ -87,8 +103,8 @@ export default function ParentPortal() {
         <Navigation className="h-4 w-4 text-blue-600" />
         <AlertTitle className="text-blue-900">Bus is on the way!</AlertTitle>
         <AlertDescription className="text-blue-700">
-          Bus #{busInfo.driver.split(' ')[0]} is approaching your pickup location. Estimated arrival
-          in {busInfo.eta}.
+          Bus #{busInfo.driver.split(" ")[0]} is approaching your pickup
+          location. Estimated arrival in {busInfo.eta}.
         </AlertDescription>
       </Alert>
 
@@ -99,16 +115,18 @@ export default function ParentPortal() {
           <Card className="border-gray-200">
             <CardHeader>
               <CardTitle>Student Information</CardTitle>
-              <CardDescription>Your child's details and assignment</CardDescription>
+              <CardDescription>
+                Your child's details and assignment
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-start gap-4">
                 <Avatar className="h-16 w-16">
                   <AvatarFallback className="bg-blue-600 text-white text-xl">
                     {childInfo.name
-                      .split(' ')
+                      .split(" ")
                       .map((n) => n[0])
-                      .join('')}
+                      .join("")}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -147,7 +165,9 @@ export default function ParentPortal() {
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle>Live Bus Tracking</CardTitle>
-                  <CardDescription>Current location of your child's bus</CardDescription>
+                  <CardDescription>
+                    Current location of your child's bus
+                  </CardDescription>
                 </div>
                 <Badge className="bg-green-500">Active</Badge>
               </div>
@@ -238,7 +258,7 @@ export default function ParentPortal() {
                     className="flex items-center justify-between p-3 rounded-lg bg-gray-50"
                   >
                     <div className="flex items-center gap-3">
-                      {trip.status === 'on-time' ? (
+                      {trip.status === "on-time" ? (
                         <CheckCircle className="w-5 h-5 text-green-500" />
                       ) : (
                         <AlertCircle className="w-5 h-5 text-orange-500" />
@@ -248,17 +268,23 @@ export default function ParentPortal() {
                           {trip.date} - {trip.type}
                         </p>
                         <p className="text-gray-600">
-                          {trip.type === 'Morning'
+                          {trip.type === "Morning"
                             ? `Pickup: ${trip.pickup} → Arrival: ${trip.arrival}`
                             : `Departure: ${trip.departure} → Dropoff: ${trip.dropoff}`}
                         </p>
                       </div>
                     </div>
                     <Badge
-                      variant={trip.status === 'on-time' ? 'default' : 'secondary'}
-                      className={trip.status === 'on-time' ? 'bg-green-500' : 'bg-orange-500'}
+                      variant={
+                        trip.status === "on-time" ? "default" : "secondary"
+                      }
+                      className={
+                        trip.status === "on-time"
+                          ? "bg-green-500"
+                          : "bg-orange-500"
+                      }
                     >
-                      {trip.status === 'on-time' ? 'On Time' : 'Delayed'}
+                      {trip.status === "on-time" ? "On Time" : "Delayed"}
                     </Badge>
                   </div>
                 ))}
@@ -280,9 +306,9 @@ export default function ParentPortal() {
                 <Avatar className="h-12 w-12">
                   <AvatarFallback className="bg-blue-600 text-white">
                     {busInfo.driver
-                      .split(' ')
+                      .split(" ")
                       .map((n) => n[0])
-                      .join('')}
+                      .join("")}
                   </AvatarFallback>
                 </Avatar>
                 <div>
@@ -312,11 +338,15 @@ export default function ParentPortal() {
                 <div className="space-y-1 text-gray-700">
                   <div className="flex justify-between">
                     <span>Pickup:</span>
-                    <span className="text-gray-900">{schedule.morning.pickup}</span>
+                    <span className="text-gray-900">
+                      {schedule.morning.pickup}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Arrival:</span>
-                    <span className="text-gray-900">{schedule.morning.arrival}</span>
+                    <span className="text-gray-900">
+                      {schedule.morning.arrival}
+                    </span>
                   </div>
                   <div className="flex items-start gap-1 pt-1">
                     <MapPin className="w-3 h-3 mt-0.5" />
@@ -333,15 +363,21 @@ export default function ParentPortal() {
                 <div className="space-y-1 text-gray-700">
                   <div className="flex justify-between">
                     <span>Departure:</span>
-                    <span className="text-gray-900">{schedule.afternoon.departure}</span>
+                    <span className="text-gray-900">
+                      {schedule.afternoon.departure}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Dropoff:</span>
-                    <span className="text-gray-900">{schedule.afternoon.dropoff}</span>
+                    <span className="text-gray-900">
+                      {schedule.afternoon.dropoff}
+                    </span>
                   </div>
                   <div className="flex items-start gap-1 pt-1">
                     <MapPin className="w-3 h-3 mt-0.5" />
-                    <span className="flex-1">{schedule.afternoon.location}</span>
+                    <span className="flex-1">
+                      {schedule.afternoon.location}
+                    </span>
                   </div>
                 </div>
               </div>

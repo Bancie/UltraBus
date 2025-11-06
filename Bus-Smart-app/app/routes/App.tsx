@@ -9,6 +9,7 @@ import RouteMap from '~/components/app/pages/RouteMap';
 import ParentPortal from '~/components/app/pages/ParentPortal';
 import indexStylesHref from '~/index.css?url';
 import globalStylesHref from '~/styles/globals.css?url';
+import { useNavigate } from 'react-router';
 
 export const links: Route.LinksFunction = () => [
   { rel: 'stylesheet', href: indexStylesHref },
@@ -16,7 +17,15 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export default function App() {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState('dashboard');
+  const handleNavigate = (page: string) => {
+    if (page === 'logout') {
+      navigate('/', { replace: true });
+      return;
+    }
+    setCurrentPage(page);
+  };
 
   const renderPage = () => {
     switch (currentPage) {
@@ -45,7 +54,7 @@ export default function App() {
   };
 
   return (
-    <Layout currentPage={currentPage} onNavigate={setCurrentPage}>
+    <Layout currentPage={currentPage} onNavigate={handleNavigate}>
       {renderPage()}
     </Layout>
   );

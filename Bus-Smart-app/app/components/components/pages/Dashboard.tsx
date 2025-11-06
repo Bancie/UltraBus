@@ -1,113 +1,126 @@
-import { Bus, Users, UserCheck, AlertTriangle, TrendingUp, Clock } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { Progress } from '../ui/progress';
+import {
+  Bus,
+  Users,
+  UserCheck,
+  AlertTriangle,
+  TrendingUp,
+  Clock,
+} from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { Badge } from "../ui/badge";
+import { Progress } from "../ui/progress";
 
 export default function Dashboard() {
   const stats = [
     {
-      title: 'Xe đang hoạt động',
-      value: '24',
-      subtitle: 'trên tổng số 28',
+      title: "Active Buses",
+      value: "24",
+      subtitle: "of 28 total",
       icon: Bus,
-      color: 'bg-blue-500',
-      trend: '+2 so với hôm qua',
+      color: "bg-blue-500",
+      trend: "+2 from yesterday",
     },
     {
-      title: 'Xe đang trong tuyến',
-      value: '22',
-      subtitle: 'Hiện đang lái',
+      title: "Drivers on Route",
+      value: "22",
+      subtitle: "currently driving",
       icon: UserCheck,
-      color: 'bg-green-500',
-      trend: '91% hiện diện',
+      color: "bg-green-500",
+      trend: "91% attendance",
     },
     {
-      title: 'Số lượng học sinh',
-      value: '1,247',
-      subtitle: 'trên tổng số 1,350',
+      title: "Students On Board",
+      value: "1,247",
+      subtitle: "of 1,350 total",
       icon: Users,
-      color: 'bg-purple-500',
-      trend: '92% sức chứa',
+      color: "bg-purple-500",
+      trend: "92% capacity",
     },
     {
-      title: 'Thông báo',
-      value: '3',
-      subtitle: 'Thông tin cần chú ý',
+      title: "Active Alerts",
+      value: "3",
+      subtitle: "needs attention",
       icon: AlertTriangle,
-      color: 'bg-orange-500',
-      trend: '2 giải quyết',
+      color: "bg-orange-500",
+      trend: "2 resolved today",
     },
   ];
 
   const recentAlerts = [
     {
       id: 1,
-      bus: 'Xe số 12',
-      message: 'Đã khởi hành 5 phút trước',
-      time: '2 phút trước',
-      severity: 'warning',
+      bus: "Bus #12",
+      message: "Running 5 minutes late",
+      time: "2 mins ago",
+      severity: "warning",
     },
     {
       id: 2,
-      bus: 'Bus #07',
-      message: 'Đã hoàn thành chuyến đi',
-      time: '15 phút trước',
-      severity: 'success',
+      bus: "Bus #07",
+      message: "Completed route successfully",
+      time: "15 mins ago",
+      severity: "success",
     },
     {
       id: 3,
-      bus: 'Bus #19',
-      message: 'Yêu cầu bảo trì',
-      time: '1 giờ trước',
-      severity: 'info',
+      bus: "Bus #19",
+      message: "Maintenance required soon",
+      time: "1 hour ago",
+      severity: "info",
     },
   ];
 
   const upcomingSchedules = [
     {
       id: 1,
-      route: 'Tuyến A - Buổi sáng',
-      time: '07:00 AM',
+      route: "Route A - Morning",
+      time: "07:00 AM",
       buses: 6,
-      status: 'Đang khởi hành',
+      status: "On Time",
     },
     {
       id: 2,
-      route: 'Tuyến B - Buổi sáng',
-      time: '07:30 AM',
+      route: "Route B - Morning",
+      time: "07:30 AM",
       buses: 8,
-      status: 'Đang khởi hành',
+      status: "On Time",
     },
     {
       id: 3,
-      route: 'Tuyến C - Buổi chiều',
-      time: '02:30 PM',
+      route: "Route C - Afternoon",
+      time: "02:30 PM",
       buses: 5,
-      status: 'Sắp khởi hành',
+      status: "Scheduled",
     },
     {
       id: 4,
-      route: 'Tuyến D - Buổi chiều',
-      time: '03:00 PM',
+      route: "Route D - Afternoon",
+      time: "03:00 PM",
       buses: 7,
-      status: 'Sắp khởi hành',
+      status: "Scheduled",
     },
   ];
 
   const busPerformance = [
-    { route: 'Tuyến A', onTime: 95, label: 'On-Time Rate' },
-    { route: 'Tuyến B', onTime: 88, label: 'On-Time Rate' },
-    { route: 'Tuyến C', onTime: 92, label: 'On-Time Rate' },
-    { route: 'Tuyến D', onTime: 85, label: 'On-Time Rate' },
+    { route: "Route A", onTime: 95, label: "On-Time Rate" },
+    { route: "Route B", onTime: 88, label: "On-Time Rate" },
+    { route: "Route C", onTime: 92, label: "On-Time Rate" },
+    { route: "Route D", onTime: 85, label: "On-Time Rate" },
   ];
 
   return (
     <div className="space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-gray-900 mb-1">Dashboard tổng quan</h1>
+        <h1 className="text-gray-900 mb-1">Dashboard Overview</h1>
         <p className="text-gray-600">
-          Hiển thị tổng quan hoạt động đưa đón học sinh và lịch trình, thông báo
+          Welcome back! Here's what's happening with your fleet today.
         </p>
       </div>
 
@@ -142,20 +155,25 @@ export default function Dashboard() {
         {/* Recent Alerts */}
         <Card className="lg:col-span-2 border-gray-200">
           <CardHeader>
-            <CardTitle>Thông báo gần đây</CardTitle>
-            <CardDescription>Cập nhật thông báo mới từ các tuyến xe</CardDescription>
+            <CardTitle>Recent Alerts</CardTitle>
+            <CardDescription>
+              Latest notifications and updates from your fleet
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {recentAlerts.map((alert) => (
-                <div key={alert.id} className="flex items-start gap-4 p-4 rounded-lg bg-gray-50">
+                <div
+                  key={alert.id}
+                  className="flex items-start gap-4 p-4 rounded-lg bg-gray-50"
+                >
                   <div
                     className={`w-2 h-2 rounded-full mt-2 ${
-                      alert.severity === 'warning'
-                        ? 'bg-orange-500'
-                        : alert.severity === 'success'
-                          ? 'bg-green-500'
-                          : 'bg-blue-500'
+                      alert.severity === "warning"
+                        ? "bg-orange-500"
+                        : alert.severity === "success"
+                          ? "bg-green-500"
+                          : "bg-blue-500"
                     }`}
                   />
                   <div className="flex-1">
@@ -174,8 +192,8 @@ export default function Dashboard() {
         {/* Bus Performance */}
         <Card className="border-gray-200">
           <CardHeader>
-            <CardTitle>Hiệu suất chuyến đi</CardTitle>
-            <CardDescription>Tỉ lệ đưa đón đúng thời điểm</CardDescription>
+            <CardTitle>Route Performance</CardTitle>
+            <CardDescription>On-time delivery rates</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -196,23 +214,30 @@ export default function Dashboard() {
       {/* Upcoming Schedules */}
       <Card className="border-gray-200">
         <CardHeader>
-          <CardTitle>Lịch trình hôm nay</CardTitle>
-          <CardDescription>Chuyến đi sắp khởi hành và chuẩn bị khởi hành</CardDescription>
+          <CardTitle>Today's Schedule</CardTitle>
+          <CardDescription>Upcoming routes and departure times</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {upcomingSchedules.map((schedule) => (
-              <div key={schedule.id} className="p-4 rounded-lg border border-gray-200 bg-white">
+              <div
+                key={schedule.id}
+                className="p-4 rounded-lg border border-gray-200 bg-white"
+              >
                 <div className="flex items-center gap-2 mb-2">
                   <Clock className="w-4 h-4 text-blue-600" />
                   <span className="text-gray-900">{schedule.time}</span>
                 </div>
                 <p className="text-gray-700 mb-2">{schedule.route}</p>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-600">{schedule.buses} xe</span>
+                  <span className="text-gray-600">{schedule.buses} buses</span>
                   <Badge
-                    variant={schedule.status === 'Đang khởi hành' ? 'default' : 'secondary'}
-                    className={schedule.status === 'Đang khởi hành' ? 'bg-green-500' : ''}
+                    variant={
+                      schedule.status === "On Time" ? "default" : "secondary"
+                    }
+                    className={
+                      schedule.status === "On Time" ? "bg-green-500" : ""
+                    }
                   >
                     {schedule.status}
                   </Badge>

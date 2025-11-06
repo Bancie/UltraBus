@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 import {
   Bell,
   Search,
@@ -10,15 +10,13 @@ import {
   Map,
   Heart,
   Settings,
-  SquareKanban,
-  LogOut,
   Menu,
   X,
-} from 'lucide-react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Badge } from './ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+} from "lucide-react";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Badge } from "./ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -26,17 +24,21 @@ interface LayoutProps {
   onNavigate: (page: string) => void;
 }
 
-export default function Layout({ children, currentPage, onNavigate }: LayoutProps) {
+export default function Layout({
+  children,
+  currentPage,
+  onNavigate,
+}: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: Home },
-    { id: 'manager', label: 'Quản lý', icon: SquareKanban },
-    { id: 'drivers', label: 'Tài xế', icon: Car },
-    { id: 'students', label: 'Học sinh', icon: Users },
-    { id: 'routes', label: 'Tuyến đường', icon: Map },
-    { id: 'settings', label: 'Cài đặt', icon: UserCircle },
-    { id: 'logout', label: 'Đăng xuất', icon: LogOut },
+    { id: "dashboard", label: "Dashboard", icon: Home },
+    { id: "manager", label: "Manager", icon: Settings },
+    { id: "drivers", label: "Drivers", icon: Car },
+    { id: "students", label: "Students", icon: Users },
+    { id: "routes", label: "Routes", icon: Map },
+    { id: "parents", label: "Parents", icon: Heart },
+    { id: "settings", label: "Settings", icon: UserCircle },
   ];
 
   return (
@@ -44,7 +46,7 @@ export default function Layout({ children, currentPage, onNavigate }: LayoutProp
       {/* Sidebar */}
       <aside
         className={`fixed left-0 top-0 z-40 h-full w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0`}
       >
         <div className="flex h-full flex-col">
@@ -80,7 +82,9 @@ export default function Layout({ children, currentPage, onNavigate }: LayoutProp
                         setSidebarOpen(false);
                       }}
                       className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
-                        isActive ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'
+                        isActive
+                          ? "bg-blue-50 text-blue-700"
+                          : "text-gray-700 hover:bg-gray-100"
                       }`}
                     >
                       <Icon className="w-5 h-5" />
@@ -97,7 +101,7 @@ export default function Layout({ children, currentPage, onNavigate }: LayoutProp
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-30 bg-white/50 lg:hidden"
+          className="fixed inset-0 z-30 bg-black bg-opacity-50 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -118,7 +122,11 @@ export default function Layout({ children, currentPage, onNavigate }: LayoutProp
               </Button>
               <div className="relative hidden sm:block">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <Input type="search" placeholder="Tìm kiếm..." className="pl-9 w-64 lg:w-80" />
+                <Input
+                  type="search"
+                  placeholder="Search..."
+                  className="pl-9 w-64 lg:w-80"
+                />
               </div>
             </div>
 
@@ -137,7 +145,7 @@ export default function Layout({ children, currentPage, onNavigate }: LayoutProp
                   </AvatarFallback>
                 </Avatar>
                 <div className="hidden lg:block">
-                  <p className="text-gray-900">Chí Bằng</p>
+                  <p className="text-gray-900">Admin User</p>
                 </div>
               </div>
             </div>
