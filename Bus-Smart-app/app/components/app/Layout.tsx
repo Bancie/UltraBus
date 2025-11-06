@@ -20,11 +20,11 @@ import { Input } from './ui/input';
 import { Badge } from './ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 
-interface LayoutProps {
+type LayoutProps = {
   children: React.ReactNode;
   currentPage: string;
   onNavigate: (page: string) => void;
-}
+};
 
 export default function Layout({ children, currentPage, onNavigate }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -80,7 +80,7 @@ export default function Layout({ children, currentPage, onNavigate }: LayoutProp
                         setSidebarOpen(false);
                       }}
                       className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
-                        isActive ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'
+                        isActive ? 'bg-pink-50 text-pink-700' : 'text-gray-700 hover:bg-gray-100'
                       }`}
                     >
                       <Icon className="w-5 h-5" />
