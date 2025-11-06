@@ -37,7 +37,14 @@ export function RolePickerModal({ open, onClose, onSelectRole }: RolePickerModal
   ];
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) {
+          onClose();
+        }
+      }}
+    >
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto rounded-xl">
         <DialogHeader>
           <DialogTitle className="text-indigo-900">Choose your role</DialogTitle>
