@@ -1,3 +1,4 @@
+import type { Route } from './+types/home';
 import { useState } from 'react';
 import { MapPin, Smartphone, Settings } from 'lucide-react';
 import { NavBar } from '~/components/login/NavBar';
@@ -7,6 +8,13 @@ import { RolePickerModal } from '~/components/login/RolePickerModal';
 import { LoginForm } from '~/components/login/LoginForm';
 import { Footer } from '~/components/login/Footer';
 import { useNavigate } from 'react-router';
+
+export function meta({}: Route.MetaArgs) {
+  return [
+    { title: 'Bus Smart 1.0' },
+    { name: 'description', content: 'Welcome to Bus Smart 1.0!' },
+  ];
+}
 
 type Page = 'home' | 'login';
 type Role = 'manager' | 'driver' | 'parent' | 'student' | null;
