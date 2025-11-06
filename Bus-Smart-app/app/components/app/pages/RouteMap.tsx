@@ -1,59 +1,47 @@
-import { MapPin, Navigation, Clock, Users } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+import { MapPin, Navigation, Clock, Users } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 export default function RouteMap() {
   const buses = [
     {
       id: 1,
-      name: "Bus #12",
-      route: "Route A - North District",
-      driver: "John Smith",
-      status: "on-route",
-      currentStop: "Oak Street (3 of 12)",
-      eta: "8 mins",
+      name: 'Bus #12',
+      route: 'Route A - North District',
+      driver: 'John Smith',
+      status: 'on-route',
+      currentStop: 'Oak Street (3 of 12)',
+      eta: '8 mins',
       students: 45,
-      speed: "35 km/h",
+      speed: '35 km/h',
       lat: 40.7128,
       lng: -74.006,
     },
     {
       id: 2,
-      name: "Bus #07",
-      route: "Route B - East District",
-      driver: "Sarah Johnson",
-      status: "on-route",
-      currentStop: "Maple Avenue (5 of 15)",
-      eta: "12 mins",
+      name: 'Bus #07',
+      route: 'Route B - East District',
+      driver: 'Sarah Johnson',
+      status: 'on-route',
+      currentStop: 'Maple Avenue (5 of 15)',
+      eta: '12 mins',
       students: 52,
-      speed: "40 km/h",
+      speed: '40 km/h',
       lat: 40.7589,
       lng: -73.9851,
     },
     {
       id: 3,
-      name: "Bus #24",
-      route: "Route D - West District",
-      driver: "Emily Davis",
-      status: "on-route",
-      currentStop: "Elm Street (7 of 14)",
-      eta: "6 mins",
+      name: 'Bus #24',
+      route: 'Route D - West District',
+      driver: 'Emily Davis',
+      status: 'on-route',
+      currentStop: 'Elm Street (7 of 14)',
+      eta: '6 mins',
       students: 48,
-      speed: "32 km/h",
+      speed: '32 km/h',
       lat: 40.7614,
       lng: -73.9776,
     },
@@ -62,45 +50,45 @@ export default function RouteMap() {
   const upcomingStops = [
     {
       id: 1,
-      name: "Oak Street",
-      time: "7:05 AM",
+      name: 'Oak Street',
+      time: '7:05 AM',
       students: 8,
-      status: "completed",
+      status: 'completed',
     },
     {
       id: 2,
-      name: "Pine Road",
-      time: "7:12 AM",
+      name: 'Pine Road',
+      time: '7:12 AM',
       students: 6,
-      status: "completed",
+      status: 'completed',
     },
     {
       id: 3,
-      name: "Cedar Lane",
-      time: "7:18 AM",
+      name: 'Cedar Lane',
+      time: '7:18 AM',
       students: 9,
-      status: "current",
+      status: 'current',
     },
     {
       id: 4,
-      name: "Maple Avenue",
-      time: "7:25 AM",
+      name: 'Maple Avenue',
+      time: '7:25 AM',
       students: 7,
-      status: "upcoming",
+      status: 'upcoming',
     },
     {
       id: 5,
-      name: "Birch Street",
-      time: "7:32 AM",
+      name: 'Birch Street',
+      time: '7:32 AM',
       students: 5,
-      status: "upcoming",
+      status: 'upcoming',
     },
     {
       id: 6,
-      name: "Lincoln Elementary",
-      time: "7:45 AM",
+      name: 'Lincoln Elementary',
+      time: '7:45 AM',
       students: 45,
-      status: "upcoming",
+      status: 'upcoming',
     },
   ];
 
@@ -110,9 +98,7 @@ export default function RouteMap() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-gray-900 mb-1">Route Map & Tracking</h1>
-          <p className="text-gray-600">
-            Real-time location tracking for all active buses
-          </p>
+          <p className="text-gray-600">Real-time location tracking for all active buses</p>
         </div>
         <div className="flex gap-2">
           <Select defaultValue="all">
@@ -240,10 +226,7 @@ export default function RouteMap() {
             </CardHeader>
             <CardContent className="space-y-3">
               {buses.map((bus) => (
-                <div
-                  key={bus.id}
-                  className="p-3 rounded-lg bg-gray-50 border border-gray-200"
-                >
+                <div key={bus.id} className="p-3 rounded-lg bg-gray-50 border border-gray-200">
                   <div className="flex items-start justify-between mb-2">
                     <div>
                       <p className="text-gray-900">{bus.name}</p>
@@ -287,22 +270,22 @@ export default function RouteMap() {
               <div
                 key={stop.id}
                 className={`p-4 rounded-lg border-2 ${
-                  stop.status === "current"
-                    ? "border-blue-500 bg-blue-50"
-                    : stop.status === "completed"
-                      ? "border-green-500 bg-green-50"
-                      : "border-gray-200 bg-white"
+                  stop.status === 'current'
+                    ? 'border-blue-500 bg-blue-50'
+                    : stop.status === 'completed'
+                      ? 'border-green-500 bg-green-50'
+                      : 'border-gray-200 bg-white'
                 }`}
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <div
                       className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                        stop.status === "current"
-                          ? "bg-blue-600 text-white"
-                          : stop.status === "completed"
-                            ? "bg-green-600 text-white"
-                            : "bg-gray-200 text-gray-600"
+                        stop.status === 'current'
+                          ? 'bg-blue-600 text-white'
+                          : stop.status === 'completed'
+                            ? 'bg-green-600 text-white'
+                            : 'bg-gray-200 text-gray-600'
                       }`}
                     >
                       {index + 1}
@@ -312,12 +295,8 @@ export default function RouteMap() {
                       <p className="text-gray-600">{stop.time}</p>
                     </div>
                   </div>
-                  {stop.status === "current" && (
-                    <Badge className="bg-blue-600">Current</Badge>
-                  )}
-                  {stop.status === "completed" && (
-                    <Badge className="bg-green-600">Done</Badge>
-                  )}
+                  {stop.status === 'current' && <Badge className="bg-blue-600">Current</Badge>}
+                  {stop.status === 'completed' && <Badge className="bg-green-600">Done</Badge>}
                 </div>
                 <div className="flex items-center gap-2 text-gray-600">
                   <Users className="w-4 h-4" />

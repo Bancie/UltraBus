@@ -1,4 +1,4 @@
-import type { Route } from './+types/home';
+import type { Route } from './+types/homepage';
 import { useState } from 'react';
 import { MapPin, Smartphone, Settings } from 'lucide-react';
 import { NavBar } from '~/components/login/NavBar';

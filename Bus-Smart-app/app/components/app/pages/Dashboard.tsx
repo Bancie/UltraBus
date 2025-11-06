@@ -1,117 +1,104 @@
-import {
-  Bus,
-  Users,
-  UserCheck,
-  AlertTriangle,
-  TrendingUp,
-  Clock,
-} from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
-import { Badge } from "../ui/badge";
-import { Progress } from "../ui/progress";
+import { Bus, Users, UserCheck, AlertTriangle, TrendingUp, Clock } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Badge } from '../ui/badge';
+import { Progress } from '../ui/progress';
 
 export default function Dashboard() {
   const stats = [
     {
-      title: "Active Buses",
-      value: "24",
-      subtitle: "of 28 total",
+      title: 'Active Buses',
+      value: '24',
+      subtitle: 'of 28 total',
       icon: Bus,
-      color: "bg-blue-500",
-      trend: "+2 from yesterday",
+      color: 'bg-blue-500',
+      trend: '+2 from yesterday',
     },
     {
-      title: "Drivers on Route",
-      value: "22",
-      subtitle: "currently driving",
+      title: 'Drivers on Route',
+      value: '22',
+      subtitle: 'currently driving',
       icon: UserCheck,
-      color: "bg-green-500",
-      trend: "91% attendance",
+      color: 'bg-green-500',
+      trend: '91% attendance',
     },
     {
-      title: "Students On Board",
-      value: "1,247",
-      subtitle: "of 1,350 total",
+      title: 'Students On Board',
+      value: '1,247',
+      subtitle: 'of 1,350 total',
       icon: Users,
-      color: "bg-purple-500",
-      trend: "92% capacity",
+      color: 'bg-purple-500',
+      trend: '92% capacity',
     },
     {
-      title: "Active Alerts",
-      value: "3",
-      subtitle: "needs attention",
+      title: 'Active Alerts',
+      value: '3',
+      subtitle: 'needs attention',
       icon: AlertTriangle,
-      color: "bg-orange-500",
-      trend: "2 resolved today",
+      color: 'bg-orange-500',
+      trend: '2 resolved today',
     },
   ];
 
   const recentAlerts = [
     {
       id: 1,
-      bus: "Bus #12",
-      message: "Running 5 minutes late",
-      time: "2 mins ago",
-      severity: "warning",
+      bus: 'Bus #12',
+      message: 'Running 5 minutes late',
+      time: '2 mins ago',
+      severity: 'warning',
     },
     {
       id: 2,
-      bus: "Bus #07",
-      message: "Completed route successfully",
-      time: "15 mins ago",
-      severity: "success",
+      bus: 'Bus #07',
+      message: 'Completed route successfully',
+      time: '15 mins ago',
+      severity: 'success',
     },
     {
       id: 3,
-      bus: "Bus #19",
-      message: "Maintenance required soon",
-      time: "1 hour ago",
-      severity: "info",
+      bus: 'Bus #19',
+      message: 'Maintenance required soon',
+      time: '1 hour ago',
+      severity: 'info',
     },
   ];
 
   const upcomingSchedules = [
     {
       id: 1,
-      route: "Route A - Morning",
-      time: "07:00 AM",
+      route: 'Route A - Morning',
+      time: '07:00 AM',
       buses: 6,
-      status: "On Time",
+      status: 'On Time',
     },
     {
       id: 2,
-      route: "Route B - Morning",
-      time: "07:30 AM",
+      route: 'Route B - Morning',
+      time: '07:30 AM',
       buses: 8,
-      status: "On Time",
+      status: 'On Time',
     },
     {
       id: 3,
-      route: "Route C - Afternoon",
-      time: "02:30 PM",
+      route: 'Route C - Afternoon',
+      time: '02:30 PM',
       buses: 5,
-      status: "Scheduled",
+      status: 'Scheduled',
     },
     {
       id: 4,
-      route: "Route D - Afternoon",
-      time: "03:00 PM",
+      route: 'Route D - Afternoon',
+      time: '03:00 PM',
       buses: 7,
-      status: "Scheduled",
+      status: 'Scheduled',
     },
   ];
 
   const busPerformance = [
-    { route: "Route A", onTime: 95, label: "On-Time Rate" },
-    { route: "Route B", onTime: 88, label: "On-Time Rate" },
-    { route: "Route C", onTime: 92, label: "On-Time Rate" },
-    { route: "Route D", onTime: 85, label: "On-Time Rate" },
+    { route: 'Route A', onTime: 95, label: 'On-Time Rate' },
+    { route: 'Route B', onTime: 88, label: 'On-Time Rate' },
+    { route: 'Route C', onTime: 92, label: 'On-Time Rate' },
+    { route: 'Route D', onTime: 85, label: 'On-Time Rate' },
   ];
 
   return (
@@ -156,24 +143,19 @@ export default function Dashboard() {
         <Card className="lg:col-span-2 border-gray-200">
           <CardHeader>
             <CardTitle>Recent Alerts</CardTitle>
-            <CardDescription>
-              Latest notifications and updates from your fleet
-            </CardDescription>
+            <CardDescription>Latest notifications and updates from your fleet</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {recentAlerts.map((alert) => (
-                <div
-                  key={alert.id}
-                  className="flex items-start gap-4 p-4 rounded-lg bg-gray-50"
-                >
+                <div key={alert.id} className="flex items-start gap-4 p-4 rounded-lg bg-gray-50">
                   <div
                     className={`w-2 h-2 rounded-full mt-2 ${
-                      alert.severity === "warning"
-                        ? "bg-orange-500"
-                        : alert.severity === "success"
-                          ? "bg-green-500"
-                          : "bg-blue-500"
+                      alert.severity === 'warning'
+                        ? 'bg-orange-500'
+                        : alert.severity === 'success'
+                          ? 'bg-green-500'
+                          : 'bg-blue-500'
                     }`}
                   />
                   <div className="flex-1">
@@ -220,10 +202,7 @@ export default function Dashboard() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {upcomingSchedules.map((schedule) => (
-              <div
-                key={schedule.id}
-                className="p-4 rounded-lg border border-gray-200 bg-white"
-              >
+              <div key={schedule.id} className="p-4 rounded-lg border border-gray-200 bg-white">
                 <div className="flex items-center gap-2 mb-2">
                   <Clock className="w-4 h-4 text-blue-600" />
                   <span className="text-gray-900">{schedule.time}</span>
@@ -232,12 +211,8 @@ export default function Dashboard() {
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">{schedule.buses} buses</span>
                   <Badge
-                    variant={
-                      schedule.status === "On Time" ? "default" : "secondary"
-                    }
-                    className={
-                      schedule.status === "On Time" ? "bg-green-500" : ""
-                    }
+                    variant={schedule.status === 'On Time' ? 'default' : 'secondary'}
+                    className={schedule.status === 'On Time' ? 'bg-green-500' : ''}
                   >
                     {schedule.status}
                   </Badge>

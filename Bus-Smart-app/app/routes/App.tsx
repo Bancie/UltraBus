@@ -1,12 +1,12 @@
 import type { Route } from './+types/App';
 import { useState } from 'react';
-import Layout from '~/components/components/Layout';
-import Dashboard from '~/components/components/pages/Dashboard';
-import Manager from '~/components/components/pages/Manager';
-import Drivers from '~/components/components/pages/Drivers';
-import Students from '~/components/components/pages/Students';
-import RouteMap from '~/components/components/pages/RouteMap';
-import ParentPortal from '~/components/components/pages/ParentPortal';
+import Layout from '~/components/app/Layout';
+import Dashboard from '~/components/app/pages/Dashboard';
+import Manager from '~/components/app/pages/Manager';
+import Drivers from '~/components/app/pages/Drivers';
+import Students from '~/components/app/pages/Students';
+import RouteMap from '~/components/app/pages/RouteMap';
+import ParentPortal from '~/components/app/pages/ParentPortal';
 import indexStylesHref from '~/index.css?url';
 import globalStylesHref from '~/styles/globals.css?url';
 
