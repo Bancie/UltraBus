@@ -75,7 +75,7 @@ export default function App() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+            <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
               <FeatureCard
                 icon={MapPin}
                 title="Theo dõi trực tuyến"
