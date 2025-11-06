@@ -40,9 +40,9 @@ export function Hero({ onLoginClick }: HeroProps) {
 
           {/* Right illustration */}
           <div className="relative">
-            <div className="aspect-square w-full max-w-md mx-auto bg-gradient-to-br from-yellow-100 to-indigo-100 rounded-3xl shadow-lg overflow-hidden flex items-center justify-center">
+            <div className="aspect-square w-full max-w-md mx-auto bg-gradient-to-br from-blue-100 to-green-100 rounded-3xl shadow-lg overflow-hidden flex items-center justify-center">
               <ImageWithFallback
-                src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&h=800&fit=crop"
+                src="/homepage_bus.png"
                 alt="School bus illustration"
                 className="w-full h-full object-cover"
               />
