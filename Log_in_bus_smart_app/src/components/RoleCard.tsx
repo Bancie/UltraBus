@@ -1,6 +1,6 @@
-import { LucideIcon } from "lucide-react";
-import { Card, CardContent } from "./ui/card";
-import { Button } from "./ui/button";
+import { type LucideIcon } from 'lucide-react';
+import { Card, CardContent } from './ui/card';
+import { Button } from './ui/button';
 
 interface RoleCardProps {
   icon: LucideIcon;
@@ -9,12 +9,7 @@ interface RoleCardProps {
   onSelect: () => void;
 }
 
-export function RoleCard({
-  icon: Icon,
-  title,
-  description,
-  onSelect,
-}: RoleCardProps) {
+export function RoleCard({ icon: Icon, title, description, onSelect }: RoleCardProps) {
   return (
     <Card className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all border-2 border-gray-200 hover:border-indigo-400 cursor-pointer">
       <CardContent className="p-6">
@@ -24,9 +19,7 @@ export function RoleCard({
           </div>
           <div>
             <h3 className="text-indigo-900 mb-2">{title}</h3>
-            <p className="text-gray-600 text-sm">
-              {description}
-            </p>
+            <p className="text-gray-600 text-sm">{description}</p>
           </div>
           <Button
             onClick={onSelect}

@@ -1,5 +1,5 @@
-import { Bus } from "lucide-react";
-import { Button } from "./ui/button";
+import { Bus } from 'lucide-react';
+import { Button } from './ui/button';
 
 interface NavBarProps {
   onLoginClick: () => void;

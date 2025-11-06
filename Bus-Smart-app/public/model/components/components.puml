@@ -1,0 +1,71 @@
+@startuml
+left to right direction
+skinparam componentStyle rectangle
+skinparam defaultFontName Courier
+
+component "App.tsx" as App
+component "NavBar.tsx" as NavBar
+component "Hero.tsx" as Hero
+component "FeatureCard.tsx" as FeatureCard
+component "RolePickerModal.tsx" as RolePickerModal
+component "LoginForm.tsx" as LoginForm
+component "Footer.tsx" as Footer
+component "RoleCard.tsx" as RoleCard
+component "figma/ImageWithFallback.tsx" as ImageWithFallback
+
+component "ui/button.tsx::Button" as Button
+component "ui/card.tsx::Card" as Card
+component "ui/card.tsx::CardContent" as CardContent
+component "ui/dialog.tsx::Dialog" as Dialog
+component "ui/dialog.tsx::DialogContent" as DialogContent
+component "ui/dialog.tsx::DialogHeader" as DialogHeader
+component "ui/dialog.tsx::DialogTitle" as DialogTitle
+component "ui/dialog.tsx::DialogDescription" as DialogDescription
+component "ui/dialog.tsx::DialogPortal" as DialogPortal
+component "ui/dialog.tsx::DialogOverlay" as DialogOverlay
+component "ui/input.tsx::Input" as Input
+component "ui/label.tsx::Label" as Label
+component "ui/checkbox.tsx::Checkbox" as Checkbox
+component "ui/tabs.tsx::Tabs" as Tabs
+component "ui/tabs.tsx::TabsList" as TabsList
+component "ui/tabs.tsx::TabsTrigger" as TabsTrigger
+component "ui/tabs.tsx::TabsContent" as TabsContent
+
+App --> NavBar : renders header
+App --> Hero : renders hero section
+App --> FeatureCard : renders feature tiles
+App --> RolePickerModal : opens role picker
+App --> LoginForm : renders login flow
+App --> Footer : renders footer
+
+NavBar --> Button : login action
+
+Hero --> Button : primary CTA
+Hero --> ImageWithFallback : hero illustration
+
+FeatureCard --> Card : layout frame
+FeatureCard --> CardContent : card body
+
+RolePickerModal --> Dialog : modal root
+RolePickerModal --> DialogContent : modal body
+RolePickerModal --> DialogHeader : modal header
+RolePickerModal --> DialogTitle : title
+RolePickerModal --> DialogDescription : helper text
+RolePickerModal --> RoleCard : role tiles
+
+DialogContent --> DialogPortal : portal wrapper
+DialogContent --> DialogOverlay : backdrop
+
+RoleCard --> Card : role card frame
+RoleCard --> CardContent : role card body
+RoleCard --> Button : select button
+
+LoginForm --> Button : submit/back buttons
+LoginForm --> Input : credential fields
+LoginForm --> Label : field labels
+LoginForm --> Checkbox : remember me
+LoginForm --> Tabs : form mode switch
+LoginForm --> TabsList : switch container
+LoginForm --> TabsTrigger : switch tab
+LoginForm --> TabsContent : tab panels
+@enduml
