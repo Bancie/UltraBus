@@ -8,7 +8,7 @@ import Students from '~/components/app/pages/Students';
 import RouteMap from '~/components/app/pages/RouteMap';
 import ParentPortal from '~/components/app/pages/ParentPortal';
 import indexStylesHref from '~/index.css?url';
-import globalStylesHref from '~/styles/globals.css?url';
+import globalStylesHref from '~/styles/app.css?url';
 import { useNavigate } from 'react-router';
 
 export const links: Route.LinksFunction = () => [

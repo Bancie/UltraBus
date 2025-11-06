@@ -1,5 +1,5 @@
-import { Button } from "./ui/button";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { Button } from './ui/button';
+import { ImageWithFallback } from './figma/ImageWithFallback';
 
 interface HeroProps {
   onLoginClick: () => void;
@@ -13,11 +13,10 @@ export function Hero({ onLoginClick }: HeroProps) {
           {/* Left content */}
           <div className="text-center lg:text-left">
             <h1 className="text-indigo-900 mb-4 sm:mb-6">
-              Safer, smarter school bus management.
+              Hệ thống quản lý đưa đón học sinh thông minh
             </h1>
             <p className="text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto lg:mx-0">
-              Manage routes, track buses, and keep families
-              informed in real time.
+              Quản lý tuyến đường, theo dõi xe và giám sát thời gian thực
             </p>
 
             {/* CTA Buttons */}
@@ -27,14 +26,14 @@ export function Hero({ onLoginClick }: HeroProps) {
                 className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-md px-8 py-6"
                 size="lg"
               >
-                Log in
+                Đăng nhập
               </Button>
               <Button
                 variant="outline"
                 className="border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50 rounded-lg px-8 py-6"
                 size="lg"
               >
-                Learn more
+                Tìm hiểu thêm
               </Button>
             </div>
           </div>

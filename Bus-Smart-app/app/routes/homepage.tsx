@@ -69,28 +69,22 @@ export default function App() {
         <section id="features" className="w-full py-16 sm:py-20 lg:py-24 bg-white">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-indigo-900 mb-4">Everything you need</h2>
+              <h2 className="text-indigo-900 mb-4">Hệ thống hỗ trợ cách tính năng</h2>
               <p className="text-gray-600 max-w-2xl mx-auto">
-                Bus Smart brings together drivers, parents, and administrators on one simple
-                platform.
+                Được xây dựng và phát triển bởi Chí Bằng, Phúc Khôi, Huy Vũ - Nhóm 06
               </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
               <FeatureCard
                 icon={MapPin}
-                title="Live Tracking"
-                description="Parents see real-time bus location."
-              />
-              <FeatureCard
-                icon={Smartphone}
-                title="Driver App"
-                description="Drivers view routes and report issues."
+                title="Theo dõi trực tuyến"
+                description="Giúp quản lý theo dõi và cập nhật thông tin tuyến trình"
               />
               <FeatureCard
                 icon={Settings}
-                title="Admin Control"
-                description="Managers manage students, drivers, and routes."
+                title="Quản lý thông tin"
+                description="Giúp quản lý thông tin tài xế, học sinh và lịch trình"
               />
             </div>
           </div>
