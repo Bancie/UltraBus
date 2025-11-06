@@ -286,7 +286,7 @@ export default function Manager() {
                     <div className="space-y-4 py-4">
                       <div className="space-y-2">
                         <Label htmlFor="routeName">Tên tuyến đường</Label>
-                        <Input id="routeName" placeholder="e.g., Route E - Central District" />
+                        <Input id="routeName" placeholder="Ví dụ, Tuyến E - Quận 4" />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="stops">Số lượng điểm dừng</Label>
