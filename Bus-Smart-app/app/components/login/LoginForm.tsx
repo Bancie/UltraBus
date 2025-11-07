@@ -15,23 +15,23 @@ type LoginFormProps = {
 const roleConfig = {
   manager: {
     icon: Briefcase,
-    title: 'Manager',
-    helpText: "Sign in to manage your school's transportation system.",
+    title: 'Quản lý',
+    helpText: 'Đăng nhập để quản lý hệ thống bus smart.',
   },
   driver: {
     icon: Car,
-    title: 'Driver',
-    helpText: 'Sign in to view your routes and manage trips.',
+    title: 'Tài xế',
+    helpText: 'Đăng nhập để xem tuyến đi và theo dõi lịch trình.',
   },
   parent: {
     icon: Users,
-    title: 'Parent',
-    helpText: "Sign in to track your child's bus in real time.",
+    title: 'Phụ huynh',
+    helpText: 'Đăng nhập để theo dõi con bạn theo thời gian thực.',
   },
   student: {
     icon: GraduationCap,
-    title: 'Student',
-    helpText: 'Sign in to check your bus schedule and stops.',
+    title: 'Học sinh',
+    helpText: 'Đăng nhập để xem lịch trình xe buýt và điểm dừng.',
   },
 };
 
@@ -59,7 +59,7 @@ export function LoginForm({ role, onBack, onLogin }: LoginFormProps) {
             <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 mb-4">
               <Icon className="h-8 w-8 text-indigo-600" />
             </div>
-            <h2 className="text-indigo-900 mb-2">Sign in — {config.title}</h2>
+            <h2 className="text-indigo-900 mb-2">Đăng nhập — {config.title}</h2>
             <p className="text-gray-600 text-sm">{config.helpText}</p>
           </div>
 
@@ -68,7 +68,7 @@ export function LoginForm({ role, onBack, onLogin }: LoginFormProps) {
               <Tabs defaultValue="email" className="w-full">
                 <TabsList className="grid w-full grid-cols-2 mb-6">
                   <TabsTrigger value="email">Email</TabsTrigger>
-                  <TabsTrigger value="phone">Phone</TabsTrigger>
+                  <TabsTrigger value="phone">Điện thoại</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="email" className="space-y-4">
@@ -85,7 +85,7 @@ export function LoginForm({ role, onBack, onLogin }: LoginFormProps) {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="password-email">Password</Label>
+                    <Label htmlFor="password-email">Mật khẩu</Label>
                     <Input
                       id="password-email"
                       type="password"
@@ -100,11 +100,11 @@ export function LoginForm({ role, onBack, onLogin }: LoginFormProps) {
 
                 <TabsContent value="phone" className="space-y-4">
                   <div>
-                    <Label htmlFor="phone-login">Phone Number</Label>
+                    <Label htmlFor="phone-login">Số điện thoại</Label>
                     <Input
                       id="phone-login"
                       type="tel"
-                      placeholder="+1 (555) 000-0000"
+                      placeholder="+84 919 362 32"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       className="mt-1 rounded-lg"
@@ -112,7 +112,7 @@ export function LoginForm({ role, onBack, onLogin }: LoginFormProps) {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="password-phone">Password</Label>
+                    <Label htmlFor="password-phone">Mật khẩu</Label>
                     <Input
                       id="password-phone"
                       type="password"
@@ -132,7 +132,7 @@ export function LoginForm({ role, onBack, onLogin }: LoginFormProps) {
                   <Input
                     id="manager-email"
                     type="email"
-                    placeholder="you@example.com"
+                    placeholder="chibangn1@gmail.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="mt-1 rounded-lg"
@@ -140,7 +140,7 @@ export function LoginForm({ role, onBack, onLogin }: LoginFormProps) {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="manager-password">Password</Label>
+                  <Label htmlFor="manager-password">Mật khẩu</Label>
                   <Input
                     id="manager-password"
                     type="password"
@@ -162,7 +162,7 @@ export function LoginForm({ role, onBack, onLogin }: LoginFormProps) {
                 onCheckedChange={(checked) => setRememberMe(checked as boolean)}
               />
               <Label htmlFor="remember" className="cursor-pointer">
-                Remember me
+                Ghi nhớ thông tin đăng nhập
               </Label>
             </div>
 
@@ -172,7 +172,7 @@ export function LoginForm({ role, onBack, onLogin }: LoginFormProps) {
               className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg mt-6 py-6"
               size="lg"
             >
-              Sign in
+              Đăng nhập
             </Button>
 
             {/* Links */}
@@ -181,7 +181,7 @@ export function LoginForm({ role, onBack, onLogin }: LoginFormProps) {
                 href="#forgot"
                 className="block text-indigo-600 hover:text-indigo-700 hover:underline focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded-sm"
               >
-                Forgot password?
+                Quên mật khẩu?
               </a>
               <Button
                 type="button"
@@ -190,7 +190,7 @@ export function LoginForm({ role, onBack, onLogin }: LoginFormProps) {
                 className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400 rounded-lg"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                Back: choose a different role
+                Quay về
               </Button>
             </div>
 

@@ -13,26 +13,26 @@ export function RolePickerModal({ open, onClose, onSelectRole }: RolePickerModal
     {
       id: 'manager' as const,
       icon: Briefcase,
-      title: 'Manager',
-      description: 'Manage routes, buses, drivers, students.',
+      title: 'Quản lý',
+      description: 'Quản lý tuyến đường, xe buýt, tài xế và học sinh.',
     },
     {
       id: 'driver' as const,
       icon: Car,
-      title: 'Driver',
-      description: 'View assigned routes, start/stop trips, report issues.',
+      title: 'Tài xế',
+      description: 'Xem tuyến đường phân công và lịch trình.',
     },
     {
       id: 'parent' as const,
       icon: Users,
-      title: 'Parent',
-      description: "Track child's bus and receive notifications.",
+      title: 'Phụ huynh',
+      description: 'Theo dõi con bạn theo thời gian thực.',
     },
     {
       id: 'student' as const,
       icon: GraduationCap,
-      title: 'Student',
-      description: 'Check schedule and stop information.',
+      title: 'Học sinh',
+      description: 'Xem lịch trình xe buýt và điểm dừng.',
     },
   ];
 
@@ -47,9 +47,9 @@ export function RolePickerModal({ open, onClose, onSelectRole }: RolePickerModal
     >
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto rounded-xl">
         <DialogHeader>
-          <DialogTitle className="text-indigo-900">Choose your role</DialogTitle>
+          <DialogTitle className="text-indigo-900">Chọn vai trò của bạn</DialogTitle>
           <DialogDescription className="text-gray-600">
-            Select the role that best describes you to continue.
+            Chọn vài trò phù hợp với mô tả vai trò bên dưới.
           </DialogDescription>
         </DialogHeader>
 
@@ -70,7 +70,7 @@ export function RolePickerModal({ open, onClose, onSelectRole }: RolePickerModal
             onClick={onClose}
             className="text-indigo-600 hover:text-indigo-700 hover:underline focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded-sm px-2 py-1"
           >
-            Back to Home
+            Quay về trang chủ
           </button>
         </div>
       </DialogContent>

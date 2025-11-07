@@ -63,7 +63,7 @@ export function NavBar({ onLoginClick }: NavBarProps) {
                   </a>
                 </nav>
                 <Button
-                  className="w-full bg-indigo-600 hover:bg-indigo-700"
+                  className="w-full bg-indigo-600 text-white hover:bg-indigo-700"
                   onClick={() => {
                     toggle();
                     onLoginClick();
@@ -78,7 +78,7 @@ export function NavBar({ onLoginClick }: NavBarProps) {
           {/* Login Button */}
           <Button
             onClick={onLoginClick}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-sm"
+            className="hidden sm:inline-flex bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-sm"
           >
             Đăng nhập
           </Button>

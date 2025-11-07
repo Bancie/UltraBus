@@ -25,7 +25,7 @@ export function RoleCard({ icon: Icon, title, description, onSelect }: RoleCardP
             onClick={onSelect}
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg mt-2"
           >
-            Continue
+            Tiếp tục
           </Button>
         </div>
       </CardContent>
