@@ -1,8 +1,9 @@
-import { MapPin, Navigation, Clock, Users } from 'lucide-react';
+import { MapPin, Clock, Users } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import GoogleMapCard from '../../GoogleMap';
 
 export default function RouteMap() {
   const buses = [
@@ -16,8 +17,8 @@ export default function RouteMap() {
       eta: '8 mins',
       students: 45,
       speed: '35 km/h',
-      lat: 40.7128,
-      lng: -74.006,
+      lat: 10.7739,
+      lng: 106.6999,
     },
     {
       id: 2,
@@ -29,12 +30,12 @@ export default function RouteMap() {
       eta: '12 mins',
       students: 52,
       speed: '40 km/h',
-      lat: 40.7589,
-      lng: -73.9851,
+      lat: 10.7648,
+      lng: 106.6661,
     },
     {
       id: 3,
-      name: 'Bus #24',
+      name: 'Xe số 24',
       route: 'Tuyến D - Quận 7',
       driver: 'Phạm Thu Hà',
       status: 'on-route',
@@ -42,8 +43,8 @@ export default function RouteMap() {
       eta: '6 mins',
       students: 48,
       speed: '32 km/h',
-      lat: 40.7614,
-      lng: -73.9776,
+      lat: 10.7324,
+      lng: 106.7053,
     },
   ];
 
@@ -92,6 +93,15 @@ export default function RouteMap() {
     },
   ];
 
+  const busMarkers = buses.map((bus) => ({
+    id: bus.id,
+    position: { lat: bus.lat, lng: bus.lng },
+    title: bus.name,
+    description: `${bus.route} - ${bus.currentStop}`,
+  }));
+
+  const mapCenter = busMarkers[0].position;
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -125,94 +135,14 @@ export default function RouteMap() {
             <CardDescription>Vị trí xe buýt hiện tại và tuyến đường đi</CardDescription>
           </CardHeader>
           <CardContent>
-            {/* Map Placeholder - Google Maps style */}
-            <div className="relative w-full h-[500px] bg-gray-100 rounded-lg overflow-hidden">
-              {/* Mock Map Background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-green-50">
-                {/* Grid lines for map effect */}
-                <div className="absolute inset-0 opacity-20">
-                  {Array.from({ length: 10 }).map((_, i) => (
-                    <div
-                      key={`h-${i}`}
-                      className="absolute w-full h-px bg-gray-400"
-                      style={{ top: `${i * 10}%` }}
-                    />
-                  ))}
-                  {Array.from({ length: 10 }).map((_, i) => (
-                    <div
-                      key={`v-${i}`}
-                      className="absolute h-full w-px bg-gray-400"
-                      style={{ left: `${i * 10}%` }}
-                    />
-                  ))}
-                </div>
-
-                {/* Bus Markers */}
-                {buses.map((bus, index) => (
-                  <div
-                    key={bus.id}
-                    className="absolute"
-                    style={{
-                      top: `${30 + index * 20}%`,
-                      left: `${20 + index * 25}%`,
-                    }}
-                  >
-                    <div className="relative group">
-                      <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shadow-lg cursor-pointer transform hover:scale-110 transition-transform">
-                        <Navigation className="w-5 h-5 text-white" />
-                      </div>
-                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                        <div className="bg-white rounded-lg shadow-lg p-3 whitespace-nowrap">
-                          <p className="text-gray-900">{bus.name}</p>
-                          <p className="text-gray-600">{bus.currentStop}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-
-                {/* Route Lines */}
-                <svg className="absolute inset-0 w-full h-full pointer-events-none">
-                  <path
-                    d="M 100 150 Q 250 100, 350 200 T 600 300"
-                    stroke="#3B82F6"
-                    strokeWidth="3"
-                    fill="none"
-                    strokeDasharray="5,5"
-                    opacity="0.6"
-                  />
-                  <path
-                    d="M 150 250 Q 300 200, 450 300 T 700 350"
-                    stroke="#10B981"
-                    strokeWidth="3"
-                    fill="none"
-                    strokeDasharray="5,5"
-                    opacity="0.6"
-                  />
-                </svg>
-
-                {/* Legend */}
-                <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg p-3 space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-blue-600 rounded-full" />
-                    <span className="text-gray-700">Xe buýt hoạt động</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-green-600 rounded-full" />
-                    <span className="text-gray-700">Điểm dừng</span>
-                  </div>
-                </div>
-
-                {/* Zoom Controls */}
-                <div className="absolute bottom-4 right-4 flex flex-col gap-2">
-                  <Button size="icon" variant="secondary" className="bg-white">
-                    +
-                  </Button>
-                  <Button size="icon" variant="secondary" className="bg-white">
-                    -
-                  </Button>
-                </div>
-              </div>
+            <div className="rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+              <GoogleMapCard
+                variant="embed"
+                height={500}
+                center={mapCenter}
+                zoom={12}
+                markers={busMarkers}
+              />
             </div>
           </CardContent>
         </Card>
