@@ -16,122 +16,12 @@ import {
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import routes from '~/models/ModelRoutes';
+import phancong from '~/models/ModelAsign';
+import attendance from '~/models/ModelAttendance';
 
 export default function Manager() {
   const [selectedTab, setSelectedTab] = useState('phancong');
-
-  const phancong = [
-    {
-      id: 1,
-      bus: 'Xe số 12',
-      driver: 'Nguyễn Văn An',
-      route: 'Tuyến A',
-      students: 45,
-      status: 'hoạt động',
-    },
-    {
-      id: 2,
-      bus: 'Xe số 07',
-      driver: 'Trần Thị Bích',
-      route: 'Tuyến B',
-      students: 52,
-      status: 'hoạt động',
-    },
-    {
-      id: 3,
-      bus: 'Xe số 19',
-      driver: 'Lê Minh Khang',
-      route: 'Tuyến C',
-      students: 38,
-      status: 'bảo trì',
-    },
-    {
-      id: 4,
-      bus: 'Xe số 24',
-      driver: 'Phạm Thu Hà',
-      route: 'Tuyến D',
-      students: 48,
-      status: 'hoạt động',
-    },
-    {
-      id: 5,
-      bus: 'Xe số 05',
-      driver: 'Đỗ Quang Huy',
-      route: 'Tuyến A',
-      students: 41,
-      status: 'hoạt động',
-    },
-  ];
-
-  const routes = [
-    {
-      id: 1,
-      name: 'Tuyến A - Quận 1',
-      stops: 12,
-      distance: '18.5 km',
-      avgTime: '45 min',
-      buses: 6,
-    },
-    {
-      id: 2,
-      name: 'Tuyến B - Quận 10',
-      stops: 15,
-      distance: '22.3 km',
-      avgTime: '52 min',
-      buses: 8,
-    },
-    {
-      id: 3,
-      name: 'Tuyến C - Quận 3',
-      stops: 10,
-      distance: '15.8 km',
-      avgTime: '38 min',
-      buses: 5,
-    },
-    {
-      id: 4,
-      name: 'Tuyến D - Quận 7',
-      stops: 14,
-      distance: '20.1 km',
-      avgTime: '48 min',
-      buses: 7,
-    },
-  ];
-
-  const attendance = [
-    {
-      id: 1,
-      date: '2025-11-02',
-      present: 1247,
-      absent: 103,
-      total: 1350,
-      rate: 92.4,
-    },
-    {
-      id: 2,
-      date: '2025-11-01',
-      present: 1265,
-      absent: 85,
-      total: 1350,
-      rate: 93.7,
-    },
-    {
-      id: 3,
-      date: '2025-10-31',
-      present: 1238,
-      absent: 112,
-      total: 1350,
-      rate: 91.7,
-    },
-    {
-      id: 4,
-      date: '2025-10-30',
-      present: 1280,
-      absent: 70,
-      total: 1350,
-      rate: 94.8,
-    },
-  ];
 
   return (
     <div className="space-y-6">

@@ -4,76 +4,11 @@ import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { childInfo, busInfo } from '~/models/ModelChild';
+import schedule from '~/models/ModelSchedule';
+import recentTrips from '~/models/ModelTrips';
 
 export default function ParentPortal() {
-  const childInfo = {
-    name: 'Nguyễn Minh Anh',
-    grade: 'Lớp 5',
-    studentId: 'ST-2847',
-    school: 'Lincoln Elementary School',
-    bus: 'Bus #12',
-    route: 'Route A - North District',
-  };
-
-  const busInfo = {
-    driver: 'Nguyễn Văn An',
-    phone: '+1 (555) 123-4567',
-    license: 'DL-28475',
-    currentLocation: 'Cedar Lane & Oak Street',
-    nextStop: 'Your Pickup Location',
-    eta: '8 minutes',
-    status: 'on-time',
-    speed: '35 km/h',
-  };
-
-  const schedule = {
-    morning: {
-      pickup: '7:18 AM',
-      arrival: '7:45 AM',
-      location: '123 Oak Street',
-    },
-    afternoon: {
-      departure: '2:30 PM',
-      dropoff: '2:58 PM',
-      location: '123 Oak Street',
-    },
-  };
-
-  const recentTrips = [
-    {
-      id: 1,
-      date: '2025-11-02',
-      type: 'Morning',
-      status: 'on-time',
-      pickup: '7:18 AM',
-      arrival: '7:43 AM',
-    },
-    {
-      id: 2,
-      date: '2025-11-01',
-      type: 'Afternoon',
-      status: 'on-time',
-      departure: '2:30 PM',
-      dropoff: '2:56 PM',
-    },
-    {
-      id: 3,
-      date: '2025-11-01',
-      type: 'Morning',
-      status: 'delayed',
-      pickup: '7:18 AM',
-      arrival: '7:52 AM',
-    },
-    {
-      id: 4,
-      date: '2025-10-31',
-      type: 'Afternoon',
-      status: 'on-time',
-      departure: '2:30 PM',
-      dropoff: '2:58 PM',
-    },
-  ];
-
   return (
     <div className="space-y-6">
       {/* Page Header */}
