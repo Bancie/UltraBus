@@ -1,0 +1,34 @@
+@startuml
+title QLHS first cut class diagram - Thêm học sinh 
+
+class "Thêm học sinh" {
+    + createHS(Tên, Lớp, Địa chỉ, Tên PH, SDT PH, Lịch học, Tuyến, Xe, Lịch)
+}
+class "Học sinh" {
+    Mã HS: String {Key}
+    Tên: String
+    Lớp: String
+    Địa chỉ: String
+    Lịch học: Date
+    + createHSinfo(Tên, Lớp, Địa chỉ, Lịch học): Học sinh
+    + linkPH(Tên PH, SĐT PH)
+}
+class "Phụ huynh" {
+    Mã HS: String {Key}
+    Tên PH: String
+    SĐT PH: String
+    + linkPH(Tên PH, SĐT PH): Phụ huynh
+}
+class "Phân công" {
+    Tuyến: String
+    Xe: String
+    Lịch: Date
+    + assignRoute(Tuyến, Xe, Lịch): Phân công
+}
+' Associations
+"Thêm học sinh" --> "Học sinh"
+"Học sinh" --> "Phụ huynh"
+"Thêm học sinh" --> "Phân công"
+@enduml
+
+
