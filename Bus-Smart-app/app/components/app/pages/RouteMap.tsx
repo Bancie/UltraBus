@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import GoogleMapCard from '../../GoogleMap';
+import GoogleMapCard from '../map/GoogleMap';
 import { buses, upcomingStops } from '~/models/ModelBus';
 
 export default function RouteMap() {
