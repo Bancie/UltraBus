@@ -16,16 +16,24 @@ import {
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import phancong from '~/models/ModelAsign';
 import attendance from '~/models/ModelAttendance';
 import RoutesController, { type RouteRecord } from '~/controllers/Routes';
+import AssignController, { type AssignRecord } from '~/controllers/AssignController';
+import type { BusRecord } from '~/controllers/Buses';
+import type { DriverRecord } from '~/controllers/Drivers';
 
 export default function Manager() {
   const [selectedTab, setSelectedTab] = useState('phancong');
   const routesControllerRef = useRef(new RoutesController());
+  const assignControllerRef = useRef(new AssignController());
   const [routeList, setRouteList] = useState<RouteRecord[]>(() =>
     routesControllerRef.current.getRoutes(),
   );
+  const [assignments, setAssignments] = useState<AssignRecord[]>(() =>
+    assignControllerRef.current.getAssign(),
+  );
+  const [busList] = useState<BusRecord[]>(() => assignControllerRef.current.getBus());
+  const [driverList] = useState<DriverRecord[]>(() => assignControllerRef.current.getDrivers());
   const [routeName, setRouteName] = useState('');
   const [routeStops, setRouteStops] = useState('');
   const [routeDistance, setRouteDistance] = useState('');
@@ -33,6 +41,14 @@ export default function Manager() {
   const [routeBuses, setRouteBuses] = useState('');
   const [routeError, setRouteError] = useState<string | null>(null);
   const [isRouteDialogOpen, setIsRouteDialogOpen] = useState(false);
+  const [assignError, setAssignError] = useState<string | null>(null);
+  const [assignForm, setAssignForm] = useState({
+    busId: '',
+    driverId: '',
+    routeId: '',
+    students: '',
+    status: 'hoạt động',
+  });
 
   useEffect(() => {
     if (!isRouteDialogOpen) {
@@ -46,6 +62,51 @@ export default function Manager() {
     setRouteDistance('');
     setRouteAvgTime('');
     setRouteBuses('');
+  };
+
+  const updateAssignForm = (field: keyof typeof assignForm, value: string) => {
+    setAssignForm((prev) => ({ ...prev, [field]: value }));
+    setAssignError(null);
+  };
+
+  const resetAssignForm = () => {
+    setAssignForm({
+      busId: '',
+      driverId: '',
+      routeId: '',
+      students: '',
+      status: 'hoạt động',
+    });
+  };
+
+  const handleCreateAssign = () => {
+    const bus = busList.find((item) => item.id.toString() === assignForm.busId);
+    const driver = driverList.find((item) => item.id.toString() === assignForm.driverId);
+    const route = routeList.find((item) => item.id.toString() === assignForm.routeId);
+
+    if (!bus || !driver || !route) {
+      setAssignError('Vui lòng chọn đầy đủ xe, tài xế và tuyến đường.');
+      return;
+    }
+
+    const newAssign: AssignRecord = {
+      id: Date.now(),
+      bus: bus.name,
+      driver: driver.name,
+      route: route.name,
+      students: Number(assignForm.students) || 0,
+      status: assignForm.status,
+      schedule: new Date(),
+    };
+
+    try {
+      assignControllerRef.current.addAssign(newAssign);
+      setAssignments(assignControllerRef.current.getAssign());
+      setAssignError(null);
+      resetAssignForm();
+    } catch (error) {
+      setAssignError(error instanceof Error ? error.message : 'Không thể tạo phân công.');
+    }
   };
 
   const handleCreateRoute = () => {
@@ -112,44 +173,92 @@ export default function Manager() {
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
                   <Label htmlFor="bus">Chọn xe</Label>
-                  <Select>
+                  <Select
+                    value={assignForm.busId}
+                    onValueChange={(value) => updateAssignForm('busId', value)}
+                  >
                     <SelectTrigger id="bus">
                       <SelectValue placeholder="Chọn một xe" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="12">Bus số 12</SelectItem>
-                      <SelectItem value="07">Bus số 07</SelectItem>
-                      <SelectItem value="19">Bus số 19</SelectItem>
+                      {busList.map((bus) => (
+                        <SelectItem key={bus.id} value={bus.id.toString()}>
+                          {bus.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="driver">Chọn tài xế</Label>
-                  <Select>
+                  <Select
+                    value={assignForm.driverId}
+                    onValueChange={(value) => updateAssignForm('driverId', value)}
+                  >
                     <SelectTrigger id="driver">
                       <SelectValue placeholder="Chọn một tài xế" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="nguyen-van-an">Nguyễn Văn An</SelectItem>
-                      <SelectItem value="tran-thi-bich">Trần Thị Bích</SelectItem>
-                      <SelectItem value="le-minh-khang">Lê Minh Khang</SelectItem>
+                      {driverList.map((driver) => (
+                        <SelectItem key={driver.id} value={driver.id.toString()}>
+                          {driver.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="route">Chọn tuyến đường</Label>
-                  <Select>
+                  <Select
+                    value={assignForm.routeId}
+                    onValueChange={(value) => updateAssignForm('routeId', value)}
+                  >
                     <SelectTrigger id="route">
                       <SelectValue placeholder="Chọn một tuyến đường" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="a">Tuyến A - Quận 1</SelectItem>
-                      <SelectItem value="b">Tuyến B - Quận 10</SelectItem>
-                      <SelectItem value="c">Tuyến C - Quận 3</SelectItem>
+                      {routeList.map((route) => (
+                        <SelectItem key={route.id} value={route.id.toString()}>
+                          {route.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
-                <Button className="w-full bg-blue-600 hover:bg-blue-700">Tạo phân công</Button>
+                <div className="space-y-2">
+                  <Label htmlFor="students">Số học sinh</Label>
+                  <Input
+                    id="students"
+                    type="number"
+                    min={0}
+                    placeholder="Nhập số học sinh"
+                    value={assignForm.students}
+                    onChange={(event) => updateAssignForm('students', event.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="status">Trạng thái</Label>
+                  <Select
+                    value={assignForm.status}
+                    onValueChange={(value) => updateAssignForm('status', value)}
+                  >
+                    <SelectTrigger id="status">
+                      <SelectValue placeholder="Chọn trạng thái" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="hoạt động">Hoạt động</SelectItem>
+                      <SelectItem value="bảo trì">Bảo trì</SelectItem>
+                      <SelectItem value="tạm dừng">Tạm dừng</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {assignError && <p className="text-sm text-red-600">{assignError}</p>}
+                <Button
+                  className="w-full bg-blue-600 hover:bg-blue-700"
+                  onClick={handleCreateAssign}
+                >
+                  Tạo phân công
+                </Button>
               </div>
             </DialogContent>
           </Dialog>
@@ -184,7 +293,7 @@ export default function Manager() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {phancong.map((assignment) => (
+                  {assignments.map((assignment) => (
                     <TableRow key={assignment.id}>
                       <TableCell>{assignment.bus}</TableCell>
                       <TableCell>{assignment.driver}</TableCell>
