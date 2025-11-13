@@ -1,6 +1,17 @@
 // models/Driver.ts
 
-export type DriverRecord = {};
+export type DriverRecord = {
+  id: number;
+  name: string;
+  license: string;
+  phone: string;
+  email: string;
+  bus: string;
+  route: string;
+  status: string;
+  experience: string;
+  rating: number;
+};
 
 const defaultDrivers: DriverRecord[] = [
   {
@@ -77,41 +88,30 @@ const defaultDrivers: DriverRecord[] = [
   },
 ];
 
-export class Driver {
-  id: string;
-  name: string;
-  license: string;
-  experience: string;
-  phone?: string;
-  email?: string;
+export default class Driver {
+  private drivers: DriverRecord[];
 
-  constructor(
-    id: string,
-    name: string,
-    license: string,
-    experience: string,
-    phone?: string,
-    email?: string,
-  ) {
-    this.id = id;
-    this.name = name;
-    this.license = license;
-    this.experience = experience;
-    this.phone = phone;
-    this.email = email;
+  constructor(initialDrivers: DriverRecord[] = defaultDrivers) {
+    const source = Array.isArray(initialDrivers) ? initialDrivers : defaultDrivers;
+    this.drivers = [...source];
   }
 
-  static createDriver(data: {
-    name: string;
-    license: string;
-    experience: string;
-    phone?: string;
-    email?: string;
-  }): Driver {
-    const id = crypto.randomUUID();
+  getDrivers(): DriverRecord[] {
+    return [...this.drivers];
+  }
 
-    return new Driver(id, data.name, data.license, data.experience, data.phone, data.email);
+  getDriverbyId(id: number): DriverRecord | undefined {
+    return this.drivers.find((route) => route.id === id);
+  }
+
+  addDriver(driver: DriverRecord): DriverRecord {
+    const existingRoute = this.getDriverbyId(driver.id);
+
+    if (existingRoute) {
+      throw new Error(`Driver with id ${driver.id} already exists.`);
+    }
+
+    this.drivers.push(driver);
+    return driver;
   }
 }
-
-export default Driver;
