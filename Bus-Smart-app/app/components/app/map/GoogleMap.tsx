@@ -1,12 +1,23 @@
 import * as React from 'react';
 import { Card, CardHeader, CardContent, Box, Typography } from '@mui/material';
-import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
+import { GoogleMap, Marker, InfoWindow, Polyline, useJsApiLoader } from '@react-google-maps/api';
 
 type MapMarker = {
   id: string | number;
   position: google.maps.LatLngLiteral;
   title?: string;
   description?: string;
+  label?: string;
+  icon?: google.maps.Icon | google.maps.Symbol;
+  iconColor?: string;
+  iconScale?: number;
+  zIndex?: number;
+};
+
+type MapPolyline = {
+  id: string | number;
+  path: google.maps.LatLngLiteral[];
+  options?: google.maps.PolylineOptions;
 };
 
 type GoogleMapCardProps = {
@@ -16,6 +27,7 @@ type GoogleMapCardProps = {
   height?: number | string;
   markers?: MapMarker[];
   variant?: 'card' | 'embed';
+  polylines?: MapPolyline[];
 };
 
 const FALLBACK_CENTER: google.maps.LatLngLiteral = {
@@ -30,6 +42,7 @@ export default function GoogleMapCard({
   height = 400,
   markers = [],
   variant = 'card',
+  polylines = [],
 }: GoogleMapCardProps) {
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string,
@@ -56,10 +69,33 @@ export default function GoogleMapCard({
             gestureHandling: 'greedy',
           }}
         >
+          {polylines.map((polyline) => (
+            <Polyline key={polyline.id} path={polyline.path} options={polyline.options} />
+          ))}
           {hasMarkers ? (
-            markers.map((marker) => (
-              <React.Fragment key={marker.id}>
-                <Marker position={marker.position} onClick={() => setActiveMarkerId(marker.id)} />
+            markers.map((marker) => {
+              const resolvedIcon =
+                marker.icon ??
+                (marker.iconColor && (window as typeof window & { google?: typeof google }).google
+                  ? {
+                      path: google.maps.SymbolPath.CIRCLE,
+                      fillColor: marker.iconColor,
+                      fillOpacity: 1,
+                      strokeColor: '#ffffff',
+                      strokeWeight: 2,
+                      scale: marker.iconScale ?? 6,
+                    }
+                  : undefined);
+
+              return (
+                <React.Fragment key={marker.id}>
+                  <Marker
+                    position={marker.position}
+                    onClick={() => setActiveMarkerId(marker.id)}
+                    label={marker.label}
+                    icon={resolvedIcon}
+                    zIndex={marker.zIndex}
+                  />
                 {activeMarkerId === marker.id && (
                   <InfoWindow
                     position={marker.position}
@@ -77,8 +113,9 @@ export default function GoogleMapCard({
                     </Box>
                   </InfoWindow>
                 )}
-              </React.Fragment>
-            ))
+                </React.Fragment>
+              );
+            })
           ) : (
             <>
               <Marker position={resolvedCenter} onClick={() => setDefaultInfoOpen(true)} />
