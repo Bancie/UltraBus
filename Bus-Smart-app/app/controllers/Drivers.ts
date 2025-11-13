@@ -1,5 +1,3 @@
-// models/Driver.ts
-
 export type DriverRecord = {
   id: number;
   name: string;

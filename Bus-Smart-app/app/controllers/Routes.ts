@@ -7,7 +7,7 @@ export type RouteRecord = {
   buses: number;
 };
 
-const defaultRoutes: RouteRecord[] = [
+export const defaultRoutes: RouteRecord[] = [
   {
     id: 1,
     name: 'Tuyến A - Quận 1',
@@ -42,7 +42,7 @@ const defaultRoutes: RouteRecord[] = [
   },
 ];
 
-export default class RoutesController {
+export default class Routes {
   private routes: RouteRecord[];
 
   constructor(initialRoutes: RouteRecord[] = defaultRoutes) {
