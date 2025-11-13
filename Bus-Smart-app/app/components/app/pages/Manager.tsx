@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Plus, UserPlus, MapPin, Calendar, CheckCircle, XCircle } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
@@ -16,12 +16,75 @@ import {
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import routes from '~/models/ModelRoutes';
 import phancong from '~/models/ModelAsign';
 import attendance from '~/models/ModelAttendance';
+import RoutesController, { type RouteRecord } from '~/controllers/Routes';
 
 export default function Manager() {
   const [selectedTab, setSelectedTab] = useState('phancong');
+  const routesControllerRef = useRef(new RoutesController());
+  const [routeList, setRouteList] = useState<RouteRecord[]>(() =>
+    routesControllerRef.current.getRoutes(),
+  );
+  const [routeName, setRouteName] = useState('');
+  const [routeStops, setRouteStops] = useState('');
+  const [routeDistance, setRouteDistance] = useState('');
+  const [routeAvgTime, setRouteAvgTime] = useState('');
+  const [routeBuses, setRouteBuses] = useState('');
+  const [routeError, setRouteError] = useState<string | null>(null);
+  const [isRouteDialogOpen, setIsRouteDialogOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isRouteDialogOpen) {
+      setRouteError(null);
+    }
+  }, [isRouteDialogOpen]);
+
+  const resetRouteForm = () => {
+    setRouteName('');
+    setRouteStops('');
+    setRouteDistance('');
+    setRouteAvgTime('');
+    setRouteBuses('');
+  };
+
+  const handleCreateRoute = () => {
+    if (!routeName.trim()) {
+      setRouteError('Vui lòng nhập tên tuyến đường.');
+      return;
+    }
+
+    const normalizedDistance = (() => {
+      const trimmed = routeDistance.trim();
+      if (!trimmed) return '0 km';
+      return trimmed.endsWith('km') ? trimmed : `${trimmed} km`;
+    })();
+
+    const normalizedAvgTime = (() => {
+      const trimmed = routeAvgTime.trim();
+      if (!trimmed) return '0 min';
+      return trimmed.includes('min') ? trimmed : `${trimmed} min`;
+    })();
+
+    try {
+      const newRoute: RouteRecord = {
+        id: Date.now(),
+        name: routeName.trim(),
+        stops: Number(routeStops) || 0,
+        distance: normalizedDistance,
+        avgTime: normalizedAvgTime,
+        buses: Number(routeBuses) || 0,
+      };
+
+      routesControllerRef.current.addRoute(newRoute);
+      setRouteList(routesControllerRef.current.getRoutes());
+      resetRouteForm();
+      setRouteError(null);
+      setIsRouteDialogOpen(false);
+    } catch (error) {
+      setRouteError(error instanceof Error ? error.message : 'Không thể tạo tuyến đường.');
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -159,7 +222,7 @@ export default function Manager() {
                   <CardTitle>Quản lý tuyến đường</CardTitle>
                   <CardDescription>Tạo và quản lý tuyến đường</CardDescription>
                 </div>
-                <Dialog>
+                <Dialog open={isRouteDialogOpen} onOpenChange={setIsRouteDialogOpen}>
                   <DialogTrigger asChild>
                     <Button className="bg-blue-600 hover:bg-blue-700">
                       <MapPin className="w-4 h-4 mr-2" />
@@ -176,17 +239,56 @@ export default function Manager() {
                     <div className="space-y-4 py-4">
                       <div className="space-y-2">
                         <Label htmlFor="routeName">Tên tuyến đường</Label>
-                        <Input id="routeName" placeholder="Ví dụ, Tuyến E - Quận 4" />
+                        <Input
+                          id="routeName"
+                          placeholder="Ví dụ, Tuyến E - Quận 4"
+                          value={routeName}
+                          onChange={(event) => setRouteName(event.target.value)}
+                        />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="stops">Số lượng điểm dừng</Label>
-                        <Input id="stops" type="number" placeholder="12" />
+                        <Input
+                          id="stops"
+                          type="number"
+                          placeholder="12"
+                          value={routeStops}
+                          onChange={(event) => setRouteStops(event.target.value)}
+                        />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="distance">Khoảng cách (km)</Label>
-                        <Input id="distance" placeholder="18.5" />
+                        <Input
+                          id="distance"
+                          placeholder="18.5"
+                          value={routeDistance}
+                          onChange={(event) => setRouteDistance(event.target.value)}
+                        />
                       </div>
-                      <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                      <div className="space-y-2">
+                        <Label htmlFor="avgTime">Thời gian trung bình (phút)</Label>
+                        <Input
+                          id="avgTime"
+                          placeholder="45"
+                          value={routeAvgTime}
+                          onChange={(event) => setRouteAvgTime(event.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="buses">Số xe phân công</Label>
+                        <Input
+                          id="buses"
+                          type="number"
+                          placeholder="6"
+                          value={routeBuses}
+                          onChange={(event) => setRouteBuses(event.target.value)}
+                        />
+                      </div>
+                      {routeError && <p className="text-sm text-red-600">{routeError}</p>}
+                      <Button
+                        className="w-full bg-blue-600 hover:bg-blue-700"
+                        onClick={handleCreateRoute}
+                      >
                         Tạo tuyến đường
                       </Button>
                     </div>
@@ -196,7 +298,7 @@ export default function Manager() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {routes.map((route) => (
+                {routeList.map((route) => (
                   <div key={route.id} className="p-4 rounded-lg border border-gray-200 bg-white">
                     <h3 className="text-gray-900 mb-3">{route.name}</h3>
                     <div className="space-y-2 text-gray-600">

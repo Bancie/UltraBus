@@ -1,9 +1,10 @@
-type RouteRecord = {
+export type RouteRecord = {
   id: number;
   name: string;
   stops: number;
   distance: string;
   avgTime: string;
+  buses: number;
 };
 
 const defaultRoutes: RouteRecord[] = [
@@ -13,6 +14,7 @@ const defaultRoutes: RouteRecord[] = [
     stops: 12,
     distance: '18.5 km',
     avgTime: '45 min',
+    buses: 6,
   },
   {
     id: 2,
@@ -20,6 +22,7 @@ const defaultRoutes: RouteRecord[] = [
     stops: 15,
     distance: '22.3 km',
     avgTime: '52 min',
+    buses: 8,
   },
   {
     id: 3,
@@ -27,6 +30,7 @@ const defaultRoutes: RouteRecord[] = [
     stops: 10,
     distance: '15.8 km',
     avgTime: '38 min',
+    buses: 5,
   },
   {
     id: 4,
@@ -34,6 +38,7 @@ const defaultRoutes: RouteRecord[] = [
     stops: 14,
     distance: '20.1 km',
     avgTime: '48 min',
+    buses: 7,
   },
 ];
 
@@ -64,18 +69,3 @@ export default class RoutesController {
     return route;
   }
 }
-
-const controller = new RoutesController([
-  { id: 1, name: 'Tuyến A - Quận 1', stops: 12, distance: '18.5 km', avgTime: '45 min' },
-]);
-console.log(controller.getRoutes());
-
-controller.addRoute({
-  id: 99,
-  name: 'Tuyến thử nghiệm',
-  stops: 8,
-  distance: '12 km',
-  avgTime: '30 min',
-});
-
-console.log('Sau khi thêm:', controller.getRoutes());
