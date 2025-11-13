@@ -7,4 +7,4 @@ import Bus from './Buses';
 // console.log(controller.getRoutes());
 
 const i = new Bus();
-console.log(i.getBusName(1));
+// console.log(i.getBusName(1));
