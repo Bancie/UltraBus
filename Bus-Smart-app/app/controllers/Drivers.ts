@@ -36,3 +36,5 @@ export class Driver {
     return new Driver(id, data.name, data.license, data.experience, data.phone, data.email);
   }
 }
+
+export default Driver;
