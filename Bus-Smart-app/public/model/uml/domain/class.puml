@@ -10,10 +10,6 @@ Class TaiXe {
     - ngayHetHanGiayPhep
     - ngaySinh
     - trangThai
-
-    +capNhatThongTinTaiXe(hoTenMoi, soDienThoaiMoi, emailMoi, diaChiMoi)
-    +dangKyLichLamViec(maLichLamViec)
-    +capNhatTrangThai(trangThaiMoi)
 }
 
 Class PhuHuynh {
@@ -23,10 +19,6 @@ Class PhuHuynh {
     - email
     - diaChi
     - trangThai
-
-    +capNhatThongTinLienHe(soDienThoaiMoi, emailMoi)
-    +nhanThongBao(noiDung)
-    +xacNhanTinhTrangHocSinh(maHocSinh, trangThai)
 }
 
 Class HocSinh {
@@ -38,10 +30,6 @@ Class HocSinh {
     - truongHoc
     - soDienThoaiLienHe
     - trangThai
-
-    +capNhatThongTinLienHe(soDienThoaiMoi)
-    +dangKyDanhSachDon(maDanhSach)
-    +capNhatTrangThai(trangThaiMoi)
 }
 
 Class LichLamViec {
@@ -53,10 +41,6 @@ Class LichLamViec {
     - gioKetThuc
     - ghiChu
     - trangThai
-
-    +capNhatKhungGio(gioBatDauMoi, gioKetThucMoi)
-    +themCongViec(ghiChuMoi)
-    +phanCongTaiXe(maTaiXe)
 }
 
 Class DanhSachDon {
@@ -66,10 +50,6 @@ Class DanhSachDon {
     - ngayTao
     - nguoiTao
     - trangThai
-
-    +themHocSinh(maHocSinh)
-    +xoaHocSinh(maHocSinh)
-    +layDanhSachHocSinh()
 }
 
 Abstract LichTrinh {
@@ -79,10 +59,6 @@ Abstract LichTrinh {
     - thoiGianDen
     - ngayApDung
     - trangThai
-
-    +capNhatThoiGian(thoiGianDiMoi, thoiGianDenMoi)
-    +themDiaDiem(maDiaDiem)
-    +tinhTongThoiGian()
 }
 
 Class LichTrinhXe {
@@ -92,10 +68,6 @@ Class LichTrinhXe {
     - quangDuong
     - chuKyLapLai
     - ghiChu
-
-    +capNhatQuangDuong(quangDuongMoi)
-    +datChuKyLapLai(chuKyMoi)
-    +capNhatGhiChu(ghiChuMoi)
 }
 
 Class LichTrinhHocSinh {
@@ -105,10 +77,6 @@ Class LichTrinhHocSinh {
     - diemTra
     - thoiGianChoToiDa
     - ghiChu
-
-    +themHocSinh(maHocSinh)
-    +capNhatDiemDon(diemDonMoi, diemTraMoi)
-    +capNhatThoiGianCho(thoiGianChoMoi)
 }
 
 Class Xe {
@@ -119,10 +87,6 @@ Class Xe {
     - namSanXuat
     - mauSac
     - trangThaiXe
-
-    +capNhatTrangThaiXe(trangThaiMoi)
-    +dangKyBaoDuong(ngayBaoDuong)
-    +kiemTraKhaDung()
 }
 
 Class PhanCongXe {
@@ -131,10 +95,6 @@ Class PhanCongXe {
     - ngayPhanCong
     - trangThai
     - ghiChu
-
-    +phanBoTaiXe(maTaiXe, maLichTrinh)
-    +capNhatCaLamViec(caLamViecMoi)
-    +huyPhanCong()
 }
 
 Abstract Tracking {
@@ -143,30 +103,18 @@ Abstract Tracking {
     - kinhDo
     - viDo
     - ghiChu
-
-    +capNhatViTri(kinhDoMoi, viDoMoi)
-    +capNhatTrangThaiTheoDoi(trangThaiMoi)
-    +layBanGhiGanNhat()
 }
 
 Class TrackingTaiXe {
     - maTrackingTaiXe
     - maTaiXe
     - trangThaiTaiXe
-
-    +capNhatTrangThaiTaiXe(trangThaiMoi)
-    +layThongTinTaiXe()
-    +ghiChuTheoDoi(ghiChuMoi)
 }
 
 Class TrackingHocSinh {
     - maTrackingHocSinh
     - maHocSinh
     - trangThaiHocSinh
-
-    +capNhatTrangThaiHocSinh(trangThaiMoi)
-    +layThongTinHocSinh()
-    +ghiChuTheoDoi(ghiChuMoi)
 }
 
 Class LichDonHocSinh {
@@ -176,10 +124,6 @@ Class LichDonHocSinh {
     - thoiGianTra
     - trangThaiDon
     - ghiChu
-
-    +xacNhanDon(maHocSinh)
-    +xacNhanTra(maHocSinh)
-    +capNhatTrangThaiDon(trangThaiMoi)
 }
 
 Class DiaDiem {
@@ -189,10 +133,6 @@ Class DiaDiem {
     - kinhDo
     - viDo
     - loaiDiaDiem
-
-    +capNhatToaDo(kinhDoMoi, viDoMoi)
-    +capNhatLoaiDiaDiem(loaiMoi)
-    +layThongTinDiaDiem()
 }
 
 Class TaiXeDiaDiem {
@@ -202,10 +142,6 @@ Class TaiXeDiaDiem {
     - thoiGianRoi
     - trangThai
     - ghiChu
-
-    +ghiNhanDen(thoiGianDenMoi)
-    +ghiNhanRoi(thoiGianRoiMoi)
-    +capNhatTrangThai(trangThaiMoi)
 }
 
 Class DiaDiemLichTrinh {
@@ -213,10 +149,6 @@ Class DiaDiemLichTrinh {
     - maLichTrinh
     - thoiGianDuKien
     - ghiChu
-
-    +sapXepThuTu(thuTu)
-    +capNhatThoiGianDuKien(thoiGianMoi)
-    +layThongTinDiemDung()
 }
 
 ' Association
