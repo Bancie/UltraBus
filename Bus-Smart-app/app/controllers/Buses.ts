@@ -1,3 +1,5 @@
+import { buses } from '~/models/ModelBus';
+
 export type BusRecord = {
   id: number;
   name: string;
@@ -12,47 +14,7 @@ export type BusRecord = {
   lng: number;
 };
 
-const defaultBuses: BusRecord[] = [
-  {
-    id: 1,
-    name: 'Xe số 12',
-    route: 'Tuyến A - Quận 1',
-    driver: 'Nguyễn Văn An',
-    status: 'on-route',
-    currentStop: '69 Lê Lợi',
-    eta: '8 mins',
-    students: 45,
-    speed: '35 km/h',
-    lat: 10.7739,
-    lng: 106.6999,
-  },
-  {
-    id: 2,
-    name: 'Xe số 07',
-    route: 'Tuyến B - Quận 10',
-    driver: 'Trần Thị Bích',
-    status: 'on-route',
-    currentStop: '92 Ngô Gia Tự',
-    eta: '12 mins',
-    students: 52,
-    speed: '40 km/h',
-    lat: 10.7648,
-    lng: 106.6661,
-  },
-  {
-    id: 3,
-    name: 'Xe số 24',
-    route: 'Tuyến D - Quận 7',
-    driver: 'Phạm Thu Hà',
-    status: 'on-route',
-    currentStop: '19 Nguyễn Văn Linh',
-    eta: '6 mins',
-    students: 48,
-    speed: '32 km/h',
-    lat: 10.7324,
-    lng: 106.7053,
-  },
-];
+const defaultBuses: BusRecord[] = buses;
 
 export default class Bus {
   private buses: BusRecord[];

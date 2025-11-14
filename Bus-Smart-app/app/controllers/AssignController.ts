@@ -1,6 +1,7 @@
 import Routes, { type RouteRecord } from './Routes';
 import Driver, { type DriverRecord } from './Drivers';
 import Bus, { type BusRecord } from './Buses';
+import phancong from '~/models/ModelAsign';
 
 export type AssignRecord = {
   id: number;
@@ -12,53 +13,7 @@ export type AssignRecord = {
   schedule: Date;
 };
 
-const defaultAssign: AssignRecord[] = [
-  {
-    id: 1,
-    bus: 'Xe số 12',
-    driver: 'Nguyễn Văn An',
-    route: 'Tuyến A',
-    students: 45,
-    status: 'hoạt động',
-    schedule: new Date('2024-07-01T07:15:00+07:00'),
-  },
-  {
-    id: 2,
-    bus: 'Xe số 07',
-    driver: 'Trần Thị Bích',
-    route: 'Tuyến B',
-    students: 52,
-    status: 'hoạt động',
-    schedule: new Date('2024-07-01T07:30:00+07:00'),
-  },
-  {
-    id: 3,
-    bus: 'Xe số 19',
-    driver: 'Lê Minh Khang',
-    route: 'Tuyến C',
-    students: 38,
-    status: 'bảo trì',
-    schedule: new Date('2024-07-01T08:00:00+07:00'),
-  },
-  {
-    id: 4,
-    bus: 'Xe số 24',
-    driver: 'Phạm Thu Hà',
-    route: 'Tuyến D',
-    students: 48,
-    status: 'hoạt động',
-    schedule: new Date('2024-07-01T08:15:00+07:00'),
-  },
-  {
-    id: 5,
-    bus: 'Xe số 05',
-    driver: 'Đỗ Quang Huy',
-    route: 'Tuyến A',
-    students: 41,
-    status: 'hoạt động',
-    schedule: new Date('2024-07-01T09:00:00+07:00'),
-  },
-];
+const defaultAssign: AssignRecord[] = phancong;
 
 export default class AssignController {
   private assignments: AssignRecord[];
@@ -102,6 +57,8 @@ export default class AssignController {
     return assign;
   }
 
+  // Routes
+
   getRoutes(): RouteRecord[] {
     return this.routesController.getRoutes();
   }
@@ -109,6 +66,8 @@ export default class AssignController {
   getRouteById(id: number): RouteRecord | undefined {
     return this.routesController.getRouteById(id);
   }
+
+  // Drivers
 
   getDrivers(): DriverRecord[] {
     return this.driverController.getDrivers();
@@ -118,6 +77,8 @@ export default class AssignController {
     return this.driverController.getDriverbyId(id);
   }
 
+  // Schedule
+
   getSchedule(): AssignRecord[] {
     return [...this.assignments];
   }
@@ -125,6 +86,8 @@ export default class AssignController {
   getScheduleById(id: number): AssignRecord | undefined {
     return this.assignments.find((source) => source.id === id);
   }
+
+  // Bus
 
   getBus(): BusRecord[] {
     return this.busController.getBus();

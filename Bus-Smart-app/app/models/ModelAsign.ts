@@ -6,6 +6,7 @@ const phancong = [
     route: 'Tuyến A',
     students: 45,
     status: 'hoạt động',
+    schedule: new Date('2024-07-01T07:15:00+07:00'),
   },
   {
     id: 2,
@@ -14,6 +15,7 @@ const phancong = [
     route: 'Tuyến B',
     students: 52,
     status: 'hoạt động',
+    schedule: new Date('2024-07-01T07:30:00+07:00'),
   },
   {
     id: 3,
@@ -22,6 +24,7 @@ const phancong = [
     route: 'Tuyến C',
     students: 38,
     status: 'bảo trì',
+    schedule: new Date('2024-07-01T08:00:00+07:00'),
   },
   {
     id: 4,
@@ -30,6 +33,7 @@ const phancong = [
     route: 'Tuyến D',
     students: 48,
     status: 'hoạt động',
+    schedule: new Date('2024-07-01T08:15:00+07:00'),
   },
   {
     id: 5,
@@ -38,6 +42,7 @@ const phancong = [
     route: 'Tuyến A',
     students: 41,
     status: 'hoạt động',
+    schedule: new Date('2024-07-01T09:00:00+07:00'),
   },
 ];
 

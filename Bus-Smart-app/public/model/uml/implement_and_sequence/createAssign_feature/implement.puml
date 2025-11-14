@@ -1,0 +1,59 @@
+@startuml
+title Create Assign - Implement Diagram
+
+class "<<Controller>> AssignController" as co {
+    - schedule: Date
+    - period: string
+    + addAssign(assign) : AssignRecord
+}
+
+class "Routes" as ro {
+    - id: number
+    - name: string
+    - stops: number
+    - distance: string
+    - avgTime: string
+    - buses: number
+    + getRoutes(): RouteRecor
+    + getRouteById(id): RouteRecor
+    + addRoute(route): RouteRecor
+}
+
+class "Driver" as dr {
+    - id: number
+    - name: string
+    - license: string
+    - phone: string
+    - email: string
+    - bus: string
+    - route: string
+    - status: string
+    - experience: string
+    - rating: number
+    + getDrivers(): DriverRecor
+    + getDriverbyId(id): DriverRecor
+    + addDriver(driver): DriverRecor
+}
+
+class "Bus" as bu {
+    - id: number
+    - name: string
+    - route: string
+    - driver: string
+    - currentStop: string
+    - status: string
+    - eta: string
+    - students: number
+    - speed: string
+    - lat: number
+    - lng: number
+    + getBus(): BusRecord
+    + getBusbyId(id): BusRecord
+    + addBus(bus): BusRecord
+}
+
+co --> ro
+co --> dr
+co --> bu
+
+@enduml
