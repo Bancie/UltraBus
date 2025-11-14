@@ -2,16 +2,16 @@
 title Quản lý học sinh - Thêm học sinh
 
 actor "Quản lý" as QL 
-participant "~~:Thêm học sinh~~" as THEMHS 
-participant "~~:Học sinh~~" as HS
-participant "~~:Phụ huynh~~" as PH 
-participant "~~:Phân công~~" as PC
+participant "~~:AddStudent~~" as THEMHS 
+participant "~~:Student~~" as HS
+participant "~~:Parent~~" as PH 
+participant "~~:Assign~~" as PC
 
-QL -> THEMHS: createHS(Tên, Lớp, Địa chỉ, Tên PH, SDT PH, Lich học, Tuyến, Xe, Lịch)
-THEMHS -> HS: createHSinfo(Tên, Lớp, Địa chỉ, Lịch học)
-HS -> PH: linkPH(Tên PH, SDT PH)
-PH --> HS: (Tên PH, SDT PH)
-HS --> THEMHS: (Tên, Lớp, Địa chỉ, Lịch học, Tên PH, SDT PH)
-THEMHS -> PC: assignRoute(Tuyến, Xe, Lịch)
-PC --> THEMHS: (Tuyến, Xe, Lịch)
-THEMHS --> QL: (Tên, Lớp, Địa chỉ, Lịch học, Tên PH, SDT PH, Tuyến, Xe, Lịch)
+QL -> THEMHS: createHS(studentName, className, address, parentName, parentPhone, studySchedule, routeCode, busCode, assignmentSchedule)
+THEMHS -> HS: createHSinfo(studentName, className, address, studySchedule)
+HS -> PH: linkPH(parentName, parentPhone)
+PH --> HS: (parentName, parentPhone)
+HS --> THEMHS: (studentName, className, address, studySchedule, parentName, parentPhone)
+THEMHS -> PC: assignRoute(routeCode, busCode, assignmentSchedule)
+PC --> THEMHS: (routeCode, busCode, assignmentSchedule)
+THEMHS --> QL: (studentName, className, address, studySchedule, parentName, parentPhone, routeCode, busCode, assignmentSchedule)

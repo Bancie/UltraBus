@@ -1,34 +1,32 @@
 @startuml
-title QLHS first cut class diagram - Thêm học sinh 
+title QLHS first cut class diagram - Add student
 
-class "Thêm học sinh" {
-    + createHS(Tên, Lớp, Địa chỉ, Tên PH, SDT PH, Lịch học, Tuyến, Xe, Lịch)
+class "Add Student" {
+    + createStudent(studentName, className, address, ParentName, ParentPhone, studySchedule, routeCode, busCode, assignmentSchedule)
 }
-class "Học sinh" {
-    Mã HS: String {Key}
-    Tên: String
-    Lớp: String
-    Địa chỉ: String
-    Lịch học: Date
-    + createHSinfo(Tên, Lớp, Địa chỉ, Lịch học): Học sinh
-    + linkPH(Tên PH, SĐT PH)
+class "Student" {
+    studentId: String {Key}
+    studentName: String
+    className: String
+    address: String
+    studySchedule: Date
+    + createStudentInfo(studentName, className, address, studySchedule): Student
+    + linkParent(ParentName, ParentPhone)
 }
-class "Phụ huynh" {
-    Mã HS: String {Key}
-    Tên PH: String
-    SĐT PH: String
-    + linkPH(Tên PH, SĐT PH): Phụ huynh
+class "Parent" {
+    studentId: String {Key}
+    ParentName: String
+    ParentPhone: String
+    + linkParent(ParentName, ParentPhone): Parent
 }
-class "Phân công" {
-    Tuyến: String
-    Xe: String
-    Lịch: Date
-    + assignRoute(Tuyến, Xe, Lịch): Phân công
+class "Route Assignment" {
+    routeCode: String
+    busCode: String
+    assignmentSchedule: Date
+    + assignRoute(routeCode, busCode, assignmentSchedule): Route Assignment
 }
 ' Associations
-"Thêm học sinh" --> "Học sinh"
-"Học sinh" --> "Phụ huynh"
-"Thêm học sinh" --> "Phân công"
+"Add Student" --> "Student"
+"Student" --> "Parent"
+"Add Student" --> "Route Assignment"
 @enduml
-
-

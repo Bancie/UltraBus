@@ -62,9 +62,9 @@ const defaultAssign: AssignRecord[] = [
 
 export default class AssignController {
   private assignments: AssignRecord[];
-  private readonly routesController: Routes;
-  private readonly driverController: Driver;
-  private readonly busController: Bus;
+  private routesController: Routes;
+  private driverController: Driver;
+  private busController: Bus;
 
   constructor(
     initialAssign: AssignRecord[] = defaultAssign,
