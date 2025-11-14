@@ -428,7 +428,10 @@ export default function Manager() {
                         <span className="text-gray-900">{route.buses}</span>
                       </div>
                     </div>
-                    <Button variant="outline" className="w-full mt-4">
+                    <Button
+                      variant="outline"
+                      className="w-full mt-4 bg-green-200 hover:bg-green-800 hover:text-white border-green-200"
+                    >
                       Xem chi tiết
                     </Button>
                   </div>
