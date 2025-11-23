@@ -1,0 +1,25 @@
+@startuml
+title Tracking - Implement Diagram
+
+class "<<Controller>> AssignController" as ac {
+    - schedule: Date
+    - period: string
+    + getStop(): List
+    + getActiveBus(): List
+}
+
+class "<<Controller>> ActiveBuses" as ab {
+    + getBusStatus(): List
+    + tracking()
+}
+
+class "<<Controller>> MapController" as mc {
+    + getRoute()
+    + getCurrentGPS()
+}
+
+ab -left-> ac
+ab --> mc
+mc --> ac
+
+@enduml

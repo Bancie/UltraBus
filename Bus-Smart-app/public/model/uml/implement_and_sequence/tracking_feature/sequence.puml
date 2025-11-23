@@ -1,0 +1,14 @@
+@startuml
+title Create Assign - Sequence Diagram
+
+actor "Quản lý" as ql
+participant "~~:ActiveBuses~~" as ab
+participant "~~:MapController" as mc
+participant "~~:AssignController" as ac
+
+ql --> ab : getBusStatus()
+ab --> mc : getRoute()
+mc --> ac : getStop()
+ab --> mc : getCurrentGPS()
+
+ab --> ql
