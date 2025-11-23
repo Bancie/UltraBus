@@ -1,4 +1,3 @@
-@startuml
 title Create Assign - Sequence Diagram
 
 actor "Quản lý" as ql
