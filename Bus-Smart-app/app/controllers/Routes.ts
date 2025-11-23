@@ -1,5 +1,12 @@
 import routes from '~/models/ModelRoutes';
 
+export type Waypoint = {
+  id: number;
+  name: string;
+  lat: number;
+  lng: number;
+};
+
 export type RouteRecord = {
   id: number;
   name: string;
@@ -7,6 +14,7 @@ export type RouteRecord = {
   distance: string;
   avgTime: string;
   buses: number;
+  wayPoints?: Waypoint[];
 };
 
 export const defaultRoutes: RouteRecord[] = routes;
@@ -36,5 +44,11 @@ export default class Routes {
 
     this.routes.push(route);
     return route;
+  }
+
+  // Waypoints
+
+  getWayPoints(id: number): Waypoint[] | undefined {
+    return this.routes.find((route) => route.id === id)?.wayPoints;
   }
 }

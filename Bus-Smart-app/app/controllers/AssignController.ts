@@ -3,6 +3,13 @@ import Driver, { type DriverRecord } from './Drivers';
 import Bus, { type BusRecord } from './Buses';
 import phancong from '~/models/ModelAsign';
 
+export type Waypoint = {
+  id: number;
+  name: string;
+  lat: number;
+  lng: number;
+};
+
 export type AssignRecord = {
   id: number;
   bus: string;
@@ -11,6 +18,7 @@ export type AssignRecord = {
   students: number;
   status: string;
   schedule: Date;
+  wayPoints?: Waypoint[];
 };
 
 const defaultAssign: AssignRecord[] = phancong;
@@ -65,6 +73,10 @@ export default class AssignController {
 
   getRouteById(id: number): RouteRecord | undefined {
     return this.routesController.getRouteById(id);
+  }
+
+  getWayPoints(id: number): Waypoint[] | undefined {
+    return this.routesController.getWayPoints(id);
   }
 
   // Drivers

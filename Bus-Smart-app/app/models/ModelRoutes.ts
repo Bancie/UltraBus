@@ -6,6 +6,44 @@ const routes = [
     distance: '18.5 km',
     avgTime: '45 min',
     buses: 6,
+    wayPoints: [
+      {
+        id: 1,
+        name: 'Bến xe Bến Thành',
+        lat: 10.7720,
+        lng: 106.6983,
+      },
+      {
+        id: 2,
+        name: 'Chợ Bến Thành',
+        lat: 10.7739,
+        lng: 106.6999,
+      },
+      {
+        id: 3,
+        name: 'Nhà thờ Đức Bà',
+        lat: 10.7796,
+        lng: 106.6990,
+      },
+      {
+        id: 4,
+        name: 'Bưu điện Trung tâm Sài Gòn',
+        lat: 10.7794,
+        lng: 106.6992,
+      },
+      {
+        id: 5,
+        name: 'Công viên 23/9',
+        lat: 10.7719,
+        lng: 106.6975,
+      },
+      {
+        id: 6,
+        name: 'Trường Đại học Kinh tế TP.HCM',
+        lat: 10.7756,
+        lng: 106.7008,
+      },
+    ],
   },
   {
     id: 2,
@@ -14,6 +52,44 @@ const routes = [
     distance: '22.3 km',
     avgTime: '52 min',
     buses: 8,
+    wayPoints: [
+      {
+        id: 1,
+        name: 'Bệnh viện Chợ Rẫy',
+        lat: 10.7589,
+        lng: 106.6680,
+      },
+      {
+        id: 2,
+        name: 'Trường Đại học Y Dược TP.HCM',
+        lat: 10.7605,
+        lng: 106.6695,
+      },
+      {
+        id: 3,
+        name: 'Chợ Nguyễn Tri Phương',
+        lat: 10.7650,
+        lng: 106.6678,
+      },
+      {
+        id: 4,
+        name: 'Công viên Lê Thị Riêng',
+        lat: 10.7736,
+        lng: 106.6678,
+      },
+      {
+        id: 5,
+        name: 'Trường THPT Nguyễn Thị Minh Khai',
+        lat: 10.7700,
+        lng: 106.6650,
+      },
+      {
+        id: 6,
+        name: 'Siêu thị Co.opmart Nguyễn Tri Phương',
+        lat: 10.7620,
+        lng: 106.6700,
+      },
+    ],
   },
   {
     id: 3,
@@ -22,6 +98,44 @@ const routes = [
     distance: '15.8 km',
     avgTime: '38 min',
     buses: 5,
+    wayPoints: [
+      {
+        id: 1,
+        name: 'Công viên Lê Văn Tám',
+        lat: 10.7890,
+        lng: 106.6880,
+      },
+      {
+        id: 2,
+        name: 'Trường Đại học Sư phạm TP.HCM',
+        lat: 10.7830,
+        lng: 106.6880,
+      },
+      {
+        id: 3,
+        name: 'Bệnh viện Nhi Đồng 2',
+        lat: 10.7800,
+        lng: 106.6900,
+      },
+      {
+        id: 4,
+        name: 'Chợ Võ Văn Tần',
+        lat: 10.7850,
+        lng: 106.6850,
+      },
+      {
+        id: 5,
+        name: 'Trường THPT Lê Quý Đôn',
+        lat: 10.7870,
+        lng: 106.6920,
+      },
+      {
+        id: 6,
+        name: 'Công viên Văn Lang',
+        lat: 10.7810,
+        lng: 106.6860,
+      },
+    ],
   },
   {
     id: 4,
@@ -30,6 +144,50 @@ const routes = [
     distance: '20.1 km',
     avgTime: '48 min',
     buses: 7,
+    wayPoints: [
+      {
+        id: 1,
+        name: 'Trung tâm thương mại SC VivoCity',
+        lat: 10.7295,
+        lng: 106.7220,
+      },
+      {
+        id: 2,
+        name: 'Khu đô thị Phú Mỹ Hưng',
+        lat: 10.7314,
+        lng: 106.7220,
+      },
+      {
+        id: 3,
+        name: 'Trường Đại học Tôn Đức Thắng',
+        lat: 10.7280,
+        lng: 106.7250,
+      },
+      {
+        id: 4,
+        name: 'Bệnh viện FV',
+        lat: 10.7330,
+        lng: 106.7200,
+      },
+      {
+        id: 5,
+        name: 'Công viên Phú Mỹ Hưng',
+        lat: 10.7300,
+        lng: 106.7180,
+      },
+      {
+        id: 6,
+        name: 'Chợ Phú Mỹ',
+        lat: 10.7350,
+        lng: 106.7240,
+      },
+      {
+        id: 7,
+        name: 'Trường THCS Nguyễn Hữu Thọ',
+        lat: 10.7320,
+        lng: 106.7260,
+      },
+    ],
   },
 ];
 

@@ -3,7 +3,7 @@ title Tracking - Implement Diagram
 class "<<Controller>> AssignController" as ac {
     - schedule: Date
     - period: string
-    + getStop(): List
+    + getWayPoints(): List
     + getActiveBus(): List
 }
 

@@ -1,0 +1,5 @@
+{
+  "setup-worktree": ["cd Bus-Smart-app && npm install"],
+  "setup-worktree-unix": ["cd Bus-Smart-app && npm install"],
+  "setup-worktree-windows": ["cd Bus-Smart-app && npm install"]
+}
