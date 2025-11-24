@@ -1,3 +1,4 @@
+@startuml
 title Tracking - Implement Diagram
 
 class "<<Controller>> AssignController" as ac {
@@ -20,3 +21,4 @@ class "<<Controller>> MapController" as mc {
 ab -left-> ac
 ab --> mc
 mc --> ac
+@enduml
