@@ -484,10 +484,9 @@ export default function Manager() {
 
       {/* Management Tabs */}
       <Tabs value={selectedTab} onValueChange={setSelectedTab}>
-        <TabsList className="grid w-full grid-cols-3 lg:w-auto">
+        <TabsList className="grid w-full grid-cols-2 lg:w-auto">
           <TabsTrigger value="phancong">Phân công công việc</TabsTrigger>
           <TabsTrigger value="routes">Tuyến đường</TabsTrigger>
-          <TabsTrigger value="attendance">Giám sát</TabsTrigger>
         </TabsList>
 
         {/* phancong Tab */}
@@ -658,59 +657,6 @@ export default function Manager() {
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Attendance Tab */}
-        <TabsContent value="attendance" className="space-y-4">
-          <Card className="border-gray-200">
-            <CardHeader>
-              <CardTitle>Giám sát và theo dõi</CardTitle>
-              <CardDescription>Giám sát và theo dõi học sinh</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Ngày</TableHead>
-                    <TableHead>Hiện diện</TableHead>
-                    <TableHead>Vắng</TableHead>
-                    <TableHead>Sỉ số</TableHead>
-                    <TableHead>Tỉ số hiện diện</TableHead>
-                    <TableHead>Trạng thái</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {attendance.map((record) => (
-                    <TableRow key={record.id}>
-                      <TableCell>{record.date}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          {record.present}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <XCircle className="w-4 h-4 text-red-500" />
-                          {record.absent}
-                        </div>
-                      </TableCell>
-                      <TableCell>{record.total}</TableCell>
-                      <TableCell>{record.rate}%</TableCell>
-                      <TableCell>
-                        <Badge
-                          variant="default"
-                          className={record.rate >= 93 ? 'bg-green-500' : 'bg-orange-500'}
-                        >
-                          {record.rate >= 93 ? 'Tốt' : 'Trung bình'}
-                        </Badge>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
             </CardContent>
           </Card>
         </TabsContent>
