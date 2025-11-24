@@ -2,58 +2,41 @@
 title Create Assign - Implement Diagram
 
 class "<<Controller>> AssignController" as co {
-    - schedule: Date
-    - period: string
-    + addAssign(assign) : AssignRecord
+    - assignments: AssignRecord[]
+    - routesController: Routes
+    - driverController: Driver
+    - busController: Bus
+    + addAssign(assign: AssignRecord): AssignRecord
+    + getAssignById(id: number): AssignRecord | undefined
+    + getRoutes(): RouteRecord[]
+    + getRouteById(id: number): RouteRecord | undefined
+    + getDrivers(): DriverRecord[]
+    + getDriverById(id: number): DriverRecord | undefined
+    + getBus(): BusRecord[]
+    + getBusById(id: number): BusRecord | undefined
 }
 
-class "Routes" as ro {
-    - id: number
-    - name: string
-    - stops: number
-    - distance: string
-    - avgTime: string
-    - buses: number
-    + getRoutes(): RouteRecor
-    + getRouteById(id): RouteRecor
-    + addRoute(route): RouteRecor
+class "<<Controller>> Routes" as ro {
+    - routes: RouteRecord[]
+    + getRoutes(): RouteRecord[]
+    + getRouteById(id: number): RouteRecord | undefined
+    + getWayPoints(id: number): Waypoint[] | undefined
 }
 
-class "Driver" as dr {
-    - id: number
-    - name: string
-    - license: string
-    - phone: string
-    - email: string
-    - bus: string
-    - route: string
-    - status: string
-    - experience: string
-    - rating: number
-    + getDrivers(): DriverRecor
-    + getDriverbyId(id): DriverRecor
-    + addDriver(driver): DriverRecor
+class "<<Controller>> Driver" as dr {
+    - drivers: DriverRecord[]
+    + getDrivers(): DriverRecord[]
+    + getDriverbyId(id: number): DriverRecord | undefined
 }
 
-class "Bus" as bu {
-    - id: number
-    - name: string
-    - route: string
-    - driver: string
-    - currentStop: string
-    - status: string
-    - eta: string
-    - students: number
-    - speed: string
-    - lat: number
-    - lng: number
-    + getBus(): BusRecord
-    + getBusbyId(id): BusRecord
-    + addBus(bus): BusRecord
+class "<<Controller>> Bus" as bu {
+    - buses: BusRecord[]
+    + getBus(): BusRecord[]
+    + getBusbyId(id: number): BusRecord | undefined
 }
 
-co --> ro
-co --> dr
-co --> bu
+co --> ro : uses
+co --> dr : uses
+co --> bu : uses
 
 @enduml

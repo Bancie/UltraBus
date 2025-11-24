@@ -7,11 +7,48 @@ participant "~~:Routes~~" as ro
 participant "~~:Driver~~" as dr
 participant "~~:Bus~~" as bu
 
-ql --> co : addAssign(assign)
-co --> ql : AssignRecord[]
-co --> dr : getDrivers()
-dr --> co : DriverRecord[]
-co --> ro : getRoutes()
+== Lấy dữ liệu để tạo form ==
+ql -> co : getRoutes()
+activate co
+co -> ro : getRoutes()
+activate ro
 ro --> co : RouteRecord[]
-co --> bu : getBus()
+deactivate ro
+co --> ql : RouteRecord[]
+deactivate co
+
+ql -> co : getDrivers()
+activate co
+co -> dr : getDrivers()
+activate dr
+dr --> co : DriverRecord[]
+deactivate dr
+co --> ql : DriverRecord[]
+deactivate co
+
+ql -> co : getBus()
+activate co
+co -> bu : getBus()
+activate bu
 bu --> co : BusRecord[]
+deactivate bu
+co --> ql : BusRecord[]
+deactivate co
+
+== Tạo Assignment ==
+ql -> co : addAssign(assign: AssignRecord)
+activate co
+co -> co : getAssignById(assign.id)
+activate co
+co --> co : AssignRecord | undefined
+deactivate co
+
+alt Assign với id đã tồn tại
+    co --> ql : Error: "Route with id already exists"
+else Assign hợp lệ
+    co -> co : assignments.push(assign)
+    co --> ql : AssignRecord
+end
+deactivate co
+
+@enduml

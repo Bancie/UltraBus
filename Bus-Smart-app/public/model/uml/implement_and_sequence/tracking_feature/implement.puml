@@ -1,24 +1,44 @@
 @startuml
 title Tracking - Implement Diagram
 
-class "<<Controller>> AssignController" as ac {
-    - schedule: Date
-    - period: string
-    + getWayPoints(): List
-    + getActiveBus(): List
-}
-
-class "<<Controller>> ActiveBuses" as ab {
-    + getBusStatus(): List
-    + tracking()
-}
-
 class "<<Controller>> MapController" as mc {
-    + getRoute()
-    + getCurrentGPS()
+    - routesController: Routes
+    - currentRouteId: number | null
+    - currentRoutePath: LatLngLiteral[]
+    - trackingStartTime: number
+    - trackingInterval: NodeJS.Timeout | null
+    - currentPosition: LatLngLiteral | null
+    - velocity: number
+    - onPositionUpdate: Function | null
+    + showRoute(routeId: number): RouteDisplayData
+    + getStretchOfRoad(routeId: number, elapsedTime: number): LatLngLiteral
+    + getCurrentGPT(): LatLngLiteral | null
+    + startTracking(routeId: number, onUpdate?: Function): void
+    + stopTracking(): void
+    + setVelocity(velocity: number): void
+    + getVelocity(): number
 }
 
-ab -left-> ac
-ab --> mc
-mc --> ac
+class "<<Controller>> AssignController" as ac {
+    - assignments: AssignRecord[]
+    - routesController: Routes
+    - driverController: Driver
+    - busController: Bus
+    + getRoutes(): RouteRecord[]
+    + getRouteById(id: number): RouteRecord | undefined
+    + getWayPoints(id: number): Waypoint[] | undefined
+    + getSchedule(): AssignRecord[]
+    + getScheduleById(id: number): AssignRecord | undefined
+}
+
+class "<<Controller>> Routes" as r {
+    - routes: RouteRecord[]
+    + getRoutes(): RouteRecord[]
+    + getRouteById(id: number): RouteRecord | undefined
+    + addRoute(route: RouteRecord): RouteRecord
+    + getWayPoints(id: number): Waypoint[] | undefined
+}
+
+mc --> r
+ac --> r
 @enduml

@@ -1,13 +1,47 @@
-title Create Assign - Sequence Diagram
+@startuml
+' title Tracking - Sequence Diagram
 
-actor "Quản lý" as ql
-participant "~~:ActiveBuses~~" as ab
-participant "~~:MapController" as mc
-participant "~~:AssignController" as ac
+actor "Quản lý" as qly
+participant "~~:MapController~~" as mc
+participant "~~:Routes~~" as routes
 
-ql --> ab : getBusStatus()
-ab --> mc : getRoute()
-mc --> ac : getStop()
-ab --> mc : getCurrentGPS()
+== Bắt đầu Tracking ==
+qly -> mc : startTracking(routeId, onUpdate?)
+activate mc
+mc -> mc : stopTracking() [nếu đang tracking]
+mc -> routes : getWayPoints(routeId)
+activate routes
+routes --> mc : Waypoint[]
+deactivate routes
+mc -> mc : Khởi tạo tracking state\n(currentRouteId, trackingStartTime, etc.)
+mc -> mc : Đặt vị trí ban đầu = waypoint[0]
+mc -> qly : onUpdate(initialPosition) [nếu có callback]
+mc -> mc : Tạo interval (mỗi 300ms)
 
-ab --> ql
+== Cập nhật vị trí định kỳ ==
+loop Mỗi 300ms
+    mc -> mc : Tính elapsedTime
+    mc -> mc : getStretchOfRoad(routeId, elapsedTime)
+    activate mc
+    mc -> routes : getWayPoints(routeId)
+    activate routes
+    routes --> mc : Waypoint[]
+    deactivate routes
+    mc -> mc : Tính toán vị trí mới\n(dựa trên velocity và elapsedTime)
+    mc --> mc : LatLngLiteral
+    deactivate mc
+    mc -> mc : Cập nhật currentPosition
+    mc -> qly : onUpdate(newPosition) [nếu có callback]
+end
+
+== Lấy vị trí hiện tại ==
+qly -> mc : getCurrentGPT()
+mc --> qly : LatLngLiteral | null
+
+== Dừng Tracking ==
+qly -> mc : stopTracking()
+mc -> mc : clearInterval(trackingInterval)
+mc -> mc : Reset tracking state
+deactivate mc
+
+@enduml
