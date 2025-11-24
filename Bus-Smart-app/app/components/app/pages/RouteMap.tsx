@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { MapPin, Clock, Users } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
@@ -8,12 +8,15 @@ import GoogleMapCard from '../map/GoogleMap';
 import { buses, upcomingStops } from '~/models/ModelBus';
 import MapController from '~/controllers/MapController';
 import AssignController from '~/controllers/AssignController';
-import type { RouteDisplayData } from '~/controllers/MapController';
+import type { RouteDisplayData, MapMarker } from '~/controllers/MapController';
 
 export default function RouteMap() {
   const mapControllerRef = useRef(new MapController());
   const assignControllerRef = useRef(new AssignController());
   const [selectedRouteData, setSelectedRouteData] = useState<RouteDisplayData | null>(null);
+  const [carMarkerPosition, setCarMarkerPosition] = useState<google.maps.LatLngLiteral | null>(
+    null,
+  );
 
   // Helper function để tìm route ID từ route name
   const findRouteIdByName = (routeName: string): number | null => {
@@ -44,13 +47,49 @@ export default function RouteMap() {
       }
       const routeData = mapControllerRef.current.showRoute(routeId);
       setSelectedRouteData(routeData);
+
+      // Bắt đầu tracking xe
+      mapControllerRef.current.startTracking(routeId, (position) => {
+        setCarMarkerPosition(position);
+      });
     } catch (error) {
       console.error('Lỗi khi hiển thị route:', error);
     }
   };
 
+  // Cleanup tracking khi component unmount
+  useEffect(() => {
+    return () => {
+      mapControllerRef.current.stopTracking();
+    };
+  }, []);
+
   // Chỉ hiển thị route markers khi có route được chọn
-  const allMarkers = selectedRouteData ? selectedRouteData.markers : [];
+  // Thêm carMarker nếu đang tracking
+  const allMarkers: MapMarker[] = selectedRouteData ? [...selectedRouteData.markers] : [];
+
+  if (carMarkerPosition && typeof window !== 'undefined' && window.google) {
+    // Kiểm tra xem carMarker đã tồn tại chưa
+    const existingCarMarkerIndex = allMarkers.findIndex((m) => m.id === 'car-marker');
+    const carMarker: MapMarker = {
+      id: 'car-marker',
+      position: carMarkerPosition,
+      title: 'Vị trí xe buýt',
+      description: 'Xe đang di chuyển',
+      icon: {
+        url: '/bustopview.png',
+        scaledSize: new google.maps.Size(30, 30),
+        anchor: new google.maps.Point(15, 15),
+      },
+      zIndex: 1000, // Đảm bảo carMarker hiển thị trên các marker khác
+    };
+
+    if (existingCarMarkerIndex >= 0) {
+      allMarkers[existingCarMarkerIndex] = carMarker;
+    } else {
+      allMarkers.push(carMarker);
+    }
+  }
 
   // Kết hợp polylines nếu có route được chọn
   const polylines = selectedRouteData ? [selectedRouteData.polyline] : [];
