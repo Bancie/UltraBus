@@ -1,0 +1,16 @@
+@startuml
+skinparam packageStyle rectangle
+left to right direction
+
+actor "Quản lý" as act
+
+rectangle "Quản lý tuyến đường" {
+    usecase "Thêm tuyến đường" as Add
+    usecase "Sửa tuyến đường" as Edit
+    usecase "Xóa tuyến đường" as Delete
+
+    act -- Add
+    act -- Edit
+    act -- Delete
+}
+@enduml
