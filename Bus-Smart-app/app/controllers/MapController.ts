@@ -84,44 +84,8 @@ export default class MapController {
   }
 
   /**
-   * Tính khoảng cách giữa hai điểm GPS (Haversine formula)
-   * @param point1 Điểm GPS đầu tiên
-   * @param point2 Điểm GPS thứ hai
-   * @returns Khoảng cách tính bằng km
-   */
-  private calculateDistance(
-    point1: google.maps.LatLngLiteral,
-    point2: google.maps.LatLngLiteral,
-  ): number {
-    const R = 6371; // Bán kính Trái Đất (km)
-    const dLat = ((point2.lat - point1.lat) * Math.PI) / 180;
-    const dLng = ((point2.lng - point1.lng) * Math.PI) / 180;
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos((point1.lat * Math.PI) / 180) *
-        Math.cos((point2.lat * Math.PI) / 180) *
-        Math.sin(dLng / 2) *
-        Math.sin(dLng / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-  }
-
-  /**
-   * Tính tổng khoảng cách của toàn bộ tuyến đường
-   * @param path Mảng các điểm GPS của tuyến đường
-   * @returns Tổng khoảng cách tính bằng km
-   */
-  private calculateTotalDistance(path: google.maps.LatLngLiteral[]): number {
-    let totalDistance = 0;
-    for (let i = 0; i < path.length - 1; i++) {
-      totalDistance += this.calculateDistance(path[i], path[i + 1]);
-    }
-    return totalDistance;
-  }
-
-  /**
    * Tính vị trí hiện tại của xe dựa trên quãng đường đã đi
-   * Sử dụng công thức: quãng đường = vận tốc * thời gian
+   * Sử dụng công thức đơn giản: s = v * t (quãng đường = vận tốc * thời gian)
    * @param routeId ID của tuyến đường
    * @param elapsedTime Thời gian đã trôi qua tính bằng giây
    * @returns Vị trí GPS hiện tại của xe
@@ -137,45 +101,37 @@ export default class MapController {
       lng: wp.lng,
     }));
 
-    // Tính quãng đường đã đi (km) = vận tốc (km/h) * thời gian (giờ)
-    const distanceTraveled = (this.velocity * elapsedTime) / 3600; // Chuyển giây sang giờ
+    // Tính quãng đường đã đi: s = v * t
+    // Vận tốc (km/h) * thời gian (giờ) = quãng đường (km)
+    const distanceTraveled = (this.velocity * elapsedTime) / 3600;
 
-    // Tính tổng khoảng cách của tuyến đường
-    let totalDistance = 0;
-    const segmentDistances: number[] = [];
-    for (let i = 0; i < path.length - 1; i++) {
-      const segmentDistance = this.calculateDistance(path[i], path[i + 1]);
-      segmentDistances.push(segmentDistance);
-      totalDistance += segmentDistance;
-    }
+    // Ước tính tổng quãng đường dựa trên số đoạn (mỗi đoạn ~1km)
+    // Đơn giản hóa: giả sử mỗi đoạn giữa 2 waypoint có độ dài tương đương
+    const numberOfSegments = path.length - 1;
+    const estimatedSegmentLength = 1; // km (ước tính mỗi đoạn ~1km)
+    const totalEstimatedDistance = numberOfSegments * estimatedSegmentLength;
 
-    // Nếu quãng đường đã đi vượt quá tổng khoảng cách, trả về điểm cuối
-    if (distanceTraveled >= totalDistance) {
+    // Tính tỷ lệ tiến trình (0 đến 1)
+    const progress = Math.min(distanceTraveled / totalEstimatedDistance, 1);
+
+    // Tính số đoạn đã đi qua
+    const segmentsTraveled = progress * numberOfSegments;
+    const currentSegmentIndex = Math.floor(segmentsTraveled);
+    const segmentProgress = segmentsTraveled - currentSegmentIndex;
+
+    // Nếu đã đến cuối tuyến đường, trả về điểm cuối
+    if (currentSegmentIndex >= numberOfSegments) {
       return path[path.length - 1];
     }
 
-    // Tìm đoạn đường mà xe đang ở
-    let accumulatedDistance = 0;
-    for (let i = 0; i < segmentDistances.length; i++) {
-      const segmentDistance = segmentDistances[i];
-      if (distanceTraveled <= accumulatedDistance + segmentDistance) {
-        // Xe đang ở trong đoạn này
-        const remainingDistance = distanceTraveled - accumulatedDistance;
-        const ratio = remainingDistance / segmentDistance;
+    // Nội suy vị trí trong đoạn hiện tại
+    const startPoint = path[currentSegmentIndex];
+    const endPoint = path[currentSegmentIndex + 1];
 
-        // Nội suy vị trí trong đoạn đường
-        const startPoint = path[i];
-        const endPoint = path[i + 1];
-        return {
-          lat: startPoint.lat + (endPoint.lat - startPoint.lat) * ratio,
-          lng: startPoint.lng + (endPoint.lng - startPoint.lng) * ratio,
-        };
-      }
-      accumulatedDistance += segmentDistance;
-    }
-
-    // Fallback: trả về điểm cuối
-    return path[path.length - 1];
+    return {
+      lat: startPoint.lat + (endPoint.lat - startPoint.lat) * segmentProgress,
+      lng: startPoint.lng + (endPoint.lng - startPoint.lng) * segmentProgress,
+    };
   }
 
   /**
