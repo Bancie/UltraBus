@@ -96,23 +96,23 @@ export default function GoogleMapCard({
                     icon={resolvedIcon}
                     zIndex={marker.zIndex}
                   />
-                {activeMarkerId === marker.id && (
-                  <InfoWindow
-                    position={marker.position}
-                    onCloseClick={() => setActiveMarkerId(null)}
-                  >
-                    <Box sx={{ p: 0.5 }}>
-                      {marker.title && (
-                        <Typography variant="subtitle2" fontWeight={600}>
-                          {marker.title}
-                        </Typography>
-                      )}
-                      {marker.description && (
-                        <Typography variant="body2">{marker.description}</Typography>
-                      )}
-                    </Box>
-                  </InfoWindow>
-                )}
+                  {activeMarkerId === marker.id && (
+                    <InfoWindow
+                      position={marker.position}
+                      onCloseClick={() => setActiveMarkerId(null)}
+                    >
+                      <Box sx={{ p: 0.5 }}>
+                        {marker.title && (
+                          <Typography variant="subtitle2" fontWeight={600}>
+                            {marker.title}
+                          </Typography>
+                        )}
+                        {marker.description && (
+                          <Typography variant="body2">{marker.description}</Typography>
+                        )}
+                      </Box>
+                    </InfoWindow>
+                  )}
                 </React.Fragment>
               );
             })
