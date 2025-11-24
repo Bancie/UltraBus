@@ -31,7 +31,7 @@ export default class MapController {
   private trackingStartTime: number = 0;
   private trackingInterval: NodeJS.Timeout | null = null;
   private currentPosition: google.maps.LatLngLiteral | null = null;
-  private velocity: number = 40; // km/h
+  private velocity: number = 200; // km/h
   private onPositionUpdate: ((position: google.maps.LatLngLiteral) => void) | null = null;
 
   constructor(routesController: Routes = new Routes()) {

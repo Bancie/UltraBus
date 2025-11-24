@@ -16,7 +16,7 @@ type StopDisplay = {
   name: string;
   time: string;
   students: number;
-  status: 'completed' | 'current' | 'upcoming';
+  status?: 'completed' | 'current' | 'upcoming';
 };
 
 export default function RouteMap() {
@@ -30,6 +30,8 @@ export default function RouteMap() {
   const [selectedRouteName, setSelectedRouteName] = useState<string>('');
   const [selectedBusName, setSelectedBusName] = useState<string>('');
   const [waypoints, setWaypoints] = useState<StopDisplay[]>([]);
+  const [waypointsData, setWaypointsData] = useState<Waypoint[]>([]);
+  const [currentWaypointIndex, setCurrentWaypointIndex] = useState<number>(0);
 
   // Helper function để tìm route ID từ route name
   const findRouteIdByName = (routeName: string): number | null => {
@@ -50,10 +52,57 @@ export default function RouteMap() {
     return route?.id ?? null;
   };
 
+  // Hàm tính khoảng cách giữa 2 điểm (Haversine formula)
+  const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
+    const R = 6371; // Bán kính Trái Đất (km)
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLng = ((lng2 - lng1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLng / 2) *
+        Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Khoảng cách tính bằng km
+  };
+
+  // Kiểm tra xem xe đã đi qua waypoint tiếp theo chưa (đảm bảo tuần tự)
+  const checkAndUpdateWaypointIndex = (
+    carPosition: google.maps.LatLngLiteral,
+    waypoints: Waypoint[],
+    currentIndex: number,
+  ): number => {
+    if (waypoints.length === 0) return 0;
+    if (currentIndex >= waypoints.length - 1) return currentIndex; // Đã đến cuối
+
+    // Ngưỡng khoảng cách để coi như đã đi qua waypoint (300m = 0.3km)
+    const thresholdDistance = 0.3;
+
+    // Kiểm tra waypoint tiếp theo (currentIndex + 1)
+    const nextWaypointIndex = currentIndex + 1;
+    const nextWaypoint = waypoints[nextWaypointIndex];
+
+    const distance = calculateDistance(
+      carPosition.lat,
+      carPosition.lng,
+      nextWaypoint.lat,
+      nextWaypoint.lng,
+    );
+
+    // Nếu đã đến gần waypoint tiếp theo, cập nhật currentIndex
+    if (distance <= thresholdDistance) {
+      return nextWaypointIndex;
+    }
+
+    // Nếu chưa đến waypoint tiếp theo, giữ nguyên currentIndex
+    return currentIndex;
+  };
+
   // Helper function để transform waypoints thành display format
   const transformWaypointsToStops = (
     waypoints: Waypoint[],
-    currentIndex: number = 2,
+    currentIndex: number = 0,
   ): StopDisplay[] => {
     const baseTime = new Date();
     baseTime.setHours(7, 0, 0, 0); // Bắt đầu từ 7:00 AM
@@ -69,17 +118,20 @@ export default function RouteMap() {
       });
 
       // Xác định trạng thái
-      let status: 'completed' | 'current' | 'upcoming';
+      let status: 'completed' | 'current' | 'upcoming' | undefined;
       if (index < currentIndex) {
         status = 'completed';
       } else if (index === currentIndex) {
         status = 'current';
-      } else {
+      } else if (index === currentIndex + 1) {
         status = 'upcoming';
       }
+      // Các waypoint còn lại không có trạng thái (undefined)
 
       // Số học sinh ước tính (random từ 5-10 cho mỗi điểm)
-      const students = Math.floor(Math.random() * 6) + 5;
+      // Sử dụng seed dựa trên waypoint id để đảm bảo giá trị không đổi
+      const seed = waypoint.id * 1000;
+      const students = (seed % 6) + 5;
 
       return {
         id: waypoint.id,
@@ -110,12 +162,17 @@ export default function RouteMap() {
       // Lấy waypoints
       const waypointsData = assignControllerRef.current.getWayPoints(routeId);
       if (waypointsData && waypointsData.length > 0) {
-        const transformedStops = transformWaypointsToStops(waypointsData);
+        setWaypointsData(waypointsData);
+        // Khởi tạo với currentIndex = 0 (xe ở điểm đầu tiên)
+        setCurrentWaypointIndex(0);
+        const transformedStops = transformWaypointsToStops(waypointsData, 0);
         setWaypoints(transformedStops);
         setSelectedRouteId(routeId);
         setSelectedRouteName(route.name);
       } else {
+        setWaypointsData([]);
         setWaypoints([]);
+        setCurrentWaypointIndex(0);
         setSelectedRouteId(routeId);
         setSelectedRouteName(route.name);
       }
@@ -139,6 +196,23 @@ export default function RouteMap() {
       console.error('Lỗi khi hiển thị route:', error);
     }
   };
+
+  // Cập nhật trạng thái waypoints khi carMarkerPosition thay đổi (đảm bảo tuần tự)
+  useEffect(() => {
+    if (carMarkerPosition && waypointsData.length > 0) {
+      setCurrentWaypointIndex((prevIndex) => {
+        const newIndex = checkAndUpdateWaypointIndex(carMarkerPosition, waypointsData, prevIndex);
+
+        // Chỉ cập nhật waypoints nếu index thay đổi
+        if (newIndex !== prevIndex) {
+          const updatedStops = transformWaypointsToStops(waypointsData, newIndex);
+          setWaypoints(updatedStops);
+        }
+
+        return newIndex;
+      });
+    }
+  }, [carMarkerPosition, waypointsData]);
 
   // Cleanup tracking khi component unmount
   useEffect(() => {
@@ -314,6 +388,7 @@ export default function RouteMap() {
                     {stop.status === 'completed' && (
                       <Badge className="bg-green-600">Đã hoàn thành</Badge>
                     )}
+                    {stop.status === 'upcoming' && <Badge className="bg-gray-500">Sắp đến</Badge>}
                   </div>
                   <div className="flex items-center gap-2 text-gray-600">
                     <Users className="w-4 h-4" />
