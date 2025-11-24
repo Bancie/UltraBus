@@ -9,8 +9,6 @@ const buses = [
     eta: '8 mins',
     students: 45,
     speed: '35 km/h',
-    lat: 10.7739,
-    lng: 106.6999,
   },
   {
     id: 2,
@@ -22,8 +20,6 @@ const buses = [
     eta: '12 mins',
     students: 52,
     speed: '40 km/h',
-    lat: 10.7648,
-    lng: 106.6661,
   },
   {
     id: 3,
@@ -35,8 +31,6 @@ const buses = [
     eta: '6 mins',
     students: 48,
     speed: '32 km/h',
-    lat: 10.7324,
-    lng: 106.7053,
   },
 ];
 

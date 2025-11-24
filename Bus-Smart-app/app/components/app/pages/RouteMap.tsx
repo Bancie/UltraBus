@@ -1,3 +1,4 @@
+import { useState, useRef } from 'react';
 import { MapPin, Clock, Users } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
@@ -5,16 +6,57 @@ import { Button } from '../ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import GoogleMapCard from '../map/GoogleMap';
 import { buses, upcomingStops } from '~/models/ModelBus';
+import MapController from '~/controllers/MapController';
+import AssignController from '~/controllers/AssignController';
+import type { RouteDisplayData } from '~/controllers/MapController';
 
 export default function RouteMap() {
-  const busMarkers = buses.map((bus) => ({
-    id: bus.id,
-    position: { lat: bus.lat, lng: bus.lng },
-    title: bus.name,
-    description: `${bus.route} - ${bus.currentStop}`,
-  }));
+  const mapControllerRef = useRef(new MapController());
+  const assignControllerRef = useRef(new AssignController());
+  const [selectedRouteData, setSelectedRouteData] = useState<RouteDisplayData | null>(null);
 
-  const mapCenter = busMarkers[0].position;
+  // Helper function để tìm route ID từ route name
+  const findRouteIdByName = (routeName: string): number | null => {
+    const routes = assignControllerRef.current.getRoutes();
+    // Tìm route bằng cách so sánh:
+    // 1. Exact match
+    // 2. Route name chứa routeName (ví dụ: "Tuyến A - Quận 1" chứa "Tuyến A")
+    // 3. RouteName chứa phần đầu của route name (ví dụ: "Tuyến A" trong "Tuyến A - Quận 1")
+    const route = routes.find((r) => {
+      const routeBaseName = r.name.split(' - ')[0]; // Lấy phần "Tuyến A" từ "Tuyến A - Quận 1"
+      return (
+        r.name === routeName ||
+        r.name.includes(routeName) ||
+        routeName.includes(routeBaseName) ||
+        routeBaseName === routeName
+      );
+    });
+    return route?.id ?? null;
+  };
+
+  // Handler cho button "Theo dõi xe"
+  const handleTrackBus = (busRoute: string) => {
+    try {
+      const routeId = findRouteIdByName(busRoute);
+      if (routeId === null) {
+        console.error(`Không tìm thấy route ID cho: ${busRoute}`);
+        return;
+      }
+      const routeData = mapControllerRef.current.showRoute(routeId);
+      setSelectedRouteData(routeData);
+    } catch (error) {
+      console.error('Lỗi khi hiển thị route:', error);
+    }
+  };
+
+  // Chỉ hiển thị route markers khi có route được chọn
+  const allMarkers = selectedRouteData ? selectedRouteData.markers : [];
+
+  // Kết hợp polylines nếu có route được chọn
+  const polylines = selectedRouteData ? [selectedRouteData.polyline] : [];
+
+  // Tính toán center: ưu tiên route được chọn, sau đó là fallback center
+  const mapCenter = selectedRouteData?.markers[0]?.position ?? { lat: 10.776889, lng: 106.700806 };
 
   return (
     <div className="space-y-6">
@@ -54,8 +96,9 @@ export default function RouteMap() {
                 variant="embed"
                 height={500}
                 center={mapCenter}
-                zoom={12}
-                markers={busMarkers}
+                zoom={selectedRouteData ? 13 : 12}
+                markers={allMarkers}
+                polylines={polylines}
               />
             </div>
           </CardContent>
@@ -92,7 +135,12 @@ export default function RouteMap() {
                       <span>{bus.students} học sinh</span>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm" className="w-full mt-3">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full mt-3"
+                    onClick={() => handleTrackBus(bus.route)}
+                  >
                     Theo dõi xe
                   </Button>
                 </div>

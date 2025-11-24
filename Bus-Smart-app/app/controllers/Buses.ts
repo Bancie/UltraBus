@@ -10,8 +10,6 @@ export type BusRecord = {
   eta: string;
   students: number;
   speed: string;
-  lat: number;
-  lng: number;
 };
 
 const defaultBuses: BusRecord[] = buses;
