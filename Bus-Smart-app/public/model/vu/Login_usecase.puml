@@ -1,0 +1,16 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Quản lý" as act
+
+rectangle "Đăng nhập vào hệ thống" {
+    usecase "Đăng nhập" as Login
+    usecase "Thông báo lỗi" as Error
+    usecase "Xác thực thông tin" as Verify
+
+    act -- Login
+    Login ..> Verify : <<include>>
+    Error ..> Login : <<extend>>
+}
+@enduml
