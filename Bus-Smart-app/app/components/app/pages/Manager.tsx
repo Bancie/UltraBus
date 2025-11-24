@@ -13,6 +13,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '../ui/alert-dialog';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
@@ -42,6 +53,8 @@ export default function Manager() {
   const [routeError, setRouteError] = useState<string | null>(null);
   const [isRouteDialogOpen, setIsRouteDialogOpen] = useState(false);
   const [assignError, setAssignError] = useState<string | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingAssignmentId, setEditingAssignmentId] = useState<number | null>(null);
   const [assignForm, setAssignForm] = useState({
     busId: '',
     driverId: '',
@@ -55,6 +68,13 @@ export default function Manager() {
       setRouteError(null);
     }
   }, [isRouteDialogOpen]);
+
+  useEffect(() => {
+    if (!isEditDialogOpen) {
+      setAssignError(null);
+      setEditingAssignmentId(null);
+    }
+  }, [isEditDialogOpen]);
 
   const resetRouteForm = () => {
     setRouteName('');
@@ -106,6 +126,77 @@ export default function Manager() {
       resetAssignForm();
     } catch (error) {
       setAssignError(error instanceof Error ? error.message : 'Không thể tạo phân công.');
+    }
+  };
+
+  const handleEditClick = (assignment: AssignRecord) => {
+    // Find the IDs for bus, driver, and route by matching names
+    const bus = busList.find((item) => item.name === assignment.bus);
+    const driver = driverList.find((item) => item.name === assignment.driver);
+    const route = routeList.find((item) => item.name === assignment.route);
+
+    setAssignForm({
+      busId: bus?.id.toString() || '',
+      driverId: driver?.id.toString() || '',
+      routeId: route?.id.toString() || '',
+      students: assignment.students.toString(),
+      status: assignment.status,
+    });
+    setEditingAssignmentId(assignment.id);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleEditAssign = () => {
+    if (editingAssignmentId === null) {
+      return;
+    }
+
+    const bus = busList.find((item) => item.id.toString() === assignForm.busId);
+    const driver = driverList.find((item) => item.id.toString() === assignForm.driverId);
+    const route = routeList.find((item) => item.id.toString() === assignForm.routeId);
+
+    if (!bus || !driver || !route) {
+      setAssignError('Vui lòng chọn đầy đủ xe, tài xế và tuyến đường.');
+      return;
+    }
+
+    const existingAssign = assignControllerRef.current.getAssignById(editingAssignmentId);
+    if (!existingAssign) {
+      setAssignError('Không tìm thấy phân công cần chỉnh sửa.');
+      return;
+    }
+
+    try {
+      assignControllerRef.current.editAssign(editingAssignmentId, {
+        bus: bus.name,
+        driver: driver.name,
+        route: route.name,
+        students: Number(assignForm.students) || 0,
+        status: assignForm.status,
+      });
+      setAssignments(assignControllerRef.current.getAssign());
+      setAssignError(null);
+      resetAssignForm();
+      setIsEditDialogOpen(false);
+      setEditingAssignmentId(null);
+    } catch (error) {
+      setAssignError(error instanceof Error ? error.message : 'Không thể cập nhật phân công.');
+    }
+  };
+
+  const handleRemoveAssign = () => {
+    if (editingAssignmentId === null) {
+      return;
+    }
+
+    try {
+      assignControllerRef.current.removeAssign(editingAssignmentId);
+      setAssignments(assignControllerRef.current.getAssign());
+      resetAssignForm();
+      setIsEditDialogOpen(false);
+      setEditingAssignmentId(null);
+    } catch (error) {
+      setAssignError(error instanceof Error ? error.message : 'Không thể xóa phân công.');
     }
   };
 
@@ -262,6 +353,132 @@ export default function Manager() {
               </div>
             </DialogContent>
           </Dialog>
+          <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Chỉnh sửa phân công</DialogTitle>
+                <DialogDescription>
+                  Cập nhật thông tin phân công tài xế và học sinh với xe và tuyến đường tương ứng
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label htmlFor="edit-bus">Chọn xe</Label>
+                  <Select
+                    value={assignForm.busId}
+                    onValueChange={(value) => updateAssignForm('busId', value)}
+                  >
+                    <SelectTrigger id="edit-bus">
+                      <SelectValue placeholder="Chọn một xe" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {busList.map((bus) => (
+                        <SelectItem key={bus.id} value={bus.id.toString()}>
+                          {bus.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-driver">Chọn tài xế</Label>
+                  <Select
+                    value={assignForm.driverId}
+                    onValueChange={(value) => updateAssignForm('driverId', value)}
+                  >
+                    <SelectTrigger id="edit-driver">
+                      <SelectValue placeholder="Chọn một tài xế" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {driverList.map((driver) => (
+                        <SelectItem key={driver.id} value={driver.id.toString()}>
+                          {driver.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-route">Chọn tuyến đường</Label>
+                  <Select
+                    value={assignForm.routeId}
+                    onValueChange={(value) => updateAssignForm('routeId', value)}
+                  >
+                    <SelectTrigger id="edit-route">
+                      <SelectValue placeholder="Chọn một tuyến đường" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {routeList.map((route) => (
+                        <SelectItem key={route.id} value={route.id.toString()}>
+                          {route.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-students">Số học sinh</Label>
+                  <Input
+                    id="edit-students"
+                    type="number"
+                    min={0}
+                    placeholder="Nhập số học sinh"
+                    value={assignForm.students}
+                    onChange={(event) => updateAssignForm('students', event.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-status">Trạng thái</Label>
+                  <Select
+                    value={assignForm.status}
+                    onValueChange={(value) => updateAssignForm('status', value)}
+                  >
+                    <SelectTrigger id="edit-status">
+                      <SelectValue placeholder="Chọn trạng thái" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="hoạt động">Hoạt động</SelectItem>
+                      <SelectItem value="bảo trì">Bảo trì</SelectItem>
+                      <SelectItem value="tạm dừng">Tạm dừng</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {assignError && <p className="text-sm text-red-600">{assignError}</p>}
+                <div className="flex gap-2">
+                  <Button
+                    className="flex-1 bg-blue-600 hover:bg-blue-700"
+                    onClick={handleEditAssign}
+                  >
+                    Cập nhật phân công
+                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="destructive" className="flex-1">
+                        Xóa
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Xác nhận xóa phân công</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Bạn có chắc chắn muốn xóa phân công này? Hành động này không thể hoàn tác.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Hủy</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={handleRemoveAssign}
+                          className="bg-red-600 hover:bg-red-700"
+                        >
+                          Xóa
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
@@ -310,7 +527,11 @@ export default function Manager() {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <Button variant="outline" size="sm">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleEditClick(assignment)}
+                        >
                           Edit
                         </Button>
                       </TableCell>
