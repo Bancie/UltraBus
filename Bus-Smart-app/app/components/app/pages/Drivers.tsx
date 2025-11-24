@@ -13,6 +13,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '../ui/alert-dialog';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
@@ -48,6 +59,8 @@ export default function Drivers() {
     driverControllerRef.current.getDrivers(),
   );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingDriverId, setEditingDriverId] = useState<number | null>(null);
   const [form, setForm] = useState<DriverFormState>(createInitialFormState);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -65,6 +78,15 @@ export default function Drivers() {
     setIsDialogOpen(open);
     if (!open) {
       resetForm();
+    }
+  };
+
+  const handleEditDialogChange = (open: boolean) => {
+    setIsEditDialogOpen(open);
+    if (!open) {
+      resetForm();
+      setEditingDriverId(null);
+      setFormError(null);
     }
   };
 
@@ -111,6 +133,79 @@ export default function Drivers() {
       handleDialogChange(false);
     } catch (error) {
       setFormError(error instanceof Error ? error.message : 'Không thể thêm tài xế.');
+    }
+  };
+
+  const handleEditClick = (driver: DriverRecord) => {
+    setForm({
+      name: driver.name,
+      license: driver.license,
+      phone: driver.phone,
+      email: driver.email,
+      bus: driver.bus,
+      route: driver.route,
+      status: driver.status,
+      experience: driver.experience,
+      rating: driver.rating.toString(),
+    });
+    setEditingDriverId(driver.id);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleEditDriver = () => {
+    if (editingDriverId === null) {
+      return;
+    }
+
+    if (!form.name.trim() || !form.license.trim() || !form.phone.trim()) {
+      setFormError('Vui lòng nhập đầy đủ tên, số bằng lái và số điện thoại.');
+      return;
+    }
+
+    const parsedRating = Number(form.rating);
+    if (form.rating && (Number.isNaN(parsedRating) || parsedRating < 0 || parsedRating > 5)) {
+      setFormError('Đánh giá phải là số từ 0 đến 5.');
+      return;
+    }
+
+    const existingDriver = driverControllerRef.current.getDriverbyId(editingDriverId);
+    if (!existingDriver) {
+      setFormError('Không tìm thấy tài xế cần chỉnh sửa.');
+      return;
+    }
+
+    try {
+      driverControllerRef.current.editDriver(editingDriverId, {
+        name: form.name.trim(),
+        license: form.license.trim(),
+        phone: form.phone.trim(),
+        email: form.email.trim(),
+        bus: form.bus.trim() || 'Chưa cập nhật',
+        route: form.route.trim() || 'Chưa cập nhật',
+        status: form.status,
+        experience: form.experience.trim() || 'Chưa cập nhật',
+        rating: form.rating ? Number(parsedRating.toFixed(1)) : 0,
+      });
+      setDriverList(driverControllerRef.current.getDrivers());
+      handleEditDialogChange(false);
+    } catch (error) {
+      setFormError(error instanceof Error ? error.message : 'Không thể cập nhật tài xế.');
+    }
+  };
+
+  const handleRemoveDriver = () => {
+    if (editingDriverId === null) {
+      return;
+    }
+
+    try {
+      driverControllerRef.current.removeDriver(editingDriverId);
+      setDriverList(driverControllerRef.current.getDrivers());
+      resetForm();
+      setIsEditDialogOpen(false);
+      setEditingDriverId(null);
+    } catch (error) {
+      setFormError(error instanceof Error ? error.message : 'Không thể xóa tài xế.');
     }
   };
 
@@ -244,6 +339,147 @@ export default function Drivers() {
               </DialogFooter>
             </DialogContent>
           </Dialog>
+          <Dialog open={isEditDialogOpen} onOpenChange={handleEditDialogChange}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Chỉnh sửa tài xế</DialogTitle>
+                <DialogDescription>Cập nhật thông tin tài xế trong hệ thống.</DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-name">Họ và tên</Label>
+                    <Input
+                      id="edit-name"
+                      value={form.name}
+                      onChange={(event) => handleFormChange('name', event.target.value)}
+                      placeholder="Nguyễn Văn A"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-license">Số bằng lái</Label>
+                    <Input
+                      id="edit-license"
+                      value={form.license}
+                      onChange={(event) => handleFormChange('license', event.target.value)}
+                      placeholder="VD: DL-12345"
+                    />
+                  </div>
+                </div>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-phone">Số điện thoại</Label>
+                    <Input
+                      id="edit-phone"
+                      value={form.phone}
+                      onChange={(event) => handleFormChange('phone', event.target.value)}
+                      placeholder="+84 ..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-email">Email</Label>
+                    <Input
+                      id="edit-email"
+                      type="email"
+                      value={form.email}
+                      onChange={(event) => handleFormChange('email', event.target.value)}
+                      placeholder="email@busmart.com"
+                    />
+                  </div>
+                </div>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-bus">Xe phụ trách</Label>
+                    <Input
+                      id="edit-bus"
+                      value={form.bus}
+                      onChange={(event) => handleFormChange('bus', event.target.value)}
+                      placeholder="VD: Xe số 12"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-route">Tuyến đường</Label>
+                    <Input
+                      id="edit-route"
+                      value={form.route}
+                      onChange={(event) => handleFormChange('route', event.target.value)}
+                      placeholder="VD: Tuyến A - Quận 1"
+                    />
+                  </div>
+                </div>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-status">Trạng thái</Label>
+                    <Select
+                      value={form.status}
+                      onValueChange={(value) => handleFormChange('status', value)}
+                    >
+                      <SelectTrigger id="edit-status">
+                        <SelectValue placeholder="Chọn trạng thái" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="đang thực hiện">Đang thực hiện</SelectItem>
+                        <SelectItem value="chưa phân công">Chưa phân công</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-experience">Kinh nghiệm</Label>
+                    <Input
+                      id="edit-experience"
+                      value={form.experience}
+                      onChange={(event) => handleFormChange('experience', event.target.value)}
+                      placeholder="VD: 5 năm"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-rating">Đánh giá (0 - 5)</Label>
+                  <Input
+                    id="edit-rating"
+                    value={form.rating}
+                    onChange={(event) => handleFormChange('rating', event.target.value)}
+                    placeholder="4.8"
+                  />
+                </div>
+                {formError && <p className="text-sm text-red-600">{formError}</p>}
+              </div>
+              <DialogFooter>
+                <div className="flex gap-2 w-full">
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="destructive" className="flex-1">
+                        Xóa
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Xác nhận xóa tài xế</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Bạn có chắc chắn muốn xóa tài xế này? Hành động này không thể hoàn tác.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Hủy</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={handleRemoveDriver}
+                          className="bg-red-600 hover:bg-red-700"
+                        >
+                          Xóa
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                  <Button variant="outline" onClick={() => handleEditDialogChange(false)}>
+                    Hủy
+                  </Button>
+                  <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleEditDriver}>
+                    Cập nhật
+                  </Button>
+                </div>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
@@ -327,6 +563,16 @@ export default function Drivers() {
                 <Button variant="outline" size="sm" className="flex-1">
                   <Mail className="w-4 h-4 mr-1" />
                   Email
+                </Button>
+              </div>
+              <div className="pt-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => handleEditClick(driver)}
+                >
+                  Chỉnh sửa
                 </Button>
               </div>
             </CardContent>
