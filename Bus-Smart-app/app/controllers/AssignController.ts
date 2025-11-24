@@ -81,6 +81,16 @@ export default class AssignController {
     return this.assignments[index];
   }
 
+  removeAssign(id: number): void {
+    const index = this.assignments.findIndex((assign) => assign.id === id);
+
+    if (index === -1) {
+      throw new Error(`Assignment with id ${id} does not exist.`);
+    }
+
+    this.assignments.splice(index, 1);
+  }
+
   // Routes
 
   getRoutes(): RouteRecord[] {

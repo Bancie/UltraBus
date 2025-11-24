@@ -13,6 +13,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '../ui/alert-dialog';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
@@ -170,6 +181,22 @@ export default function Manager() {
       setEditingAssignmentId(null);
     } catch (error) {
       setAssignError(error instanceof Error ? error.message : 'Không thể cập nhật phân công.');
+    }
+  };
+
+  const handleRemoveAssign = () => {
+    if (editingAssignmentId === null) {
+      return;
+    }
+
+    try {
+      assignControllerRef.current.removeAssign(editingAssignmentId);
+      setAssignments(assignControllerRef.current.getAssign());
+      resetAssignForm();
+      setIsEditDialogOpen(false);
+      setEditingAssignmentId(null);
+    } catch (error) {
+      setAssignError(error instanceof Error ? error.message : 'Không thể xóa phân công.');
     }
   };
 
@@ -417,9 +444,38 @@ export default function Manager() {
                   </Select>
                 </div>
                 {assignError && <p className="text-sm text-red-600">{assignError}</p>}
-                <Button className="w-full bg-blue-600 hover:bg-blue-700" onClick={handleEditAssign}>
-                  Cập nhật phân công
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    className="flex-1 bg-blue-600 hover:bg-blue-700"
+                    onClick={handleEditAssign}
+                  >
+                    Cập nhật phân công
+                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="destructive" className="flex-1">
+                        Xóa
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Xác nhận xóa phân công</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Bạn có chắc chắn muốn xóa phân công này? Hành động này không thể hoàn tác.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Hủy</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={handleRemoveAssign}
+                          className="bg-red-600 hover:bg-red-700"
+                        >
+                          Xóa
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
               </div>
             </DialogContent>
           </Dialog>
