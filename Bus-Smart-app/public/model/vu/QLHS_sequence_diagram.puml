@@ -15,3 +15,4 @@ HS --> THEMHS: (studentName, className, address, studySchedule, parentName, pare
 THEMHS -> PC: assignRoute(routeCode, busCode, assignmentSchedule)
 PC --> THEMHS: (routeCode, busCode, assignmentSchedule)
 THEMHS --> QL: (studentName, className, address, studySchedule, parentName, parentPhone, routeCode, busCode, assignmentSchedule)
+@enduml
