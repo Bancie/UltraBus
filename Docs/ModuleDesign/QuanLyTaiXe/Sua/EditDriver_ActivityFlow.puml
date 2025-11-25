@@ -1,0 +1,92 @@
+@startuml
+title Activity Flow Diagram - Chỉnh sửa tài xế (Edit Driver)
+
+|Quản lý|
+start
+:Nhấn nút "Chỉnh sửa" trên một tài xế;
+
+|Hệ thống|
+:Lấy thông tin tài xế theo ID;
+
+if (Tài xế tồn tại?) then (Không)
+  :Hiển thị lỗi "Không tìm thấy tài xế";
+  stop
+endif
+
+:Chuyển rating sang string để hiển thị;
+:Điền sẵn form với dữ liệu hiện tại;
+:Mở dialog chỉnh sửa;
+:Lưu ID tài xế vào editingDriverId;
+
+|Quản lý|
+:Chỉnh sửa thông tin\n(tên, số bằng lái, số điện thoại, email, xe, tuyến đường, trạng thái, kinh nghiệm, đánh giá);
+
+|Hệ thống|
+:Cập nhật form data theo thay đổi của người dùng;
+:Reset formError nếu có;
+
+|Quản lý|
+:Nhấn nút "Cập nhật";
+
+|Hệ thống|
+:Validate dữ liệu\n(kiểm tra tên, số bằng lái, số điện thoại không được trống);
+
+if (Thiếu thông tin bắt buộc?) then (Có)
+  :Hiển thị lỗi "Vui lòng nhập đầy đủ tên, số bằng lái và số điện thoại";
+  stop
+endif
+
+:Validate đánh giá\n(nếu có, phải từ 0 đến 5);
+
+if (Đánh giá không hợp lệ?) then (Có)
+  :Hiển thị lỗi "Đánh giá phải là số từ 0 đến 5";
+  stop
+endif
+
+:Kiểm tra tài xế có tồn tại không;
+
+if (Tài xế tồn tại?) then (Không)
+  :Hiển thị lỗi "Không tìm thấy tài xế cần chỉnh sửa";
+  stop
+endif
+
+:Chuẩn hóa dữ liệu\n(trim whitespace);
+
+if (Xe phụ trách trống?) then (Có)
+  :Mặc định "Chưa cập nhật";
+endif
+
+if (Tuyến đường trống?) then (Có)
+  :Mặc định "Chưa cập nhật";
+endif
+
+if (Kinh nghiệm trống?) then (Có)
+  :Mặc định "Chưa cập nhật";
+endif
+
+if (Đánh giá trống?) then (Có)
+  :Mặc định 0;
+else (Có giá trị)
+  :Làm tròn 1 chữ số thập phân;
+endif
+
+:Gọi driverController.editDriver();
+
+if (Tài xế không tồn tại?) then (Có)
+  :Ném exception "Driver with id {id} does not exist";
+  :Hiển thị lỗi "Không thể cập nhật tài xế";
+  stop
+endif
+
+if (Có lỗi trong quá trình cập nhật?) then (Có)
+  :Hiển thị thông báo lỗi "Không thể cập nhật tài xế";
+  stop
+endif
+
+:Cập nhật danh sách tài xế trên giao diện;
+:Cập nhật thống kê tổng quan\n(nếu có thay đổi về trạng thái hoặc đánh giá);
+:Đóng dialog và reset form;
+stop
+
+@enduml
+

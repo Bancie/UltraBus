@@ -1,0 +1,53 @@
+@startuml
+title SSD for View Drivers Use Case
+
+actor "Quản lý" as Manager
+participant ":System" as System
+
+Manager -> System: Truy cập trang Quản lý tài xế
+activate System
+System -> System: initializeDriverController()
+System -> System: getDrivers()
+
+alt [Có lỗi khi tải dữ liệu]
+    System --> Manager: Thông báo lỗi
+    deactivate System
+else [Không có tài xế nào]
+    System -> System: saveDriverList([])
+    System --> Manager: Hiển thị grid trống
+    deactivate System
+else [Có dữ liệu]
+    System -> System: saveDriverList(drivers)
+    System -> System: calculateTotalDrivers()
+    System -> System: calculateActiveDrivers()
+    System -> System: calculateUnassignedDrivers()
+    
+    alt [Tổng số tài xế = 0]
+        System -> System: setAverageRating("0.0")
+    else [Có tài xế]
+        System -> System: calculateAverageRating()
+    end
+    
+    System --> Manager: Xác nhận đã tải danh sách tài xế
+    
+    System -> System: displayStatistics()
+    System --> Manager: Hiển thị 4 thẻ thống kê:\n- Tổng tài xế\n- Đang thực hiện\n- Chưa phân công\n- Đánh giá trung bình
+    
+    System -> System: displayDriverGrid()
+    
+    alt [Có lỗi khi hiển thị]
+        System --> Manager: Thông báo lỗi hiển thị
+        deactivate System
+    else [Hiển thị thành công]
+        System -> System: renderDriverCards(drivers)
+        System --> Manager: Hiển thị grid với các card tài xế:\n- Avatar với chữ cái đầu của tên\n- Tên và số bằng lái\n- Badge trạng thái với màu sắc\n  (xanh cho "đang thực hiện", xám cho "chưa phân công")\n- Tuyến đường phụ trách\n- Xe phụ trách\n- Kinh nghiệm\n- Đánh giá (rating với 1 chữ số thập phân)\n- Nút "Gọi" và "Email"\n- Nút "Chỉnh sửa"
+        System -> System: applyResponsiveLayout()
+        System --> Manager: Grid responsive:\n3 cột desktop, 2 cột tablet, 1 cột mobile
+        deactivate System
+    end
+end
+
+Manager -> System: Xem danh sách tài xế
+
+@enduml
+

@@ -698,6 +698,526 @@ Các tính năng có thể mở rộng:
 
 ## Module Quản lý tài xế
 
+### 1. Tổng quan
+
+Module Quản lý tài xế là một module quan trọng trong hệ thống Bus Smart, chịu trách nhiệm quản lý thông tin tài xế, bao gồm thông tin cá nhân, bằng lái, liên hệ, xe và tuyến đường được phân công, trạng thái làm việc, kinh nghiệm và đánh giá. Module này cung cấp giao diện quản lý trực quan cho quản trị viên để thực hiện các thao tác CRUD (Create, Read, Update, Delete) đầy đủ trên dữ liệu tài xế.
+
+**Vị trí trong hệ thống:**
+
+- Controller: `Bus-Smart-app/app/controllers/Drivers.ts`
+- UI Component: `Bus-Smart-app/app/components/app/pages/Drivers.tsx`
+- Model: `Bus-Smart-app/app/models/ModelDrivers.ts`
+
+### Đặc tả Use case (Use case description)
+
+#### Use Case 1: Tạo tài xế mới (Create Driver)
+
+| Trường                   | Mô tả                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Use case name**        | Tạo tài xế mới                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| **Scenario**             | Quản trị viên tạo tài xế mới trong hệ thống                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| **Triggering event**     | Quản trị viên nhấn nút "Thêm tài xế" trên giao diện quản lý tài xế                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| **Brief description**    | Quản trị viên tạo một tài xế mới bằng cách nhập thông tin cá nhân (tên, số bằng lái, số điện thoại, email), thông tin phân công (xe phụ trách, tuyến đường), trạng thái, kinh nghiệm và đánh giá. Hệ thống sẽ tạo và lưu tài xế mới vào danh sách.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| **Actors**               | Quản trị viên (Manager)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| **Related use cases**    | Có thể được gọi từ Module Quản lý phân công khi cần thêm tài xế mới để phân công                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| **Stakeholders**         | Quản trị viên, Tài xế, Học sinh, Phụ huynh                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| **Preconditions**        | <ul><li>Module DriverController phải sẵn sàng hoạt động</li><li>Component Drivers phải được khởi tạo</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| **Postconditions**       | <ul><li>Tài xế mới phải được tạo và lưu vào danh sách</li><li>Tài xế phải có ID duy nhất (timestamp)</li><li>Thông tin tài xế phải được lưu đầy đủ</li><li>Danh sách tài xế trên giao diện phải được cập nhật</li><li>Thống kê tổng quan (tổng tài xế, đang thực hiện, chưa phân công, đánh giá trung bình) phải được cập nhật</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| **Flow of activities**   | <table><tr><th>Actor</th><th>System</th></tr><tr><td>1. Quản trị viên nhấn nút "Thêm tài xế"</td><td>1.1 Hệ thống hiển thị dialog form tạo tài xế<br>1.2 Hệ thống reset form về trạng thái ban đầu</td></tr><tr><td>2. Quản trị viên nhập họ và tên</td><td>2.1 Hệ thống lưu giá trị vào form state</td></tr><tr><td>3. Quản trị viên nhập số bằng lái</td><td>3.1 Hệ thống lưu giá trị vào form state</td></tr><tr><td>4. Quản trị viên nhập số điện thoại</td><td>4.1 Hệ thống lưu giá trị vào form state</td></tr><tr><td>5. Quản trị viên nhập email (tùy chọn)</td><td>5.1 Hệ thống lưu giá trị vào form state</td></tr><tr><td>6. Quản trị viên nhập xe phụ trách (tùy chọn)</td><td>6.1 Hệ thống lưu giá trị vào form state</td></tr><tr><td>7. Quản trị viên nhập tuyến đường (tùy chọn)</td><td>7.1 Hệ thống lưu giá trị vào form state</td></tr><tr><td>8. Quản trị viên chọn trạng thái (đang thực hiện, chưa phân công)</td><td>8.1 Hệ thống lưu trạng thái đã chọn (mặc định "đang thực hiện")</td></tr><tr><td>9. Quản trị viên nhập kinh nghiệm (tùy chọn)</td><td>9.1 Hệ thống lưu giá trị vào form state</td></tr><tr><td>10. Quản trị viên nhập đánh giá 0-5 (tùy chọn)</td><td>10.1 Hệ thống lưu giá trị vào form state</td></tr><tr><td>11. Quản trị viên nhấn nút "Lưu tài xế"</td><td>11.1 Hệ thống validate dữ liệu (kiểm tra tên, số bằng lái, số điện thoại không được trống)<br>11.2 Hệ thống validate đánh giá (nếu có, phải từ 0 đến 5)<br>11.3 Hệ thống chuẩn hóa dữ liệu (trim whitespace, mặc định "Chưa cập nhật" cho bus/route/experience nếu trống, mặc định 0 cho rating nếu trống)<br>11.4 Hệ thống tạo DriverRecord mới với ID = Date.now()<br>11.5 Hệ thống gọi driverController.addDriver()<br>11.6 Hệ thống cập nhật danh sách tài xế trên giao diện<br>11.7 Hệ thống cập nhật thống kê tổng quan<br>11.8 Hệ thống đóng dialog và reset form</td></tr></table> |
+| **Exception conditions** | <ul><li>11.1 Nếu thiếu thông tin bắt buộc (tên, số bằng lái, số điện thoại): Hiển thị lỗi "Vui lòng nhập đầy đủ tên, số bằng lái và số điện thoại"</li><li>11.2 Nếu đánh giá không hợp lệ (không phải số hoặc ngoài khoảng 0-5): Hiển thị lỗi "Đánh giá phải là số từ 0 đến 5"</li><li>11.5 Nếu ID tài xế đã tồn tại: Ném exception "Driver with id {id} already exists" và hiển thị lỗi</li><li>11.5 Nếu có lỗi trong quá trình thêm: Hiển thị thông báo lỗi "Không thể thêm tài xế"</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+
+#### Use Case 2: Chỉnh sửa tài xế (Edit Driver)
+
+| Trường                   | Mô tả                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Use case name**        | Chỉnh sửa tài xế                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| **Scenario**             | Quản trị viên chỉnh sửa thông tin của một tài xế hiện có                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| **Triggering event**     | Quản trị viên nhấn nút "Chỉnh sửa" trên một tài xế trong grid danh sách                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| **Brief description**    | Quản trị viên chỉnh sửa thông tin tài xế bằng cách cập nhật các trường thông tin. Hệ thống sẽ cập nhật và lưu thay đổi.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| **Actors**               | Quản trị viên (Manager)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| **Related use cases**    | Có thể được gọi sau khi xem danh sách tài xế                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| **Stakeholders**         | Quản trị viên, Tài xế, Học sinh, Phụ huynh                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| **Preconditions**        | <ul><li>Tài xế cần chỉnh sửa phải tồn tại trong hệ thống</li><li>Module DriverController phải sẵn sàng hoạt động</li><li>Component Drivers phải được khởi tạo</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| **Postconditions**       | <ul><li>Tài xế phải được cập nhật với thông tin mới</li><li>ID tài xế không được thay đổi</li><li>Danh sách tài xế trên giao diện phải được cập nhật</li><li>Thống kê tổng quan phải được cập nhật nếu có thay đổi về trạng thái hoặc đánh giá</li><li>Dialog chỉnh sửa phải được đóng</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| **Flow of activities**   | <table><tr><th>Actor</th><th>System</th></tr><tr><td>1. Quản trị viên nhấn nút "Chỉnh sửa" trên một tài xế</td><td>1.1 Hệ thống lấy thông tin tài xế theo ID<br>1.2 Hệ thống điền sẵn form với dữ liệu hiện tại (chuyển rating sang string để hiển thị)<br>1.3 Hệ thống mở dialog chỉnh sửa<br>1.4 Hệ thống lưu ID tài xế vào editingDriverId</td></tr><tr><td>2. Quản trị viên chỉnh sửa thông tin (tên, số bằng lái, số điện thoại, email, xe, tuyến đường, trạng thái, kinh nghiệm, đánh giá)</td><td>2.1 Hệ thống cập nhật form data theo thay đổi của người dùng<br>2.2 Hệ thống reset formError nếu có</td></tr><tr><td>3. Quản trị viên nhấn nút "Cập nhật"</td><td>3.1 Hệ thống validate dữ liệu (kiểm tra tên, số bằng lái, số điện thoại không được trống)<br>3.2 Hệ thống validate đánh giá (nếu có, phải từ 0 đến 5)<br>3.3 Hệ thống kiểm tra tài xế có tồn tại không<br>3.4 Hệ thống chuẩn hóa dữ liệu (tương tự như tạo mới)<br>3.5 Hệ thống gọi driverController.editDriver()<br>3.6 Hệ thống cập nhật danh sách tài xế trên giao diện<br>3.7 Hệ thống cập nhật thống kê tổng quan<br>3.8 Hệ thống đóng dialog và reset form</td></tr></table> |
+| **Exception conditions** | <ul><li>3.1 Nếu thiếu thông tin bắt buộc: Hiển thị lỗi "Vui lòng nhập đầy đủ tên, số bằng lái và số điện thoại"</li><li>3.2 Nếu đánh giá không hợp lệ: Hiển thị lỗi "Đánh giá phải là số từ 0 đến 5"</li><li>3.3 Nếu tài xế không tồn tại: Hiển thị lỗi "Không tìm thấy tài xế cần chỉnh sửa"</li><li>3.5 Nếu tài xế không tồn tại: Ném exception "Driver with id {id} does not exist"</li><li>3.5 Nếu có lỗi trong quá trình cập nhật: Hiển thị thông báo lỗi "Không thể cập nhật tài xế"</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+
+#### Use Case 3: Xóa tài xế (Delete Driver)
+
+| Trường                   | Mô tả                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Use case name**        | Xóa tài xế                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| **Scenario**             | Quản trị viên xóa một tài xế khỏi hệ thống                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| **Triggering event**     | Quản trị viên nhấn nút "Xóa" trong dialog chỉnh sửa tài xế                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| **Brief description**    | Quản trị viên xác nhận xóa một tài xế. Hệ thống sẽ xóa tài xế khỏi danh sách và cập nhật giao diện.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| **Actors**               | Quản trị viên (Manager)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| **Related use cases**    | Thường được gọi sau khi chỉnh sửa tài xế (trong cùng dialog)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| **Stakeholders**         | Quản trị viên, Tài xế, Học sinh, Phụ huynh                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| **Preconditions**        | <ul><li>Tài xế cần xóa phải tồn tại trong hệ thống</li><li>Dialog chỉnh sửa phải đang mở</li><li>Module DriverController phải sẵn sàng hoạt động</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| **Postconditions**       | <ul><li>Tài xế phải được xóa khỏi danh sách</li><li>Danh sách tài xế trên giao diện phải được cập nhật</li><li>Thống kê tổng quan phải được cập nhật</li><li>Dialog chỉnh sửa phải được đóng</li><li>Form phải được reset</li><li>editingDriverId phải được xóa (set về null)</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| **Flow of activities**   | <table><tr><th>Actor</th><th>System</th></tr><tr><td>1. Quản trị viên nhấn nút "Xóa" trong dialog chỉnh sửa</td><td>1.1 Hệ thống hiển thị AlertDialog xác nhận xóa</td></tr><tr><td>2. Quản trị viên xem thông báo xác nhận</td><td>2.1 Hệ thống hiển thị thông báo "Bạn có chắc chắn muốn xóa tài xế này? Hành động này không thể hoàn tác."</td></tr><tr><td>3. Quản trị viên nhấn nút "Xóa" để xác nhận</td><td>3.1 Hệ thống gọi driverController.removeDriver() với ID tài xế<br>3.2 Hệ thống xóa tài xế khỏi danh sách<br>3.3 Hệ thống cập nhật danh sách tài xế trên giao diện<br>3.4 Hệ thống cập nhật thống kê tổng quan<br>3.5 Hệ thống đóng AlertDialog và dialog chỉnh sửa<br>3.6 Hệ thống reset form và xóa editingDriverId</td></tr><tr><td>4. (Alternative) Quản trị viên nhấn "Hủy"</td><td>4.1 Hệ thống đóng AlertDialog, giữ nguyên dialog chỉnh sửa</td></tr></table> |
+| **Exception conditions** | <ul><li>3.1 Nếu tài xế không tồn tại: Ném exception "Driver with id {id} does not exist" và hiển thị lỗi "Không thể xóa tài xế"</li><li>3.2 Nếu có lỗi trong quá trình xóa: Hiển thị thông báo lỗi và không xóa tài xế</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+
+#### Use Case 4: Xem danh sách tài xế (View Drivers)
+
+| Trường                   | Mô tả                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Use case name**        | Xem danh sách tài xế                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| **Scenario**             | Quản trị viên xem danh sách tất cả các tài xế hiện có trong hệ thống                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| **Triggering event**     | Quản trị viên truy cập trang Quản lý tài xế                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| **Brief description**    | Quản trị viên xem danh sách tất cả các tài xế được hiển thị dưới dạng grid với các card tài xế, mỗi card chứa thông tin chi tiết về tài xế, trạng thái, tuyến đường, xe phụ trách, kinh nghiệm, đánh giá và các nút liên hệ. Hệ thống cũng hiển thị thống kê tổng quan ở đầu trang.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| **Actors**               | Quản trị viên (Manager)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| **Related use cases**    | Được gọi trước khi thực hiện chỉnh sửa hoặc xóa tài xế                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| **Stakeholders**         | Quản trị viên, Tài xế, Học sinh, Phụ huynh                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| **Preconditions**        | <ul><li>Module DriverController phải sẵn sàng hoạt động</li><li>Component Drivers phải được khởi tạo</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| **Postconditions**       | <ul><li>Danh sách tài xế phải được hiển thị trên giao diện</li><li>Thống kê tổng quan phải được hiển thị (tổng tài xế, đang thực hiện, chưa phân công, đánh giá trung bình)</li><li>Mỗi tài xế phải hiển thị đầy đủ thông tin: avatar, tên, số bằng lái, trạng thái, tuyến đường, xe phụ trách, kinh nghiệm, đánh giá</li><li>Trạng thái phải được hiển thị với Badge màu sắc phù hợp (xanh cho "đang thực hiện", xám cho "chưa phân công")</li><li>Mỗi tài xế phải có nút "Chỉnh sửa" để chỉnh sửa</li><li>Mỗi tài xế phải có nút "Gọi" và "Email" để liên hệ</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| **Flow of activities**   | <table><tr><th>Actor</th><th>System</th></tr><tr><td>1. Quản trị viên truy cập trang Quản lý tài xế</td><td>1.1 Hệ thống khởi tạo DriverController bằng useRef<br>1.2 Hệ thống gọi driverController.getDrivers() để lấy danh sách tài xế<br>1.3 Hệ thống lưu danh sách vào state driverList</td></tr><tr><td>2. Hệ thống tính toán thống kê</td><td>2.1 Hệ thống tính tổng số tài xế (driverList.length)<br>2.2 Hệ thống tính số tài xế đang thực hiện (filter status === "đang thực hiện")<br>2.3 Hệ thống tính số tài xế chưa phân công (tổng - đang thực hiện)<br>2.4 Hệ thống tính đánh giá trung bình (tổng rating / số lượng, làm tròn 1 chữ số)</td></tr><tr><td>3. Quản trị viên xem danh sách tài xế</td><td>3.1 Hệ thống hiển thị 4 thẻ thống kê ở đầu trang<br>3.2 Hệ thống hiển thị grid với các card tài xế (responsive: 3 cột desktop, 2 cột tablet, 1 cột mobile)<br>3.3 Mỗi card hiển thị:<br>- Avatar với chữ cái đầu của tên<br>- Tên và số bằng lái<br>- Badge trạng thái với màu sắc<br>- Tuyến đường phụ trách<br>- Xe phụ trách<br>- Kinh nghiệm<br>- Đánh giá (rating với 1 chữ số thập phân)<br>- Nút "Gọi" và "Email"<br>- Nút "Chỉnh sửa"</td></tr></table> |
+| **Exception conditions** | <ul><li>1.2 Nếu không có tài xế nào: Hiển thị grid trống</li><li>1.2 Nếu có lỗi khi tải dữ liệu: Hiển thị thông báo lỗi</li><li>2.4 Nếu tổng số tài xế = 0: Đánh giá trung bình hiển thị "0.0"</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+
+### 2. Mục đích
+
+Module này được thiết kế để:
+
+- Quản lý thông tin cá nhân của tài xế (tên, số bằng lái, số điện thoại, email)
+- Theo dõi xe buýt và tuyến đường được phân công cho từng tài xế
+- Quản lý trạng thái làm việc của tài xế (đang thực hiện, chưa phân công)
+- Lưu trữ và hiển thị kinh nghiệm làm việc và đánh giá của tài xế
+- Cung cấp giao diện quản lý trực quan với thống kê tổng quan
+- Hỗ trợ các thao tác CRUD (Create, Read, Update, Delete) đầy đủ
+- Cung cấp các nút liên hệ nhanh (gọi điện, email) cho từng tài xế
+
+### 3. Kiến trúc và thành phần
+
+#### 3.1. DriverController (Controller Layer)
+
+`DriverController` (class `Driver`) là lớp điều khiển chính, quản lý logic nghiệp vụ và dữ liệu tài xế.
+
+**Các thành phần:**
+
+- `drivers: DriverRecord[]` - Danh sách các tài xế (private)
+- Constructor nhận `initialDrivers` (mặc định là `defaultDrivers` từ model)
+
+**Các phương thức chính:**
+
+| Phương thức                     | Mô tả                       | Tham số                                              | Giá trị trả về              |
+| ------------------------------- | --------------------------- | ---------------------------------------------------- | --------------------------- |
+| `getDrivers()`                  | Lấy danh sách tất cả tài xế | -                                                    | `DriverRecord[]`            |
+| `getDriverbyId(id)`             | Lấy tài xế theo ID          | `id: number`                                         | `DriverRecord \| undefined` |
+| `addDriver(driver)`             | Thêm tài xế mới             | `driver: DriverRecord`                               | `DriverRecord`              |
+| `editDriver(id, updatedDriver)` | Cập nhật tài xế             | `id: number`, `updatedDriver: Partial<DriverRecord>` | `DriverRecord`              |
+| `removeDriver(id)`              | Xóa tài xế                  | `id: number`                                         | `void`                      |
+
+**Đặc điểm:**
+
+- Sử dụng defensive copy khi trả về danh sách (`[...this.drivers]`) để tránh mutation từ bên ngoài
+- Validate ID trước khi thêm, sửa, xóa
+- Ném exception với thông báo rõ ràng khi có lỗi
+- Đảm bảo ID không bị thay đổi khi chỉnh sửa
+
+#### 3.2. Drivers Component (Presentation Layer)
+
+Component React quản lý giao diện người dùng cho module quản lý tài xế.
+
+**Các tính năng UI:**
+
+- **Thống kê tổng quan:** Hiển thị 4 thẻ thống kê:
+  - Tổng tài xế
+  - Đang thực hiện
+  - Chưa phân công
+  - Đánh giá trung bình
+- **Grid hiển thị tài xế:** Responsive grid (3 cột trên desktop, 2 cột trên tablet, 1 cột trên mobile)
+- **Card tài xế:** Mỗi card hiển thị:
+  - Avatar với chữ cái đầu của tên
+  - Tên và số bằng lái
+  - Badge trạng thái (màu xanh cho "đang thực hiện", màu xám cho "chưa phân công")
+  - Tuyến đường phụ trách
+  - Xe phụ trách
+  - Kinh nghiệm
+  - Đánh giá (rating)
+  - Nút liên hệ (Gọi, Email)
+  - Nút chỉnh sửa
+- **Dialog tạo tài xế mới:** Form với các trường:
+  - Họ và tên
+  - Số bằng lái
+  - Số điện thoại
+  - Email
+  - Xe phụ trách
+  - Tuyến đường
+  - Trạng thái (dropdown)
+  - Kinh nghiệm
+  - Đánh giá (0-5)
+- **Dialog chỉnh sửa tài xế:** Tương tự dialog tạo mới, có thêm nút xóa
+- **Xác nhận xóa:** AlertDialog để xác nhận trước khi xóa
+
+**Các state quản lý:**
+
+- `driverList`: Danh sách tài xế hiện tại
+- `form`: Form data cho tạo/chỉnh sửa (DriverFormState)
+- `editingDriverId`: ID tài xế đang chỉnh sửa (null nếu không có)
+- `isDialogOpen`: Trạng thái mở/đóng dialog tạo tài xế
+- `isEditDialogOpen`: Trạng thái mở/đóng dialog chỉnh sửa tài xế
+- `formError`: Thông báo lỗi (null nếu không có lỗi)
+
+### 4. Cấu trúc dữ liệu
+
+#### 4.1. DriverRecord
+
+Định nghĩa cấu trúc dữ liệu cho một tài xế:
+
+```typescript
+type DriverRecord = {
+  id: number; // ID duy nhất của tài xế
+  name: string; // Họ và tên tài xế
+  license: string; // Số bằng lái (ví dụ: "DL-12345")
+  phone: string; // Số điện thoại (ví dụ: "+84 919 832 446")
+  email: string; // Email liên hệ
+  bus: string; // Xe buýt được phân công (ví dụ: "Xe số 12")
+  route: string; // Tuyến đường phụ trách (ví dụ: "Tuyến A - Quận 1")
+  status: string; // Trạng thái: "đang thực hiện" hoặc "chưa phân công"
+  experience: string; // Kinh nghiệm (ví dụ: "8 năm")
+  rating: number; // Đánh giá từ 0 đến 5 (ví dụ: 4.8)
+};
+```
+
+**Lưu ý:**
+
+- `bus` và `route` có thể là "Chưa cập nhật" nếu chưa được phân công
+- `experience` có thể là "Chưa cập nhật" nếu chưa có thông tin
+- `rating` là số thập phân từ 0 đến 5, được làm tròn 1 chữ số thập phân
+- `status` chỉ có 2 giá trị: "đang thực hiện" hoặc "chưa phân công"
+
+#### 4.2. DriverFormState
+
+Định nghĩa cấu trúc dữ liệu cho form tạo/chỉnh sửa tài xế:
+
+```typescript
+type DriverFormState = {
+  name: string;
+  license: string;
+  phone: string;
+  email: string;
+  bus: string;
+  route: string;
+  status: DriverRecord["status"];
+  experience: string;
+  rating: string; // Lưu dưới dạng string trong form để dễ xử lý
+};
+```
+
+**Lưu ý:**
+
+- `rating` được lưu dưới dạng string trong form để dễ validate và chuyển đổi
+- Khi submit, `rating` được chuyển đổi sang number và làm tròn 1 chữ số thập phân
+
+### 5. Các chức năng chính
+
+#### 5.1. Tạo tài xế mới
+
+**Luồng xử lý:**
+
+1. Người dùng nhấn nút "Thêm tài xế"
+2. Dialog hiển thị form với các trường:
+   - Họ và tên (text input, bắt buộc)
+   - Số bằng lái (text input, bắt buộc)
+   - Số điện thoại (text input, bắt buộc)
+   - Email (email input, tùy chọn)
+   - Xe phụ trách (text input, tùy chọn)
+   - Tuyến đường (text input, tùy chọn)
+   - Trạng thái (select dropdown, mặc định "đang thực hiện")
+   - Kinh nghiệm (text input, tùy chọn)
+   - Đánh giá (number input, 0-5, tùy chọn)
+3. Validate dữ liệu:
+   - Kiểm tra tên, số bằng lái, số điện thoại không được trống
+   - Kiểm tra đánh giá phải là số từ 0 đến 5 (nếu có)
+4. Tạo `DriverRecord` mới với:
+   - `id`: Timestamp hiện tại (`Date.now()`)
+   - Các thông tin từ form đã được chuẩn hóa:
+     - `bus` và `route`: Mặc định "Chưa cập nhật" nếu trống
+     - `experience`: Mặc định "Chưa cập nhật" nếu trống
+     - `rating`: Mặc định 0 nếu trống, làm tròn 1 chữ số thập phân
+5. Gọi `driverController.addDriver()` để thêm vào danh sách
+6. Cập nhật UI với danh sách tài xế mới
+7. Đóng dialog và reset form
+
+**Xử lý lỗi:**
+
+- Nếu thiếu thông tin bắt buộc: Hiển thị lỗi "Vui lòng nhập đầy đủ tên, số bằng lái và số điện thoại"
+- Nếu đánh giá không hợp lệ: Hiển thị lỗi "Đánh giá phải là số từ 0 đến 5"
+- Nếu ID đã tồn tại: Ném exception từ controller và hiển thị lỗi
+
+#### 5.2. Chỉnh sửa tài xế
+
+**Luồng xử lý:**
+
+1. Người dùng nhấn nút "Chỉnh sửa" trên một tài xế trong grid
+2. Hệ thống lấy thông tin tài xế theo ID
+3. Dialog chỉnh sửa hiển thị với dữ liệu hiện tại đã được điền sẵn:
+   - `rating` được chuyển sang string để hiển thị trong input
+4. Người dùng chỉnh sửa thông tin
+5. Validate dữ liệu (tương tự như tạo mới)
+6. Kiểm tra tài xế có tồn tại không
+7. Gọi `driverController.editDriver()` để cập nhật
+8. Cập nhật UI
+
+**Xử lý lỗi:**
+
+- Nếu không tìm thấy tài xế: Hiển thị "Không tìm thấy tài xế cần chỉnh sửa"
+- Nếu thiếu thông tin bắt buộc: Hiển thị lỗi validation
+- Nếu đánh giá không hợp lệ: Hiển thị lỗi validation
+
+#### 5.3. Xóa tài xế
+
+**Luồng xử lý:**
+
+1. Người dùng nhấn nút "Xóa" trong dialog chỉnh sửa
+2. AlertDialog hiển thị xác nhận xóa với thông báo: "Bạn có chắc chắn muốn xóa tài xế này? Hành động này không thể hoàn tác."
+3. Nếu xác nhận, gọi `driverController.removeDriver()` với ID tài xế
+4. Cập nhật UI và đóng dialog
+5. Reset form và xóa `editingDriverId`
+
+**Xử lý lỗi:**
+
+- Nếu không tìm thấy tài xế: Ném exception từ controller và hiển thị lỗi "Không thể xóa tài xế"
+
+**Lưu ý:**
+
+- Hiện tại hệ thống chưa kiểm tra xem tài xế có đang được sử dụng trong phân công hay không trước khi xóa. Đây là một điểm cần cải thiện trong tương lai.
+
+#### 5.4. Hiển thị danh sách tài xế
+
+**Luồng xử lý:**
+
+1. Component khởi tạo với dữ liệu từ `driverController.getDrivers()`
+2. Tính toán thống kê:
+   - Tổng số tài xế
+   - Số tài xế đang thực hiện (status === "đang thực hiện")
+   - Số tài xế chưa phân công (tổng - đang thực hiện)
+   - Đánh giá trung bình (tổng rating / số lượng, làm tròn 1 chữ số)
+3. Hiển thị grid với các card tài xế, mỗi card chứa:
+   - Avatar với chữ cái đầu của tên
+   - Tên và số bằng lái
+   - Badge trạng thái với màu sắc phù hợp
+   - Thông tin tuyến đường, xe, kinh nghiệm, đánh giá
+   - Nút liên hệ (Gọi, Email)
+   - Nút chỉnh sửa
+4. Grid responsive:
+   - 3 cột trên màn hình lg trở lên (`lg:grid-cols-3`)
+   - 2 cột trên màn hình md (`md:grid-cols-2`)
+   - 1 cột trên màn hình mobile
+
+#### 5.5. Liên hệ tài xế
+
+**Luồng xử lý:**
+
+1. Người dùng nhấn nút "Gọi" hoặc "Email" trên card tài xế
+2. Nút "Gọi": Hiển thị số điện thoại (có thể tích hợp với `tel:` link trong tương lai)
+3. Nút "Email": Hiển thị email (có thể tích hợp với `mailto:` link trong tương lai)
+
+**Lưu ý:**
+
+- Hiện tại các nút liên hệ chỉ hiển thị thông tin, chưa có chức năng thực sự. Có thể mở rộng để:
+  - Gọi điện trực tiếp (với `tel:` link trên mobile)
+  - Mở ứng dụng email (với `mailto:` link)
+
+### 6. Phụ thuộc và tích hợp
+
+#### 6.1. Phụ thuộc vào các module khác
+
+Module này là module độc lập, không phụ thuộc trực tiếp vào các module khác. Tuy nhiên:
+
+- **Module Quản lý phân công** (`AssignController`): Có thể sử dụng module này để lấy thông tin tài xế khi tạo phân công
+- **Module Quản lý tuyến đường**: Có thể tích hợp để lấy danh sách tuyến đường khi phân công cho tài xế
+- **Module Quản lý xe buýt**: Có thể tích hợp để lấy danh sách xe buýt khi phân công cho tài xế
+
+#### 6.2. Tích hợp với UI Components
+
+Sử dụng các component từ thư viện UI:
+
+- `Card`, `CardContent`, `CardHeader`, `CardTitle`, `CardDescription`
+- `Dialog`, `DialogContent`, `DialogHeader`, `DialogTitle`, `DialogDescription`, `DialogFooter`, `DialogTrigger`
+- `AlertDialog`, `AlertDialogAction`, `AlertDialogCancel`, `AlertDialogContent`, `AlertDialogDescription`, `AlertDialogFooter`, `AlertDialogHeader`, `AlertDialogTitle`, `AlertDialogTrigger`
+- `Input`, `Label`, `Button`, `Badge`, `Avatar`, `AvatarFallback`
+- `Select`, `SelectContent`, `SelectItem`, `SelectTrigger`, `SelectValue`
+- Icons từ `lucide-react`: `Phone`, `Mail`, `MapPin`, `Clock`, `User`
+
+#### 6.3. Model Integration
+
+Module sử dụng dữ liệu mặc định từ:
+
+- `Bus-Smart-app/app/models/ModelDrivers.ts`: Chứa danh sách tài xế mặc định
+
+### 7. Xử lý lỗi và validation
+
+#### 7.1. Validation phía client
+
+- **Tạo tài xế:**
+
+  - Kiểm tra tên không được trống
+  - Kiểm tra số bằng lái không được trống
+  - Kiểm tra số điện thoại không được trống
+  - Kiểm tra đánh giá phải là số hợp lệ (>= 0 và <= 5) nếu có nhập
+  - Email không bắt buộc nhưng nếu nhập phải đúng định dạng (validation tự động của input type="email")
+
+- **Chỉnh sửa tài xế:**
+  - Tương tự như tạo tài xế
+  - Kiểm tra tài xế tồn tại trước khi chỉnh sửa
+
+#### 7.2. Xử lý lỗi từ Controller
+
+- `addDriver()`: Ném lỗi `"Driver with id {id} already exists"` nếu ID đã tồn tại
+- `editDriver()`: Ném lỗi `"Driver with id {id} does not exist"` nếu tài xế không tồn tại
+- `removeDriver()`: Ném lỗi `"Driver with id {id} does not exist"` nếu tài xế không tồn tại
+
+Tất cả lỗi được bắt và hiển thị trong UI thông qua state `formError`.
+
+#### 7.3. Chuẩn hóa dữ liệu
+
+**Xe phụ trách và Tuyến đường:**
+
+- Nếu input trống: Mặc định "Chưa cập nhật"
+- Nếu input có giá trị: Trim whitespace và giữ nguyên
+
+**Kinh nghiệm:**
+
+- Nếu input trống: Mặc định "Chưa cập nhật"
+- Nếu input có giá trị: Trim whitespace và giữ nguyên
+
+**Đánh giá:**
+
+- Nếu input trống: Mặc định 0
+- Nếu input có giá trị: Chuyển đổi sang number và làm tròn 1 chữ số thập phân
+- Validate: Phải là số từ 0 đến 5
+
+**Tên, số bằng lái, số điện thoại:**
+
+- Trim whitespace trước khi lưu
+- Không được trống (validation bắt buộc)
+
+### 8. Trạng thái và quản lý state
+
+Component sử dụng React hooks để quản lý state:
+
+- `driverList`: Danh sách tài xế hiện tại (được cập nhật sau mỗi thao tác CRUD)
+- `form`: Form data cho tạo/chỉnh sửa (DriverFormState)
+- `editingDriverId`: ID tài xế đang chỉnh sửa (null nếu không có)
+- `isDialogOpen`: Trạng thái mở/đóng dialog tạo tài xế
+- `isEditDialogOpen`: Trạng thái mở/đóng dialog chỉnh sửa tài xế
+- `formError`: Thông báo lỗi (null nếu không có lỗi)
+
+**Quản lý lifecycle:**
+
+- Controller được khởi tạo bằng `useRef` để tránh re-initialize mỗi lần render
+- `driverList` được khởi tạo từ `driverController.getDrivers()` khi component mount
+- Form được reset khi dialog đóng thông qua `handleDialogChange` và `handleEditDialogChange`
+- `formError` được reset khi:
+  - Dialog đóng
+  - Người dùng thay đổi giá trị trong form
+
+**Các hàm xử lý:**
+
+- `handleDialogChange`: Xử lý mở/đóng dialog tạo mới, reset form khi đóng
+- `handleEditDialogChange`: Xử lý mở/đóng dialog chỉnh sửa, reset form và `editingDriverId` khi đóng
+- `handleFormChange`: Cập nhật giá trị form và reset error khi người dùng nhập
+- `resetForm`: Reset form về trạng thái ban đầu và xóa error
+- `handleAddDriver`: Xử lý tạo tài xế mới
+- `handleEditClick`: Khởi tạo form với dữ liệu tài xế cần chỉnh sửa
+- `handleEditDriver`: Xử lý cập nhật tài xế
+- `handleRemoveDriver`: Xử lý xóa tài xế
+
+### 9. Mở rộng trong tương lai
+
+Các tính năng có thể mở rộng:
+
+- **Tìm kiếm và lọc:**
+
+  - Tìm kiếm tài xế theo tên, số bằng lái, số điện thoại
+  - Lọc tài xế theo trạng thái (đang thực hiện, chưa phân công)
+  - Lọc tài xế theo tuyến đường hoặc xe buýt
+  - Sắp xếp tài xế theo đánh giá, kinh nghiệm, tên
+
+- **Validation nâng cao:**
+
+  - Kiểm tra tài xế có đang được sử dụng trong phân công trước khi xóa
+  - Validate số điện thoại theo định dạng Việt Nam
+  - Validate số bằng lái theo định dạng chuẩn
+  - Kiểm tra trùng số bằng lái (mỗi tài xế phải có số bằng lái duy nhất)
+  - Kiểm tra trùng email (nếu email là bắt buộc)
+
+- **Quản lý lịch trình:**
+
+  - Xem lịch làm việc của từng tài xế
+  - Phân công ca làm việc cho tài xế
+  - Theo dõi giờ làm việc và nghỉ phép
+
+- **Đánh giá và phản hồi:**
+
+  - Cho phép phụ huynh đánh giá tài xế
+  - Lưu lịch sử đánh giá theo thời gian
+  - Hiển thị biểu đồ xu hướng đánh giá
+
+- **Tích hợp liên hệ:**
+
+  - Tích hợp `tel:` link để gọi điện trực tiếp trên mobile
+  - Tích hợp `mailto:` link để mở ứng dụng email
+  - Tích hợp SMS/WhatsApp để liên hệ nhanh
+
+- **Xuất dữ liệu:**
+
+  - Xuất danh sách tài xế ra file Excel/PDF
+  - In danh sách tài xế
+  - Xuất báo cáo thống kê tài xế
+
+- **Quản lý bằng lái:**
+
+  - Lưu trữ thông tin chi tiết về bằng lái (ngày cấp, ngày hết hạn)
+  - Cảnh báo khi bằng lái sắp hết hạn
+  - Quản lý lịch sử gia hạn bằng lái
+
+- **Tích hợp với module khác:**
+  - Tự động cập nhật xe và tuyến đường khi có phân công mới
+  - Đồng bộ trạng thái tài xế với trạng thái phân công
+  - Hiển thị lịch sử phân công của từng tài xế
+
 ## Module Quản lý học sinh
 
+### 1. Tổng quan
+
+### Đặc tả Use case (Use case description)
+
+### 2. Mục đích
+
+### 3. Kiến trúc và thành phần
+
+### 4. Cấu trúc dữ liệu
+
+### 5. Các chức năng chính
+
+### 6. Phụ thuộc và tích hợp
+
+### 7. Xử lý lỗi và validation
+
+### 8. Trạng thái và quản lý state
+
+### 9. Mở rộng trong tương lai
+
 ## Module Theo dõi xe và Cập nhật danh sách điểm dừng theo thời gian thực
+
+### 1. Tổng quan
+
+### Đặc tả Use case (Use case description)
+
+### 2. Mục đích
+
+### 3. Kiến trúc và thành phần
+
+### 4. Cấu trúc dữ liệu
+
+### 5. Các chức năng chính
+
+### 6. Phụ thuộc và tích hợp
+
+### 7. Xử lý lỗi và validation
+
+### 8. Trạng thái và quản lý state
+
+### 9. Mở rộng trong tương lai
