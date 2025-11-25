@@ -1,5 +1,5 @@
 @startuml
-title Create Assign - Sequence Diagram
+title Assign Management - Sequence Diagram
 
 actor "Quản lý" as ql
 participant "~~:AssignController~~" as co
@@ -43,11 +43,49 @@ activate co
 co --> co : AssignRecord | undefined
 deactivate co
 
-alt Assign với id đã tồn tại
+alt [Assign với id đã tồn tại]
     co --> ql : Error: "Route with id already exists"
-else Assign hợp lệ
+else [Assign hợp lệ]
     co -> co : assignments.push(assign)
     co --> ql : AssignRecord
+end
+deactivate co
+
+== Chỉnh sửa Assignment ==
+ql -> co : getAssignById(id: number)
+activate co
+co -> co : assignments.find(id)
+co --> ql : AssignRecord | undefined
+deactivate co
+
+ql -> co : editAssign(id: number, updatedAssign: Partial<AssignRecord>)
+activate co
+co -> co : assignments.findIndex(id)
+activate co
+co --> co : number (index)
+deactivate co
+
+alt [Phân công không tồn tại]
+    co --> ql : Error: "Assignment with id {id} does not exist"
+else [Phân công tồn tại]
+    co -> co : assignments[index] = {...assignments[index], ...updatedAssign, id}
+    co --> ql : AssignRecord
+end
+deactivate co
+
+== Xóa Assignment ==
+ql -> co : removeAssign(id: number)
+activate co
+co -> co : assignments.findIndex(id)
+activate co
+co --> co : number (index)
+deactivate co
+
+alt [Phân công không tồn tại]
+    co --> ql : Error: "Assignment with id {id} does not exist"
+else [Phân công tồn tại]
+    co -> co : assignments.splice(index, 1)
+    co --> ql : void
 end
 deactivate co
 

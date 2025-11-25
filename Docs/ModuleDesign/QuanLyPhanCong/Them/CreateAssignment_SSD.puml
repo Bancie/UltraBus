@@ -1,0 +1,64 @@
+@startuml
+title SSD for Create Assignment Use Case
+
+actor "Quản lý" as Manager
+participant ":System" as System
+
+Manager -> System: Nhấn nút "Tạo phân công mới"
+activate System
+System --> Manager: Dialog form tạo phân công
+System -> System: getBusList()
+System --> Manager: Danh sách xe buýt
+System -> System: getDriverList()
+System --> Manager: Danh sách tài xế
+System -> System: getRouteList()
+System --> Manager: Danh sách tuyến đường
+
+alt [Không có dữ liệu]
+    System --> Manager: Thông báo lỗi: Không có xe buýt, tài xế hoặc tuyến đường
+    deactivate System
+else [Có dữ liệu]
+    Manager -> System: selectBus(busId)
+    System --> Manager: Xác nhận đã chọn xe buýt
+    
+    Manager -> System: selectDriver(driverId)
+    System --> Manager: Xác nhận đã chọn tài xế
+    
+    Manager -> System: selectRoute(routeId)
+    System --> Manager: Xác nhận đã chọn tuyến đường
+    
+    Manager -> System: enterStudents(students)
+    System -> System: validateStudents(students)
+    opt [Số học sinh < 0]
+        System -> System: setStudents(0)
+    end
+    System --> Manager: Xác nhận số học sinh hợp lệ
+    
+    Manager -> System: selectStatus(status)
+    System --> Manager: Xác nhận đã chọn trạng thái
+    
+    Manager -> System: createAssignment()
+    System -> System: validateData()
+    
+    alt [Dữ liệu không hợp lệ]
+        System --> Manager: Lỗi: "Vui lòng chọn đầy đủ xe, tài xế và tuyến đường"
+        deactivate System
+    else [Dữ liệu hợp lệ]
+        System -> System: createAssignRecord(id, bus, driver, route, students, status)
+        System -> System: addAssign(assign)
+        
+        alt [ID đã tồn tại]
+            System --> Manager: Exception: "Route with id {id} already exists"
+            deactivate System
+        else [ID chưa tồn tại]
+            System -> System: updateAssignmentsList()
+            System --> Manager: Xác nhận tạo phân công thành công
+            System -> System: closeDialog()
+            System --> Manager: Dialog đã đóng
+            deactivate System
+        end
+    end
+end
+
+@enduml
+
