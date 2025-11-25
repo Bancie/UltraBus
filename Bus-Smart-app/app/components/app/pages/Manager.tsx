@@ -52,6 +52,8 @@ export default function Manager() {
   const [routeBuses, setRouteBuses] = useState('');
   const [routeError, setRouteError] = useState<string | null>(null);
   const [isRouteDialogOpen, setIsRouteDialogOpen] = useState(false);
+  const [isEditRouteDialogOpen, setIsEditRouteDialogOpen] = useState(false);
+  const [editingRouteId, setEditingRouteId] = useState<number | null>(null);
   const [assignError, setAssignError] = useState<string | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingAssignmentId, setEditingAssignmentId] = useState<number | null>(null);
@@ -68,6 +70,13 @@ export default function Manager() {
       setRouteError(null);
     }
   }, [isRouteDialogOpen]);
+
+  useEffect(() => {
+    if (!isEditRouteDialogOpen) {
+      setRouteError(null);
+      setEditingRouteId(null);
+    }
+  }, [isEditRouteDialogOpen]);
 
   useEffect(() => {
     if (!isEditDialogOpen) {
@@ -235,6 +244,82 @@ export default function Manager() {
       setIsRouteDialogOpen(false);
     } catch (error) {
       setRouteError(error instanceof Error ? error.message : 'Không thể tạo tuyến đường.');
+    }
+  };
+
+  const handleEditRouteClick = (route: RouteRecord) => {
+    setRouteName(route.name);
+    setRouteStops(route.stops.toString());
+    // Extract number from distance string (e.g., "18.5 km" -> "18.5")
+    const distanceMatch = route.distance.match(/[\d.]+/);
+    setRouteDistance(distanceMatch ? distanceMatch[0] : '');
+    // Extract number from avgTime string (e.g., "45 min" -> "45")
+    const timeMatch = route.avgTime.match(/[\d.]+/);
+    setRouteAvgTime(timeMatch ? timeMatch[0] : '');
+    setRouteBuses(route.buses.toString());
+    setEditingRouteId(route.id);
+    setIsEditRouteDialogOpen(true);
+  };
+
+  const handleEditRoute = () => {
+    if (editingRouteId === null) {
+      return;
+    }
+
+    if (!routeName.trim()) {
+      setRouteError('Vui lòng nhập tên tuyến đường.');
+      return;
+    }
+
+    const normalizedDistance = (() => {
+      const trimmed = routeDistance.trim();
+      if (!trimmed) return '0 km';
+      return trimmed.endsWith('km') ? trimmed : `${trimmed} km`;
+    })();
+
+    const normalizedAvgTime = (() => {
+      const trimmed = routeAvgTime.trim();
+      if (!trimmed) return '0 min';
+      return trimmed.includes('min') ? trimmed : `${trimmed} min`;
+    })();
+
+    const existingRoute = routesControllerRef.current.getRouteById(editingRouteId);
+    if (!existingRoute) {
+      setRouteError('Không tìm thấy tuyến đường cần chỉnh sửa.');
+      return;
+    }
+
+    try {
+      routesControllerRef.current.editRoute(editingRouteId, {
+        name: routeName.trim(),
+        stops: Number(routeStops) || 0,
+        distance: normalizedDistance,
+        avgTime: normalizedAvgTime,
+        buses: Number(routeBuses) || 0,
+      });
+      setRouteList(routesControllerRef.current.getRoutes());
+      resetRouteForm();
+      setRouteError(null);
+      setIsEditRouteDialogOpen(false);
+      setEditingRouteId(null);
+    } catch (error) {
+      setRouteError(error instanceof Error ? error.message : 'Không thể cập nhật tuyến đường.');
+    }
+  };
+
+  const handleRemoveRoute = () => {
+    if (editingRouteId === null) {
+      return;
+    }
+
+    try {
+      routesControllerRef.current.removeRoute(editingRouteId);
+      setRouteList(routesControllerRef.current.getRoutes());
+      resetRouteForm();
+      setIsEditRouteDialogOpen(false);
+      setEditingRouteId(null);
+    } catch (error) {
+      setRouteError(error instanceof Error ? error.message : 'Không thể xóa tuyến đường.');
     }
   };
 
@@ -651,14 +736,111 @@ export default function Manager() {
                     <Button
                       variant="outline"
                       className="w-full mt-4 bg-green-200 hover:bg-green-800 hover:text-white border-green-200"
+                      onClick={() => handleEditRouteClick(route)}
                     >
-                      Xem chi tiết
+                      Chỉnh sửa
                     </Button>
                   </div>
                 ))}
               </div>
             </CardContent>
           </Card>
+          <Dialog open={isEditRouteDialogOpen} onOpenChange={setIsEditRouteDialogOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Chỉnh sửa tuyến đường</DialogTitle>
+                <DialogDescription>
+                  Cập nhật thông tin tuyến đường trong hệ thống.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label htmlFor="edit-routeName">Tên tuyến đường</Label>
+                  <Input
+                    id="edit-routeName"
+                    placeholder="Ví dụ, Tuyến E - Quận 4"
+                    value={routeName}
+                    onChange={(event) => setRouteName(event.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-stops">Số lượng điểm dừng</Label>
+                  <Input
+                    id="edit-stops"
+                    type="number"
+                    placeholder="12"
+                    value={routeStops}
+                    onChange={(event) => setRouteStops(event.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-distance">Khoảng cách (km)</Label>
+                  <Input
+                    id="edit-distance"
+                    placeholder="18.5"
+                    value={routeDistance}
+                    onChange={(event) => setRouteDistance(event.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-avgTime">Thời gian trung bình (phút)</Label>
+                  <Input
+                    id="edit-avgTime"
+                    placeholder="45"
+                    value={routeAvgTime}
+                    onChange={(event) => setRouteAvgTime(event.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-buses">Số xe phân công</Label>
+                  <Input
+                    id="edit-buses"
+                    type="number"
+                    placeholder="6"
+                    value={routeBuses}
+                    onChange={(event) => setRouteBuses(event.target.value)}
+                  />
+                </div>
+                {routeError && <p className="text-sm text-red-600">{routeError}</p>}
+                <div className="flex gap-2">
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="destructive" className="flex-1">
+                        Xóa
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Xác nhận xóa tuyến đường</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Bạn có chắc chắn muốn xóa tuyến đường này? Hành động này không thể hoàn
+                          tác.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Hủy</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={handleRemoveRoute}
+                          className="bg-red-600 hover:bg-red-700"
+                        >
+                          Xóa
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                  <Button variant="outline" onClick={() => setIsEditRouteDialogOpen(false)}>
+                    Hủy
+                  </Button>
+                  <Button
+                    className="flex-1 bg-blue-600 hover:bg-blue-700"
+                    onClick={handleEditRoute}
+                  >
+                    Cập nhật
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </TabsContent>
       </Tabs>
     </div>
