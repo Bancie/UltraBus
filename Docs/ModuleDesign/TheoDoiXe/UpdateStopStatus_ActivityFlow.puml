@@ -1,0 +1,52 @@
+@startuml
+title Activity Flow Diagram - Cập nhật trạng thái điểm dừng theo vị trí xe (Update Stop Status Based on Bus Position)
+
+|Hệ thống|
+start
+repeat
+  :Nhận carMarkerPosition mới từ MapController\n(mỗi 300ms);
+  :Trigger useEffect với dependencies\n[carMarkerPosition, waypointsData];
+
+  if (carMarkerPosition null?) then (Có)
+    stop
+  endif
+
+  if (Không có waypoints?) then (Có)
+    :Trả về currentIndex = 0;
+    stop
+  endif
+
+  :Gọi checkAndUpdateWaypointIndex()\nvới carPosition, waypoints, currentIndex;
+  :Tính khoảng cách từ xe đến waypoint tiếp theo\n(currentIndex + 1) bằng công thức Haversine;
+
+  if (Đã đến cuối tuyến\n(currentIndex >= length - 1)?) then (Có)
+    :Giữ nguyên currentIndex = length - 1;
+  else (Chưa đến cuối)
+    :So sánh khoảng cách với ngưỡng 300m (0.3km);
+
+    if (Khoảng cách <= 300m?) then (Có)
+      :Cập nhật currentIndex = nextWaypointIndex;
+    else (Khoảng cách > 300m)
+      :Giữ nguyên currentIndex;
+    endif
+  endif
+
+  :Gọi transformWaypointsToStops()\nvới currentIndex mới;
+
+  if (Có lỗi trong quá trình transform?) then (Có)
+    :Giữ nguyên trạng thái cũ;
+  else (Không có lỗi)
+    :Gán status cho mỗi waypoint:\n- index < currentIndex: "completed"\n- index === currentIndex: "current"\n- index === currentIndex + 1: "upcoming"\n- Còn lại: undefined;
+    :Cập nhật state waypoints;
+
+    :Hiển thị điểm dừng hiện tại\nvới border màu xanh và background xanh nhạt;
+    :Hiển thị điểm dừng đã hoàn thành\nvới border màu xanh lá và background xanh lá nhạt;
+    :Hiển thị badge tương ứng\n("Hiện tại", "Đã hoàn thành", "Sắp đến");
+  endif
+
+repeat while (Tracking đang hoạt động?) is (Có)
+-> Không;
+
+stop
+
+@enduml

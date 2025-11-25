@@ -1,0 +1,68 @@
+@startuml
+title Activity Flow Diagram - Theo dõi xe buýt trên bản đồ (Track Bus on Map)
+
+|Người dùng|
+start
+:Nhấn nút "Theo dõi xe"\ntrên một xe buýt trong danh sách;
+
+|Hệ thống|
+:Lấy tên tuyến đường từ thông tin xe buýt;
+:Tìm route ID từ tên tuyến đường\nbằng findRouteIdByName();
+
+if (Không tìm thấy route ID?) then (Có)
+  :Hiển thị lỗi\n"Không tìm thấy route ID cho: {busRoute}";
+  stop
+endif
+
+:Lấy thông tin route từ AssignController;
+
+if (Không tìm thấy route?) then (Có)
+  :Hiển thị lỗi\n"Không tìm thấy route với ID: {routeId}";
+  stop
+endif
+
+:Lấy waypoints từ\nAssignController.getWayPoints();
+
+if (Tuyến đường không có waypoints?) then (Có)
+  :Hiển thị lỗi\nvà không hiển thị danh sách điểm dừng;
+  stop
+endif
+
+:Khởi tạo currentWaypointIndex = 0;
+:Transform waypoints thành StopDisplay format;
+:Lưu thông tin vào state;
+
+:Gọi mapController.showRoute(routeId)\nđể lấy RouteDisplayData;
+
+if (Route không tồn tại?) then (Có)
+  :Ném exception\n"Route with id {routeId} not found";
+  stop
+endif
+
+:Hiển thị polyline màu xanh (#3b82f6)\ntrên bản đồ;
+:Hiển thị markers cho các waypoints\nvới số thứ tự;
+
+:Gọi mapController.startTracking(routeId, callback);
+
+if (Tuyến đường không có waypoints?) then (Có)
+  :Ném exception\n"Route with id {routeId} has no waypoints";
+  stop
+endif
+
+:Đặt vị trí ban đầu của xe\ntại waypoint đầu tiên;
+:Khởi tạo interval cập nhật vị trí mỗi 300ms;
+:Hiển thị carMarker với icon bus trên bản đồ;
+
+repeat
+  |Hệ thống|
+  :Tính toán vị trí mới dựa trên elapsedTime;
+  :Sử dụng công thức:\ndistanceTraveled = (velocity * elapsedTime) / 3600;
+  :Nội suy vị trí trên đoạn đường hiện tại;
+  :Cập nhật carMarkerPosition và gọi callback;
+  :Cập nhật UI với vị trí mới;
+repeat while (Tracking đang hoạt động?) is (Có)
+-> Không;
+
+stop
+
+@enduml

@@ -1204,20 +1204,461 @@ Các tính năng có thể mở rộng:
 
 ### 1. Tổng quan
 
+Module Theo dõi xe và Cập nhật danh sách điểm dừng theo thời gian thực là một module quan trọng trong hệ thống Bus Smart, chịu trách nhiệm hiển thị vị trí xe buýt trên bản đồ Google Maps và cập nhật trạng thái các điểm dừng theo thời gian thực. Module này cho phép quản trị viên và người dùng theo dõi vị trí xe buýt đang di chuyển, xem lịch trình các điểm dừng sắp tới, và cập nhật trạng thái điểm dừng (đã hoàn thành, hiện tại, sắp đến) dựa trên vị trí GPS của xe. Module sử dụng thuật toán mô phỏng di chuyển dựa trên vận tốc và thời gian để tính toán vị trí xe trên tuyến đường.
+
 ### Đặc tả Use case (Use case description)
+
+#### Use Case 1: Theo dõi xe buýt trên bản đồ (Track Bus on Map)
+
+| Trường                   | Mô tả                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Use case name**        | Theo dõi xe buýt trên bản đồ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| **Scenario**             | Quản trị viên hoặc người dùng theo dõi vị trí xe buýt đang di chuyển trên bản đồ Google Maps theo thời gian thực                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| **Triggering event**     | Người dùng nhấn nút "Theo dõi xe" trên một xe buýt trong danh sách "Xe đang hoạt động"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| **Brief description**    | Người dùng chọn một xe buýt từ danh sách và nhấn "Theo dõi xe". Hệ thống sẽ hiển thị tuyến đường của xe trên bản đồ, bắt đầu tracking vị trí xe, và cập nhật vị trí xe mỗi 300ms. Xe được hiển thị bằng marker đặc biệt trên bản đồ với icon bus.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| **Actors**               | Quản trị viên (Manager), Người dùng (User)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| **Related use cases**    | Được gọi từ trang RouteMap khi người dùng muốn theo dõi một xe cụ thể                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| **Stakeholders**         | Quản trị viên, Tài xế, Học sinh, Phụ huynh                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| **Preconditions**        | <ul><li>Hệ thống phải có ít nhất một xe buýt trong danh sách</li><li>Xe buýt phải có tuyến đường được phân công</li><li>Tuyến đường phải có ít nhất một waypoint</li><li>Module MapController và AssignController phải sẵn sàng hoạt động</li><li>Google Maps API key phải được cấu hình</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| **Postconditions**       | <ul><li>Tuyến đường của xe phải được hiển thị trên bản đồ dưới dạng polyline màu xanh</li><li>Các điểm dừng (waypoints) phải được hiển thị dưới dạng markers đánh số</li><li>Xe buýt phải được hiển thị bằng marker đặc biệt với icon bus</li><li>Tracking phải được bắt đầu và cập nhật vị trí mỗi 300ms</li><li>Vị trí ban đầu của xe là waypoint đầu tiên</li><li>Danh sách điểm dừng sắp tới phải được hiển thị</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| **Flow of activities**   | <table><tr><th>Actor</th><th>System</th></tr><tr><td>1. Người dùng nhấn nút "Theo dõi xe" trên một xe buýt</td><td>1.1 Hệ thống lấy tên tuyến đường từ thông tin xe buýt<br>1.2 Hệ thống tìm route ID từ tên tuyến đường bằng findRouteIdByName()<br>1.3 Hệ thống lấy thông tin route từ AssignController</td></tr><tr><td>2. Hệ thống xử lý thông tin tuyến đường</td><td>2.1 Hệ thống lấy waypoints từ AssignController.getWayPoints()<br>2.2 Hệ thống khởi tạo currentWaypointIndex = 0<br>2.3 Hệ thống transform waypoints thành StopDisplay format<br>2.4 Hệ thống lưu thông tin vào state</td></tr><tr><td>3. Hệ thống hiển thị tuyến đường trên bản đồ</td><td>3.1 Hệ thống gọi mapController.showRoute(routeId) để lấy RouteDisplayData<br>3.2 Hệ thống hiển thị polyline màu xanh (#3b82f6) trên bản đồ<br>3.3 Hệ thống hiển thị markers cho các waypoints với số thứ tự</td></tr><tr><td>4. Hệ thống bắt đầu tracking</td><td>4.1 Hệ thống gọi mapController.startTracking(routeId, callback)<br>4.2 Hệ thống đặt vị trí ban đầu của xe tại waypoint đầu tiên<br>4.3 Hệ thống khởi tạo interval cập nhật vị trí mỗi 300ms<br>4.4 Hệ thống hiển thị carMarker với icon bus trên bản đồ</td></tr><tr><td>5. Hệ thống cập nhật vị trí theo thời gian thực</td><td>5.1 Mỗi 300ms, hệ thống tính toán vị trí mới dựa trên elapsedTime<br>5.2 Hệ thống sử dụng công thức: distanceTraveled = (velocity \* elapsedTime) / 3600<br>5.3 Hệ thống nội suy vị trí trên đoạn đường hiện tại<br>5.4 Hệ thống cập nhật carMarkerPosition và gọi callback<br>5.5 Hệ thống cập nhật UI với vị trí mới</td></tr></table> |
+| **Exception conditions** | <ul><li>1.2 Nếu không tìm thấy route ID: Hiển thị lỗi "Không tìm thấy route ID cho: {busRoute}" và không thực hiện tracking</li><li>1.3 Nếu không tìm thấy route: Hiển thị lỗi "Không tìm thấy route với ID: {routeId}"</li><li>2.1 Nếu tuyến đường không có waypoints: Hiển thị lỗi và không hiển thị danh sách điểm dừng</li><li>3.1 Nếu route không tồn tại: Ném exception "Route with id {routeId} not found"</li><li>4.1 Nếu tuyến đường không có waypoints: Ném exception "Route with id {routeId} has no waypoints"</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+
+#### Use Case 2: Cập nhật trạng thái điểm dừng theo vị trí xe (Update Stop Status Based on Bus Position)
+
+| Trường                   | Mô tả                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Use case name**        | Cập nhật trạng thái điểm dừng theo vị trí xe                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| **Scenario**             | Hệ thống tự động cập nhật trạng thái các điểm dừng (đã hoàn thành, hiện tại, sắp đến) dựa trên vị trí GPS hiện tại của xe buýt                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| **Triggering event**     | Vị trí xe buýt (carMarkerPosition) được cập nhật mỗi 300ms trong quá trình tracking                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| **Brief description**    | Hệ thống sử dụng thuật toán kiểm tra khoảng cách giữa vị trí xe và các waypoints để xác định điểm dừng hiện tại. Khi xe đến gần một waypoint (trong phạm vi 300m), hệ thống cập nhật trạng thái của waypoint đó thành "current" và các waypoint trước đó thành "completed". Hệ thống đảm bảo việc cập nhật tuần tự, không bỏ qua bất kỳ điểm dừng nào.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| **Actors**               | Hệ thống (System)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| **Related use cases**    | Được gọi tự động trong quá trình tracking xe buýt                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| **Stakeholders**         | Quản trị viên, Tài xế, Học sinh, Phụ huynh                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| **Preconditions**        | <ul><li>Tracking phải đang được thực hiện (carMarkerPosition không null)</li><li>Danh sách waypoints phải có ít nhất một phần tử</li><li>currentWaypointIndex phải được khởi tạo</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| **Postconditions**       | <ul><li>Trạng thái các điểm dừng phải được cập nhật chính xác</li><li>Điểm dừng hiện tại phải có status = "current"</li><li>Các điểm dừng đã đi qua phải có status = "completed"</li><li>Điểm dừng tiếp theo phải có status = "upcoming"</li><li>UI phải được cập nhật với trạng thái mới (màu sắc, badge)</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| **Flow of activities**   | <table><tr><th>Actor</th><th>System</th></tr><tr><td>1. Vị trí xe được cập nhật (mỗi 300ms)</td><td>1.1 Hệ thống nhận carMarkerPosition mới từ MapController<br>1.2 Hệ thống trigger useEffect với dependencies [carMarkerPosition, waypointsData]</td></tr><tr><td>2. Hệ thống kiểm tra khoảng cách đến waypoint tiếp theo</td><td>2.1 Hệ thống gọi checkAndUpdateWaypointIndex() với carPosition, waypoints, currentIndex<br>2.2 Hệ thống tính khoảng cách từ xe đến waypoint tiếp theo (currentIndex + 1) bằng công thức Haversine<br>2.3 Hệ thống so sánh khoảng cách với ngưỡng 300m (0.3km)</td></tr><tr><td>3. Hệ thống cập nhật currentWaypointIndex</td><td>3.1 Nếu khoảng cách <= 300m: Cập nhật currentIndex = nextWaypointIndex<br>3.2 Nếu khoảng cách > 300m: Giữ nguyên currentIndex<br>3.3 Nếu đã đến cuối tuyến: Giữ nguyên currentIndex = length - 1</td></tr><tr><td>4. Hệ thống cập nhật trạng thái điểm dừng</td><td>4.1 Hệ thống gọi transformWaypointsToStops() với currentIndex mới<br>4.2 Hệ thống gán status cho mỗi waypoint:<br>- index < currentIndex: "completed"<br>- index === currentIndex: "current"<br>- index === currentIndex + 1: "upcoming"<br>- Còn lại: undefined<br>4.3 Hệ thống cập nhật state waypoints</td></tr><tr><td>5. UI cập nhật hiển thị</td><td>5.1 Hệ thống hiển thị điểm dừng hiện tại với border màu xanh và background xanh nhạt<br>5.2 Hệ thống hiển thị điểm dừng đã hoàn thành với border màu xanh lá và background xanh lá nhạt<br>5.3 Hệ thống hiển thị badge tương ứng ("Hiện tại", "Đã hoàn thành", "Sắp đến")</td></tr></table> |
+| **Exception conditions** | <ul><li>2.2 Nếu không có waypoints: Trả về currentIndex = 0</li><li>2.2 Nếu đã đến cuối tuyến (currentIndex >= length - 1): Trả về currentIndex hiện tại</li><li>4.1 Nếu có lỗi trong quá trình transform: Giữ nguyên trạng thái cũ</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+
+**Vị trí trong hệ thống:**
+
+- Controller: `Bus-Smart-app/app/controllers/MapController.ts`, `Bus-Smart-app/app/controllers/TrackingController.ts`
+- UI Component: `Bus-Smart-app/app/components/app/pages/RouteMap.tsx`
+- Map Component: `Bus-Smart-app/app/components/app/map/GoogleMap.tsx`
 
 ### 2. Mục đích
 
+Module này được thiết kế để:
+
+- Hiển thị vị trí xe buýt trên bản đồ Google Maps theo thời gian thực
+- Mô phỏng di chuyển của xe buýt dựa trên vận tốc và thời gian
+- Hiển thị tuyến đường và các điểm dừng trên bản đồ
+- Cập nhật trạng thái điểm dừng (đã hoàn thành, hiện tại, sắp đến) dựa trên vị trí xe
+- Cung cấp giao diện trực quan để theo dõi lịch trình xe buýt
+- Tính toán vị trí xe dựa trên công thức vật lý: quãng đường = vận tốc × thời gian
+- Đảm bảo việc cập nhật trạng thái điểm dừng tuần tự, không bỏ qua điểm dừng nào
+- Hỗ trợ nhiều xe buýt cùng lúc với khả năng chuyển đổi theo dõi giữa các xe
+
 ### 3. Kiến trúc và thành phần
+
+#### 3.1. MapController (Controller Layer)
+
+`MapController` là lớp điều khiển chính, quản lý logic hiển thị bản đồ và tracking vị trí xe.
+
+**Các thành phần:**
+
+- `routesController: Routes` - Controller quản lý tuyến đường và waypoints
+- `currentRouteId: number | null` - ID tuyến đường đang được tracking
+- `currentRoutePath: google.maps.LatLngLiteral[]` - Đường đi của tuyến đường hiện tại
+- `trackingStartTime: number` - Thời điểm bắt đầu tracking (timestamp)
+- `trackingInterval: NodeJS.Timeout | null` - Interval ID cho việc cập nhật vị trí
+- `currentPosition: google.maps.LatLngLiteral | null` - Vị trí GPS hiện tại của xe
+- `velocity: number` - Vận tốc mặc định (km/h), mặc định 200 km/h
+- `onPositionUpdate: ((position: google.maps.LatLngLiteral) => void) | null` - Callback được gọi khi vị trí được cập nhật
+
+**Các phương thức chính:**
+
+- `showRoute(routeId: number): RouteDisplayData` - Hiển thị tuyến đường trên bản đồ, trả về polyline và markers
+- `getStretchOfRoad(routeId: number, elapsedTime: number): google.maps.LatLngLiteral` - Tính toán vị trí xe dựa trên thời gian đã trôi qua
+- `startTracking(routeId: number, onUpdate?: (position: google.maps.LatLngLiteral) => void): void` - Bắt đầu tracking xe
+- `stopTracking(): void` - Dừng tracking xe
+- `getCurrentGPT(): google.maps.LatLngLiteral | null` - Lấy vị trí GPS hiện tại
+- `setVelocity(velocity: number): void` - Thiết lập vận tốc
+- `getVelocity(): number` - Lấy vận tốc hiện tại
+
+#### 3.2. RouteMap Component (UI Layer)
+
+`RouteMap` là component React chính, quản lý giao diện theo dõi xe và hiển thị bản đồ.
+
+**Các state chính:**
+
+- `selectedRouteData: RouteDisplayData | null` - Dữ liệu tuyến đường được chọn
+- `carMarkerPosition: google.maps.LatLngLiteral | null` - Vị trí marker xe buýt
+- `selectedRouteId: number | null` - ID tuyến đường đang được theo dõi
+- `selectedRouteName: string` - Tên tuyến đường
+- `selectedBusName: string` - Tên xe buýt đang theo dõi
+- `waypoints: StopDisplay[]` - Danh sách điểm dừng để hiển thị
+- `waypointsData: Waypoint[]` - Dữ liệu waypoints gốc
+- `currentWaypointIndex: number` - Chỉ số điểm dừng hiện tại
+
+**Các hàm helper:**
+
+- `findRouteIdByName(routeName: string): number | null` - Tìm route ID từ tên tuyến đường
+- `calculateDistance(lat1, lng1, lat2, lng2): number` - Tính khoảng cách giữa 2 điểm (Haversine formula)
+- `checkAndUpdateWaypointIndex(carPosition, waypoints, currentIndex): number` - Kiểm tra và cập nhật chỉ số điểm dừng hiện tại
+- `transformWaypointsToStops(waypoints, currentIndex): StopDisplay[]` - Chuyển đổi waypoints thành format hiển thị
+- `handleTrackBus(busRoute: string): void` - Handler cho nút "Theo dõi xe"
+
+#### 3.3. GoogleMap Component (Map Component)
+
+`GoogleMapCard` là component hiển thị bản đồ Google Maps, sử dụng thư viện `@react-google-maps/api`.
+
+**Props:**
+
+- `title?: string` - Tiêu đề bản đồ
+- `center?: google.maps.LatLngLiteral` - Tâm bản đồ
+- `zoom?: number` - Mức độ zoom
+- `height?: number | string` - Chiều cao bản đồ
+- `markers?: MapMarker[]` - Danh sách markers
+- `variant?: 'card' | 'embed'` - Kiểu hiển thị
+- `polylines?: MapPolyline[]` - Danh sách polylines (đường đi)
+
+**Tính năng:**
+
+- Hiển thị markers với icon tùy chỉnh hoặc màu sắc
+- Hiển thị polylines cho tuyến đường
+- InfoWindow khi click vào marker
+- Tự động center bản đồ dựa trên markers hoặc center được cung cấp
 
 ### 4. Cấu trúc dữ liệu
 
+#### 4.1. MapPolyline
+
+```typescript
+type MapPolyline = {
+  id: string | number;
+  path: google.maps.LatLngLiteral[];
+  options?: google.maps.PolylineOptions;
+};
+```
+
+**Mô tả:** Đại diện cho một đường polyline trên bản đồ (tuyến đường).
+
+- `id`: Định danh duy nhất của polyline
+- `path`: Mảng các điểm tọa độ GPS tạo thành đường đi
+- `options`: Tùy chọn hiển thị (màu sắc, độ dày, độ trong suốt)
+
+#### 4.2. MapMarker
+
+```typescript
+type MapMarker = {
+  id: string | number;
+  position: google.maps.LatLngLiteral;
+  title?: string;
+  description?: string;
+  label?: string;
+  iconColor?: string;
+  icon?: google.maps.Icon | google.maps.Symbol;
+  zIndex?: number;
+};
+```
+
+**Mô tả:** Đại diện cho một marker trên bản đồ (điểm dừng hoặc xe buýt).
+
+- `id`: Định danh duy nhất của marker
+- `position`: Tọa độ GPS của marker
+- `title`: Tiêu đề hiển thị trong InfoWindow
+- `description`: Mô tả hiển thị trong InfoWindow
+- `label`: Nhãn hiển thị trên marker (số thứ tự)
+- `iconColor`: Màu sắc của icon (nếu không dùng icon tùy chỉnh)
+- `icon`: Icon tùy chỉnh (hình ảnh hoặc symbol)
+- `zIndex`: Thứ tự hiển thị (marker có zIndex cao hơn sẽ hiển thị trên)
+
+#### 4.3. RouteDisplayData
+
+```typescript
+type RouteDisplayData = {
+  route: RouteRecord;
+  polyline: MapPolyline;
+  markers: MapMarker[];
+};
+```
+
+**Mô tả:** Dữ liệu hiển thị cho một tuyến đường trên bản đồ.
+
+- `route`: Thông tin tuyến đường
+- `polyline`: Đường đi của tuyến đường
+- `markers`: Danh sách markers cho các điểm dừng
+
+#### 4.4. StopDisplay
+
+```typescript
+type StopDisplay = {
+  id: number;
+  name: string;
+  time: string;
+  students: number;
+  status?: "completed" | "current" | "upcoming";
+};
+```
+
+**Mô tả:** Dữ liệu hiển thị cho một điểm dừng trong danh sách.
+
+- `id`: ID của điểm dừng
+- `name`: Tên điểm dừng
+- `time`: Thời gian ước tính đến điểm dừng
+- `students`: Số lượng học sinh tại điểm dừng
+- `status`: Trạng thái điểm dừng (đã hoàn thành, hiện tại, sắp đến)
+
+#### 4.5. Waypoint
+
+```typescript
+type Waypoint = {
+  id: number;
+  name: string;
+  lat: number;
+  lng: number;
+};
+```
+
+**Mô tả:** Điểm dừng trên tuyến đường.
+
+- `id`: ID của điểm dừng
+- `name`: Tên điểm dừng
+- `lat`: Vĩ độ
+- `lng`: Kinh độ
+
 ### 5. Các chức năng chính
+
+#### 5.1. Hiển thị tuyến đường trên bản đồ
+
+**Luồng xử lý:**
+
+1. Người dùng chọn xe buýt và nhấn "Theo dõi xe"
+2. Hệ thống tìm route ID từ tên tuyến đường
+3. Gọi `mapController.showRoute(routeId)` để lấy dữ liệu hiển thị
+4. Tạo polyline từ waypoints với màu xanh (#3b82f6), độ dày 4px
+5. Tạo markers cho mỗi waypoint với số thứ tự và màu đỏ (#ef4444)
+6. Hiển thị polyline và markers trên bản đồ Google Maps
+
+**Chi tiết kỹ thuật:**
+
+- Polyline sử dụng `geodesic: true` để hiển thị đường cong theo hình dạng Trái Đất
+- Markers được đánh số từ 1 đến n (n = số lượng waypoints)
+- Mỗi marker có InfoWindow hiển thị tên và mô tả khi click
+
+#### 5.2. Tracking vị trí xe theo thời gian thực
+
+**Luồng xử lý:**
+
+1. Gọi `mapController.startTracking(routeId, callback)`
+2. Khởi tạo `trackingStartTime = Date.now()`
+3. Đặt vị trí ban đầu của xe tại waypoint đầu tiên
+4. Tạo interval cập nhật vị trí mỗi 300ms
+5. Mỗi lần cập nhật:
+   - Tính `elapsedTime = (Date.now() - trackingStartTime) / 300` (giây)
+   - Gọi `getStretchOfRoad(routeId, elapsedTime)` để tính vị trí mới
+   - Cập nhật `currentPosition`
+   - Gọi callback để cập nhật UI
+
+**Thuật toán tính vị trí:**
+
+```typescript
+// Tính quãng đường đã đi (km)
+distanceTraveled = (velocity * elapsedTime) / 3600;
+
+// Ước tính tổng quãng đường (giả sử mỗi đoạn ~1km)
+totalEstimatedDistance = numberOfSegments * 1;
+
+// Tính tỷ lệ tiến trình (0 đến 1)
+progress = min(distanceTraveled / totalEstimatedDistance, 1);
+
+// Tính số đoạn đã đi qua
+segmentsTraveled = progress * numberOfSegments;
+currentSegmentIndex = floor(segmentsTraveled);
+segmentProgress = segmentsTraveled - currentSegmentIndex;
+
+// Nội suy vị trí trong đoạn hiện tại
+position = interpolate(startPoint, endPoint, segmentProgress);
+```
+
+**Chi tiết kỹ thuật:**
+
+- Vận tốc mặc định: 200 km/h (có thể thay đổi bằng `setVelocity()`)
+- Interval cập nhật: 300ms (có thể điều chỉnh)
+- Vị trí được nội suy tuyến tính giữa 2 waypoint liên tiếp
+
+#### 5.3. Cập nhật trạng thái điểm dừng
+
+**Luồng xử lý:**
+
+1. Mỗi khi `carMarkerPosition` thay đổi, trigger `useEffect`
+2. Gọi `checkAndUpdateWaypointIndex()` để kiểm tra khoảng cách
+3. Tính khoảng cách từ xe đến waypoint tiếp theo bằng công thức Haversine
+4. Nếu khoảng cách <= 300m: Cập nhật `currentWaypointIndex`
+5. Gọi `transformWaypointsToStops()` với `currentIndex` mới
+6. Cập nhật trạng thái cho mỗi waypoint:
+   - `index < currentIndex`: "completed"
+   - `index === currentIndex`: "current"
+   - `index === currentIndex + 1`: "upcoming"
+7. Cập nhật UI với màu sắc và badge tương ứng
+
+**Công thức Haversine:**
+
+```typescript
+R = 6371; // Bán kính Trái Đất (km)
+dLat = (lat2 - lat1) * π / 180;
+dLng = (lng2 - lng1) * π / 180;
+a = sin²(dLat/2) + cos(lat1) * cos(lat2) * sin²(dLng/2);
+c = 2 * atan2(√a, √(1-a));
+distance = R * c;
+```
+
+**Chi tiết kỹ thuật:**
+
+- Ngưỡng khoảng cách: 300m (0.3km)
+- Đảm bảo tuần tự: Chỉ cập nhật khi đến gần waypoint tiếp theo
+- Không bỏ qua waypoint: Xe phải đi qua từng waypoint theo thứ tự
+
+#### 5.4. Hiển thị danh sách điểm dừng sắp tới
+
+**Luồng xử lý:**
+
+1. Transform waypoints thành `StopDisplay[]` với thông tin:
+   - Tên điểm dừng
+   - Thời gian ước tính (bắt đầu từ 7:00 AM, mỗi điểm cách nhau 7 phút)
+   - Số lượng học sinh (tính từ seed dựa trên waypoint ID)
+   - Trạng thái (completed/current/upcoming)
+2. Hiển thị dưới dạng grid (3 cột trên desktop, responsive)
+3. Mỗi card hiển thị:
+   - Số thứ tự trong vòng tròn màu
+   - Tên và thời gian
+   - Badge trạng thái
+   - Số lượng học sinh
+
+**Chi tiết kỹ thuật:**
+
+- Thời gian ước tính: `baseTime + index * 7 minutes`
+- Số học sinh: `(waypoint.id * 1000) % 6 + 5` (từ 5 đến 10)
+- Màu sắc:
+  - Current: border xanh (#3b82f6), background xanh nhạt
+  - Completed: border xanh lá (#10b981), background xanh lá nhạt
+  - Upcoming: border xám, background trắng
 
 ### 6. Phụ thuộc và tích hợp
 
+#### 6.1. Phụ thuộc vào các module khác
+
+Module này phụ thuộc vào:
+
+- **Module Quản lý tuyến đường** (`Routes`): Để lấy thông tin tuyến đường và waypoints
+  - Sử dụng `Routes.getRouteById()` để lấy thông tin route
+  - Sử dụng `Routes.getWayPoints()` để lấy danh sách waypoints
+- **Module Quản lý phân công** (`AssignController`): Để lấy thông tin phân công và route
+  - Sử dụng `AssignController.getRoutes()` để lấy danh sách routes
+  - Sử dụng `AssignController.getRouteById()` để lấy thông tin route
+  - Sử dụng `AssignController.getWayPoints()` để lấy waypoints
+
+#### 6.2. Tích hợp với thư viện bên ngoài
+
+- **Google Maps JavaScript API** (`@react-google-maps/api`):
+  - `useJsApiLoader`: Load Google Maps API
+  - `GoogleMap`: Component bản đồ chính
+  - `Marker`: Component marker
+  - `Polyline`: Component đường đi
+  - `InfoWindow`: Component cửa sổ thông tin
+- **Material-UI** (`@mui/material`):
+  - `Card`, `CardHeader`, `CardContent`: Container components
+  - `Box`, `Typography`: Layout và typography
+- **Lucide React**: Icons (MapPin, Clock, Users)
+- **shadcn/ui**: UI components (Button, Badge, Select, Card)
+
+#### 6.3. Tích hợp với UI Components
+
+Sử dụng các component từ thư viện UI:
+
+- `Card`, `CardContent`, `CardHeader`, `CardTitle`, `CardDescription`
+- `Button`, `Badge`, `Select`
+- Custom `GoogleMapCard` component
+
 ### 7. Xử lý lỗi và validation
+
+#### 7.1. Validation phía client
+
+- **Theo dõi xe:**
+  - Kiểm tra route ID có tồn tại không
+  - Kiểm tra tuyến đường có waypoints không
+  - Kiểm tra Google Maps API key đã được cấu hình
+- **Cập nhật vị trí:**
+  - Kiểm tra `currentRouteId` không null trước khi tính toán
+  - Kiểm tra waypoints không rỗng
+  - Xử lý trường hợp đã đến cuối tuyến đường
+
+#### 7.2. Xử lý lỗi từ Controller
+
+- `showRoute()`: Ném lỗi nếu route không tồn tại hoặc không có waypoints
+- `startTracking()`: Ném lỗi nếu route không tồn tại hoặc không có waypoints
+- `getStretchOfRoad()`: Ném lỗi nếu route không có waypoints
+
+Tất cả lỗi được bắt và hiển thị trong UI thông qua `console.error()` và có thể mở rộng để hiển thị thông báo lỗi cho người dùng.
+
+#### 7.3. Xử lý edge cases
+
+- **Xe đã đến cuối tuyến:** Vị trí được giữ tại waypoint cuối cùng
+- **Không tìm thấy route:** Hiển thị lỗi và không thực hiện tracking
+- **Waypoints rỗng:** Hiển thị lỗi và không hiển thị danh sách điểm dừng
+- **Google Maps API lỗi:** Hiển thị thông báo lỗi "Không tải được Google Maps"
+- **Khoảng cách tính toán:** Sử dụng công thức Haversine để tính chính xác khoảng cách trên bề mặt Trái Đất
 
 ### 8. Trạng thái và quản lý state
 
+#### 8.1. State trong RouteMap Component
+
+Component sử dụng React hooks để quản lý state:
+
+- `selectedRouteData: RouteDisplayData | null` - Dữ liệu tuyến đường được chọn
+- `carMarkerPosition: google.maps.LatLngLiteral | null` - Vị trí marker xe buýt
+- `selectedRouteId: number | null` - ID tuyến đường đang được theo dõi
+- `selectedRouteName: string` - Tên tuyến đường
+- `selectedBusName: string` - Tên xe buýt đang theo dõi
+- `waypoints: StopDisplay[]` - Danh sách điểm dừng để hiển thị
+- `waypointsData: Waypoint[]` - Dữ liệu waypoints gốc
+- `currentWaypointIndex: number` - Chỉ số điểm dừng hiện tại
+
+#### 8.2. State trong MapController
+
+- `currentRouteId: number | null` - ID tuyến đường đang tracking
+- `currentRoutePath: google.maps.LatLngLiteral[]` - Đường đi của tuyến đường
+- `trackingStartTime: number` - Thời điểm bắt đầu tracking
+- `trackingInterval: NodeJS.Timeout | null` - Interval ID
+- `currentPosition: google.maps.LatLngLiteral | null` - Vị trí GPS hiện tại
+- `velocity: number` - Vận tốc (km/h)
+
+#### 8.3. Lifecycle Management
+
+- **Component Mount:** Khởi tạo `MapController` và `AssignController` bằng `useRef`
+- **Component Unmount:** Gọi `mapController.stopTracking()` để dọn dẹp interval
+- **Tracking Start:** Khởi tạo interval và lưu `trackingStartTime`
+- **Tracking Stop:** Clear interval và reset các state liên quan
+
+#### 8.4. Side Effects
+
+- `useEffect` với dependencies `[carMarkerPosition, waypointsData]`: Cập nhật trạng thái điểm dừng khi vị trí xe thay đổi
+- `useEffect` với empty dependencies `[]`: Cleanup tracking khi component unmount
+
 ### 9. Mở rộng trong tương lai
+
+Các tính năng có thể mở rộng:
+
+- **Tích hợp GPS thực:** Thay thế mô phỏng bằng dữ liệu GPS thực từ thiết bị trên xe
+- **Tối ưu thuật toán tracking:** Sử dụng thuật toán phức tạp hơn để tính toán vị trí chính xác hơn (xem xét giao thông, địa hình)
+- **Lịch sử di chuyển:** Lưu và hiển thị lịch sử vị trí xe trong ngày/tuần
+- **Thông báo real-time:** Gửi thông báo khi xe đến gần điểm dừng
+- **Theo dõi nhiều xe cùng lúc:** Hiển thị nhiều xe trên cùng một bản đồ với màu sắc khác nhau
+- **Tối ưu hiệu năng:** Sử dụng Web Workers để tính toán vị trí, giảm tải cho main thread
+- **Offline support:** Cache dữ liệu tuyến đường và hoạt động offline
+- **Tích hợp với backend:** Đồng bộ dữ liệu vị trí với server, lưu trữ lịch sử
+- **Tính năng dự đoán:** Dự đoán thời gian đến điểm dừng dựa trên vận tốc và giao thông
+- **Tùy chỉnh vận tốc theo đoạn đường:** Cho phép thiết lập vận tốc khác nhau cho từng đoạn đường
+- **Animation mượt mà:** Sử dụng animation để di chuyển marker mượt mà hơn
+- **Tích hợp với module thông báo:** Gửi thông báo cho phụ huynh khi xe đến điểm dừng

@@ -1,0 +1,56 @@
+@startuml
+title SSD for Update Stop Status Based on Bus Position Use Case
+
+actor "Quản lý" as Manager
+participant ":System" as System
+
+note over System: Use case này được gọi tự động\nkhi vị trí xe được cập nhật mỗi 300ms
+
+loop [Tracking đang hoạt động]
+    System -> System: Nhận carMarkerPosition mới từ MapController\n(mỗi 300ms)
+    activate System
+    System -> System: Trigger useEffect với dependencies\n[carMarkerPosition, waypointsData]
+    
+    alt [carMarkerPosition null]
+        System -> System: Dừng xử lý
+        deactivate System
+    else [carMarkerPosition không null]
+        alt [Không có waypoints]
+            System -> System: Trả về currentIndex = 0
+            deactivate System
+        else [Có waypoints]
+            System -> System: checkAndUpdateWaypointIndex(carPosition, waypoints, currentIndex)
+            System -> System: Tính khoảng cách từ xe đến waypoint tiếp theo\n(currentIndex + 1) bằng công thức Haversine
+            
+            alt [Đã đến cuối tuyến\n(currentIndex >= length - 1)]
+                System -> System: Giữ nguyên currentIndex = length - 1
+            else [Chưa đến cuối tuyến]
+                System -> System: So sánh khoảng cách với ngưỡng 300m (0.3km)
+                
+                alt [Khoảng cách <= 300m]
+                    System -> System: Cập nhật currentIndex = nextWaypointIndex
+                else [Khoảng cách > 300m]
+                    System -> System: Giữ nguyên currentIndex
+                end
+            end
+            
+            System -> System: transformWaypointsToStops(waypoints, currentIndex)
+            
+            alt [Có lỗi trong quá trình transform]
+                System -> System: Giữ nguyên trạng thái cũ
+                deactivate System
+            else [Không có lỗi]
+                System -> System: Gán status cho mỗi waypoint:\n- index < currentIndex: "completed"\n- index === currentIndex: "current"\n- index === currentIndex + 1: "upcoming"\n- Còn lại: undefined
+                System -> System: Cập nhật state waypoints
+                System -> System: Hiển thị điểm dừng hiện tại\nvới border màu xanh và background xanh nhạt
+                System -> System: Hiển thị điểm dừng đã hoàn thành\nvới border màu xanh lá và background xanh lá nhạt
+                System -> System: Hiển thị badge tương ứng\n("Hiện tại", "Đã hoàn thành", "Sắp đến")
+                System --> Manager: Cập nhật UI với trạng thái điểm dừng mới
+                deactivate System
+            end
+        end
+    end
+end
+
+@enduml
+

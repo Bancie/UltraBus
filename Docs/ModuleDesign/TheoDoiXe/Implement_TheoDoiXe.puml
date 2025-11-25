@@ -1,0 +1,43 @@
+@startuml
+title Tracking Management - Implement Diagram
+
+class "<<Controller>> MapController" as mc {
+    - routesController: Routes
+    - currentRouteId: number | null
+    - currentRoutePath: google.maps.LatLngLiteral[]
+    - trackingStartTime: number
+    - trackingInterval: NodeJS.Timeout | null
+    - currentPosition: google.maps.LatLngLiteral | null
+    - velocity: number
+    - onPositionUpdate: ((position: google.maps.LatLngLiteral) => void) | null
+    + showRoute(routeId: number): RouteDisplayData
+    + getStretchOfRoad(routeId: number, elapsedTime: number): google.maps.LatLngLiteral
+    + getCurrentGPT(): google.maps.LatLngLiteral | null
+    + startTracking(routeId: number, onUpdate?: (position: google.maps.LatLngLiteral) => void): void
+    + stopTracking(): void
+    + setVelocity(velocity: number): void
+    + getVelocity(): number
+}
+
+class "<<Controller>> Routes" as ro {
+    - routes: RouteRecord[]
+    + getRoutes(): RouteRecord[]
+    + getRouteById(id: number): RouteRecord | undefined
+    + getWayPoints(id: number): Waypoint[] | undefined
+}
+
+class "<<Controller>> AssignController" as ac {
+    - assignments: AssignRecord[]
+    - routesController: Routes
+    - driverController: Driver
+    - busController: Bus
+    + getRoutes(): RouteRecord[]
+    + getRouteById(id: number): RouteRecord | undefined
+    + getWayPoints(id: number): Waypoint[] | undefined
+}
+
+mc --> ro : uses
+ac --> ro : uses
+
+@enduml
+
