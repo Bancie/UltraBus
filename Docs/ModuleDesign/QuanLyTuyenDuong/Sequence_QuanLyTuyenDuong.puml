@@ -1,0 +1,80 @@
+@startuml
+title Route Management - Sequence Diagram
+
+actor "Quản lý" as ql
+participant "~~:Routes~~" as ro
+
+== Xem danh sách tuyến đường ==
+ql -> ro : getRoutes()
+activate ro
+ro -> ro : [...this.routes]
+ro --> ql : RouteRecord[]
+deactivate ro
+
+== Tạo tuyến đường mới ==
+ql -> ro : addRoute(route: RouteRecord)
+activate ro
+ro -> ro : getRouteById(route.id)
+activate ro
+ro --> ro : RouteRecord | undefined
+deactivate ro
+
+alt [Tuyến đường với id đã tồn tại]
+    ro --> ql : Error: "Route with id {id} already exists"
+else [Tuyến đường hợp lệ]
+    ro -> ro : routes.push(route)
+    ro --> ql : RouteRecord
+end
+deactivate ro
+
+== Chỉnh sửa tuyến đường ==
+ql -> ro : getRouteById(id: number)
+activate ro
+ro -> ro : routes.find(id)
+ro --> ql : RouteRecord | undefined
+deactivate ro
+
+ql -> ro : editRoute(id: number, updatedRoute: Partial<RouteRecord>)
+activate ro
+ro -> ro : routes.findIndex(id)
+activate ro
+ro --> ro : number (index)
+deactivate ro
+
+alt [Tuyến đường không tồn tại]
+    ro --> ql : Error: "Route with id {id} does not exist"
+else [Tuyến đường tồn tại]
+    ro -> ro : routes[index] = {...routes[index], ...updatedRoute, id}
+    ro --> ql : RouteRecord
+end
+deactivate ro
+
+== Xóa tuyến đường ==
+ql -> ro : removeRoute(id: number)
+activate ro
+ro -> ro : routes.findIndex(id)
+activate ro
+ro --> ro : number (index)
+deactivate ro
+
+alt [Tuyến đường không tồn tại]
+    ro --> ql : Error: "Route with id {id} does not exist"
+else [Tuyến đường tồn tại]
+    ro -> ro : routes.splice(index, 1)
+    ro --> ql : void
+end
+deactivate ro
+
+== Lấy điểm dừng ==
+ql -> ro : getWayPoints(id: number)
+activate ro
+ro -> ro : routes.find(id)
+activate ro
+ro --> ro : RouteRecord | undefined
+deactivate ro
+ro -> ro : route?.wayPoints
+ro --> ql : Waypoint[] | undefined
+deactivate ro
+
+@enduml
+

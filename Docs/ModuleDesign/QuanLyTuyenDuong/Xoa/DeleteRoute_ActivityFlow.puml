@@ -1,0 +1,43 @@
+@startuml
+title Activity Flow Diagram - Xóa tuyến đường (Delete Route)
+
+|Quản lý|
+start
+:Nhấn nút "Xóa" trong dialog chỉnh sửa;
+
+|Hệ thống|
+:Hiển thị AlertDialog xác nhận xóa;
+:Hiển thị thông báo\n"Bạn có chắc chắn muốn xóa tuyến đường này?\nHành động này không thể hoàn tác.";
+
+|Quản lý|
+if (Xác nhận xóa?) then (Hủy)
+  |Hệ thống|
+  :Đóng AlertDialog, giữ nguyên dialog chỉnh sửa;
+  stop
+endif
+
+|Quản lý|
+:Nhấn nút "Xóa" để xác nhận;
+
+|Hệ thống|
+:Gọi routesController.removeRoute() với ID tuyến đường;
+
+if (Tuyến đường tồn tại?) then (Không)
+  :Ném exception "Route with id {id} does not exist";
+  :Hiển thị lỗi "Không thể xóa tuyến đường";
+  stop
+endif
+
+if (Có lỗi trong quá trình xóa?) then (Có)
+  :Hiển thị thông báo lỗi và không xóa tuyến đường;
+  stop
+endif
+
+:Xóa tuyến đường khỏi danh sách;
+:Cập nhật danh sách tuyến đường trên giao diện;
+:Đóng AlertDialog và dialog chỉnh sửa;
+:Reset form;
+stop
+
+@enduml
+

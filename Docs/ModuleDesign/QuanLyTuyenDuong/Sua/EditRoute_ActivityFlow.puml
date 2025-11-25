@@ -1,0 +1,74 @@
+@startuml
+title Activity Flow Diagram - Chỉnh sửa tuyến đường (Edit Route)
+
+|Quản lý|
+start
+:Nhấn nút "Chỉnh sửa" trên một tuyến đường;
+
+|Hệ thống|
+:Lấy thông tin tuyến đường theo ID;
+:Trích xuất số từ khoảng cách\n(ví dụ: "18.5 km" -> "18.5");
+
+if (Không thể trích xuất số?) then (Có)
+  :Để trống field khoảng cách trong form;
+endif
+
+:Trích xuất số từ thời gian\n(ví dụ: "45 min" -> "45");
+
+if (Không thể trích xuất số?) then (Có)
+  :Để trống field thời gian trong form;
+endif
+
+:Điền sẵn form với dữ liệu hiện tại;
+:Mở dialog chỉnh sửa;
+
+|Quản lý|
+:Chỉnh sửa thông tin\n(tên, điểm dừng, khoảng cách, thời gian, số xe);
+
+|Hệ thống|
+:Cập nhật form data theo thay đổi của người dùng;
+
+|Quản lý|
+:Nhấn nút "Cập nhật";
+
+|Hệ thống|
+:Validate dữ liệu\n(kiểm tra tên tuyến đường không được trống);
+
+if (Tên tuyến đường trống?) then (Có)
+  :Hiển thị lỗi "Vui lòng nhập tên tuyến đường";
+  stop
+endif
+
+:Chuẩn hóa khoảng cách (thêm "km" nếu chưa có);
+
+if (Khoảng cách trống?) then (Có)
+  :Tự động đặt về "0 km";
+endif
+
+:Chuẩn hóa thời gian (thêm "min" nếu chưa có);
+
+if (Thời gian trống?) then (Có)
+  :Tự động đặt về "0 min";
+endif
+
+:Kiểm tra tuyến đường có tồn tại không;
+
+if (Tuyến đường tồn tại?) then (Không)
+  :Hiển thị lỗi "Không tìm thấy tuyến đường cần chỉnh sửa";
+  stop
+endif
+
+:Gọi routesController.editRoute();
+
+if (Exception?) then (Có)
+  :Ném exception "Route with id {id} does not exist";
+  :Hiển thị lỗi;
+  stop
+endif
+
+:Cập nhật danh sách tuyến đường trên giao diện;
+:Đóng dialog và reset form;
+stop
+
+@enduml
+

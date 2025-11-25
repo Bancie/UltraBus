@@ -1,0 +1,41 @@
+@startuml
+title SSD for Delete Route Use Case
+
+actor "Quản lý" as Manager
+participant ":System" as System
+
+Manager -> System: clickDeleteButton()
+activate System
+System -> System: showConfirmDialog()
+System --> Manager: Hiển thị thông báo xác nhận:\n"Bạn có chắc chắn muốn xóa tuyến đường này?\nHành động này không thể hoàn tác."
+
+alt [Quản lý nhấn "Hủy"]
+    Manager -> System: clickCancel()
+    System -> System: closeConfirmDialog()
+    System --> Manager: AlertDialog đã đóng
+    deactivate System
+else [Quản lý xác nhận xóa]
+    Manager -> System: confirmDelete(routeId)
+    System -> System: removeRoute(routeId)
+    
+    alt [Tuyến đường không tồn tại]
+        System --> Manager: Exception: "Route with id {id} does not exist"
+        System --> Manager: Lỗi: "Không thể xóa tuyến đường"
+        deactivate System
+    else [Có lỗi trong quá trình xóa]
+        System --> Manager: Thông báo lỗi và không xóa tuyến đường
+        deactivate System
+    else [Xóa thành công]
+        System -> System: deleteRoute(routeId)
+        System -> System: updateRouteList()
+        System --> Manager: Xác nhận xóa tuyến đường thành công
+        System -> System: closeConfirmDialog()
+        System -> System: closeEditDialog()
+        System -> System: resetForm()
+        System --> Manager: Dialog đã đóng
+        deactivate System
+    end
+end
+
+@enduml
+

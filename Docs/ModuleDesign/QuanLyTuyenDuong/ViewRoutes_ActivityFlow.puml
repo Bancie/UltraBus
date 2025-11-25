@@ -1,0 +1,37 @@
+@startuml
+title Activity Flow Diagram - Xem danh sách tuyến đường (View Routes)
+
+|Quản lý|
+start
+:Truy cập trang Quản lý và điều khiển;
+
+|Hệ thống|
+:Khởi tạo RoutesController;
+:Gọi routesController.getRoutes() để lấy danh sách tuyến đường;
+
+if (Có lỗi khi tải dữ liệu?) then (Có)
+  :Hiển thị thông báo lỗi;
+  stop
+endif
+
+if (Không có tuyến đường nào?) then (Có)
+  :Hiển thị grid trống;
+  stop
+endif
+
+:Lưu danh sách vào state;
+
+|Quản lý|
+:Chọn tab "Tuyến đường";
+
+|Hệ thống|
+:Hiển thị grid danh sách tuyến đường;
+:Hiển thị grid với các card tuyến đường, mỗi card chứa:\n- Tên tuyến đường\n- Số điểm dừng\n- Khoảng cách\n- Thời gian trung bình\n- Số xe phân công\n- Nút chỉnh sửa;
+:Hiển thị grid responsive:\n2 cột trên md trở lên, 1 cột trên mobile;
+
+|Quản lý|
+:Xem danh sách tuyến đường;
+stop
+
+@enduml
+
