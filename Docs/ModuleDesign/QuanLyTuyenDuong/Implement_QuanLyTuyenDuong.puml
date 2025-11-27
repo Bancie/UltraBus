@@ -1,0 +1,15 @@
+@startuml
+title Route Management - Implement Diagram
+
+class "<<Controller>> Routes" as ro {
+    - routes: RouteRecord[]
+    + getRoutes(): RouteRecord[]
+    + getRouteById(id: number): RouteRecord | undefined
+    + addRoute(route: RouteRecord): RouteRecord
+    + editRoute(id: number, updatedRoute: Partial<RouteRecord>): RouteRecord
+    + removeRoute(id: number): void
+    + getWayPoints(id: number): Waypoint[] | undefined
+}
+
+@enduml
+

@@ -1,0 +1,87 @@
+@startuml
+title Activity Flow Diagram - Tạo tuyến đường mới (Create Route)
+
+|Quản lý|
+start
+:Nhấn nút "Tạo tuyến đường";
+
+|Hệ thống|
+:Hiển thị dialog form tạo tuyến đường;
+:Reset các trường form về giá trị mặc định;
+
+|Quản lý|
+:Nhập tên tuyến đường;
+
+|Hệ thống|
+:Lưu tên tuyến đường vào state;
+
+|Quản lý|
+:Nhập số lượng điểm dừng;
+
+|Hệ thống|
+:Validate số điểm dừng (phải là số >= 0);
+
+if (Số điểm dừng < 0?) then (Có)
+  :Tự động đặt về 0;
+endif
+
+|Quản lý|
+:Nhập khoảng cách;
+
+|Hệ thống|
+:Lưu khoảng cách vào state;
+
+|Quản lý|
+:Nhập thời gian trung bình;
+
+|Hệ thống|
+:Lưu thời gian trung bình vào state;
+
+|Quản lý|
+:Nhập số xe phân công;
+
+|Hệ thống|
+:Validate số xe (phải là số >= 0);
+
+if (Số xe < 0?) then (Có)
+  :Tự động đặt về 0;
+endif
+
+|Quản lý|
+:Nhấn nút "Tạo tuyến đường";
+
+|Hệ thống|
+:Validate dữ liệu\n(kiểm tra tên tuyến đường không được trống);
+
+if (Tên tuyến đường trống?) then (Có)
+  :Hiển thị lỗi "Vui lòng nhập tên tuyến đường";
+  stop
+endif
+
+:Chuẩn hóa khoảng cách (thêm "km" nếu chưa có);
+
+if (Khoảng cách trống?) then (Có)
+  :Tự động đặt về "0 km";
+endif
+
+:Chuẩn hóa thời gian (thêm "min" nếu chưa có);
+
+if (Thời gian trống?) then (Có)
+  :Tự động đặt về "0 min";
+endif
+
+:Tạo RouteRecord mới với ID = Date.now();
+:Gọi routesController.addRoute();
+
+if (ID đã tồn tại?) then (Có)
+  :Ném exception "Route with id {id} already exists";
+  :Hiển thị lỗi "Không thể tạo tuyến đường";
+  stop
+endif
+
+:Cập nhật danh sách tuyến đường trên giao diện;
+:Đóng dialog và reset form;
+stop
+
+@enduml
+

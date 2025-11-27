@@ -1,0 +1,40 @@
+@startuml
+title SSD for View Routes Use Case
+
+actor "Quản lý" as Manager
+participant ":System" as System
+
+Manager -> System: Truy cập trang Quản lý và điều khiển
+activate System
+System -> System: initializeRoutesController()
+System -> System: getRoutes()
+
+alt [Có lỗi khi tải dữ liệu]
+    System --> Manager: Thông báo lỗi
+    deactivate System
+else [Không có tuyến đường nào]
+    System -> System: saveRouteList([])
+    System --> Manager: Hiển thị grid trống
+else [Có dữ liệu]
+    System -> System: saveRouteList(routes)
+    System --> Manager: Xác nhận đã tải danh sách tuyến đường
+end
+
+Manager -> System: selectTab("Tuyến đường")
+System -> System: displayRouteGrid()
+
+alt [Có lỗi khi hiển thị]
+    System --> Manager: Thông báo lỗi hiển thị
+    deactivate System
+else [Hiển thị thành công]
+    System -> System: renderRouteCards(routes)
+    System --> Manager: Hiển thị grid với các card tuyến đường:\n- Tên tuyến đường\n- Số điểm dừng\n- Khoảng cách\n- Thời gian trung bình\n- Số xe phân công\n- Nút chỉnh sửa
+    System -> System: applyResponsiveLayout()
+    System --> Manager: Grid responsive:\n2 cột trên md trở lên, 1 cột trên mobile
+    deactivate System
+end
+
+Manager -> System: Xem danh sách tuyến đường
+
+@enduml
+

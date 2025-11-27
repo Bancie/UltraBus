@@ -1,0 +1,147 @@
+@startuml
+title Tracking Management - Sequence Diagram
+
+actor "Quản lý" as ql
+participant "~~:MapController~~" as mc
+participant "~~:AssignController~~" as ac
+participant "~~:Routes~~" as ro
+
+== Lấy thông tin route và waypoints ==
+ql -> ac : findRouteIdByName(busRoute: string)
+activate ac
+ac -> ac : getRoutes()
+activate ac
+ac -> ro : getRoutes()
+activate ro
+ro --> ac : RouteRecord[]
+deactivate ro
+ac --> ac : RouteRecord[]
+deactivate ac
+ac -> ac : Tìm route ID từ tên tuyến đường
+ac --> ql : routeId: number | null
+deactivate ac
+
+alt [Không tìm thấy route ID]
+    ac --> ql : Error: "Không tìm thấy route ID cho: {busRoute}"
+else [Tìm thấy route ID]
+    ql -> ac : getRouteById(routeId: number)
+    activate ac
+    ac -> ro : getRouteById(routeId)
+    activate ro
+    ro --> ac : RouteRecord | undefined
+    deactivate ro
+    ac --> ql : RouteRecord | undefined
+    deactivate ac
+    
+    alt [Không tìm thấy route]
+        ac --> ql : Error: "Không tìm thấy route với ID: {routeId}"
+    else [Tìm thấy route]
+        ql -> ac : getWayPoints(routeId: number)
+        activate ac
+        ac -> ro : getWayPoints(routeId)
+        activate ro
+        ro --> ac : Waypoint[] | undefined
+        deactivate ro
+        ac --> ql : Waypoint[] | undefined
+        deactivate ac
+        
+        alt [Tuyến đường không có waypoints]
+            ac --> ql : Error: Không có waypoints
+        else [Có waypoints]
+            == Hiển thị route trên bản đồ ==
+            ql -> mc : showRoute(routeId: number)
+            activate mc
+            mc -> ro : getRouteById(routeId)
+            activate ro
+            ro --> mc : RouteRecord | undefined
+            deactivate ro
+            
+            alt [Route không tồn tại]
+                mc --> ql : Error: "Route with id {routeId} not found"
+            else [Route tồn tại]
+                mc -> ro : getWayPoints(routeId)
+                activate ro
+                ro --> mc : Waypoint[] | undefined
+                deactivate ro
+                
+                alt [Không có waypoints]
+                    mc --> ql : Error: "Route with id {routeId} has no waypoints"
+                else [Có waypoints]
+                    mc -> mc : Tạo polyline từ waypoints
+                    mc -> mc : Tạo markers cho các waypoints
+                    mc --> ql : RouteDisplayData (route, polyline, markers)
+                end
+            end
+            deactivate mc
+            
+            == Bắt đầu tracking ==
+            ql -> mc : startTracking(routeId: number, onUpdate?: callback)
+            activate mc
+            mc -> ro : getWayPoints(routeId)
+            activate ro
+            ro --> mc : Waypoint[] | undefined
+            deactivate ro
+            
+            alt [Tuyến đường không có waypoints]
+                mc --> ql : Error: "Route with id {routeId} has no waypoints"
+            else [Có waypoints]
+                mc -> mc : Đặt vị trí ban đầu tại waypoint đầu tiên
+                mc -> mc : Khởi tạo trackingStartTime = Date.now()
+                mc -> mc : Khởi tạo interval cập nhật vị trí mỗi 300ms
+                mc --> ql : Xác nhận bắt đầu tracking
+                
+                == Cập nhật vị trí theo thời gian thực ==
+                loop [Mỗi 300ms - Tracking đang hoạt động]
+                    mc -> mc : Tính elapsedTime = (Date.now() - trackingStartTime) / 300
+                    mc -> mc : getStretchOfRoad(routeId, elapsedTime)
+                    activate mc
+                    mc -> ro : getWayPoints(routeId)
+                    activate ro
+                    ro --> mc : Waypoint[] | undefined
+                    deactivate ro
+                    mc -> mc : Tính distanceTraveled = (velocity * elapsedTime) / 3600
+                    mc -> mc : Tính progress và segmentsTraveled
+                    mc -> mc : Nội suy vị trí trên đoạn đường hiện tại
+                    mc --> mc : google.maps.LatLngLiteral
+                    deactivate mc
+                    mc -> mc : Cập nhật currentPosition
+                    mc -> mc : Gọi callback với vị trí mới
+                    mc --> ql : Cập nhật UI với vị trí mới
+                end
+                
+                == Cập nhật trạng thái điểm dừng ==
+                loop [Mỗi khi vị trí được cập nhật]
+                    ql -> ql : checkAndUpdateWaypointIndex(carPosition, waypoints, currentIndex)
+                    activate ql
+                    ql -> ql : Tính khoảng cách bằng công thức Haversine
+                    ql -> ql : So sánh khoảng cách với ngưỡng 300m
+                    
+                    alt [Khoảng cách <= 300m và chưa đến cuối]
+                        ql -> ql : Cập nhật currentIndex = nextWaypointIndex
+                    else [Khoảng cách > 300m hoặc đã đến cuối]
+                        ql -> ql : Giữ nguyên currentIndex
+                    end
+                    
+                    ql -> ql : transformWaypointsToStops(waypoints, currentIndex)
+                    ql -> ql : Gán status cho mỗi waypoint\n(completed, current, upcoming)
+                    ql -> ql : Cập nhật state waypoints
+                    ql -> ql : Cập nhật UI với trạng thái mới
+                    ql --> ql : UI đã được cập nhật
+                    deactivate ql
+                end
+                
+                == Dừng tracking ==
+                ql -> mc : stopTracking()
+                activate mc
+                mc -> mc : clearInterval(trackingInterval)
+                mc -> mc : Reset các state (currentRouteId, trackingStartTime, ...)
+                mc --> ql : Xác nhận đã dừng tracking
+                deactivate mc
+            end
+            deactivate mc
+        end
+    end
+end
+
+@enduml
+

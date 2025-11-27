@@ -1,0 +1,14 @@
+@startuml
+title Driver Management - Implement Diagram
+
+class "<<Controller>> Driver" as dr {
+    - drivers: DriverRecord[]
+    + getDrivers(): DriverRecord[]
+    + getDriverbyId(id: number): DriverRecord | undefined
+    + addDriver(driver: DriverRecord): DriverRecord
+    + editDriver(id: number, updatedDriver: Partial<DriverRecord>): DriverRecord
+    + removeDriver(id: number): void
+}
+
+@enduml
+

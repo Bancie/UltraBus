@@ -46,6 +46,32 @@ export default class Routes {
     return route;
   }
 
+  editRoute(id: number, updatedRoute: Partial<RouteRecord>): RouteRecord {
+    const index = this.routes.findIndex((route) => route.id === id);
+
+    if (index === -1) {
+      throw new Error(`Route with id ${id} does not exist.`);
+    }
+
+    this.routes[index] = {
+      ...this.routes[index],
+      ...updatedRoute,
+      id, // Ensure id is not changed
+    };
+
+    return this.routes[index];
+  }
+
+  removeRoute(id: number): void {
+    const index = this.routes.findIndex((route) => route.id === id);
+
+    if (index === -1) {
+      throw new Error(`Route with id ${id} does not exist.`);
+    }
+
+    this.routes.splice(index, 1);
+  }
+
   // Waypoints
 
   getWayPoints(id: number): Waypoint[] | undefined {

@@ -1,0 +1,71 @@
+@startuml
+title SSD for Track Bus on Map Use Case
+
+actor "Quản lý" as Manager
+participant ":System" as System
+
+Manager -> System: Nhấn nút "Theo dõi xe"\ntrên một xe buýt trong danh sách
+activate System
+System -> System: Lấy tên tuyến đường từ thông tin xe buýt
+System -> System: findRouteIdByName(busRoute)
+
+alt [Không tìm thấy route ID]
+    System --> Manager: Lỗi: "Không tìm thấy route ID cho: {busRoute}"
+    deactivate System
+else [Tìm thấy route ID]
+    System -> System: getRouteById(routeId)
+    
+    alt [Không tìm thấy route]
+        System --> Manager: Lỗi: "Không tìm thấy route với ID: {routeId}"
+        deactivate System
+    else [Tìm thấy route]
+        System -> System: getWayPoints(routeId)
+        
+        alt [Tuyến đường không có waypoints]
+            System --> Manager: Lỗi: Không có waypoints\nvà không hiển thị danh sách điểm dừng
+            deactivate System
+        else [Có waypoints]
+            System -> System: Khởi tạo currentWaypointIndex = 0
+            System -> System: transformWaypointsToStops(waypoints, 0)
+            System -> System: Lưu thông tin vào state
+            
+            System -> System: showRoute(routeId)
+            
+            alt [Route không tồn tại]
+                System --> Manager: Exception: "Route with id {routeId} not found"
+                deactivate System
+            else [Route tồn tại]
+                System -> System: Tạo polyline màu xanh (#3b82f6)
+                System -> System: Tạo markers cho các waypoints với số thứ tự
+                System --> Manager: Hiển thị tuyến đường và waypoints trên bản đồ
+                
+                System -> System: startTracking(routeId, callback)
+                
+                alt [Tuyến đường không có waypoints]
+                    System --> Manager: Exception: "Route with id {routeId} has no waypoints"
+                    deactivate System
+                else [Có waypoints]
+                    System -> System: Đặt vị trí ban đầu của xe tại waypoint đầu tiên
+                    System -> System: Khởi tạo interval cập nhật vị trí mỗi 300ms
+                    System -> System: Hiển thị carMarker với icon bus
+                    System --> Manager: Bắt đầu tracking và hiển thị xe trên bản đồ
+                    
+                    loop [Mỗi 300ms - Tracking đang hoạt động]
+                        System -> System: Tính toán elapsedTime = (Date.now() - trackingStartTime) / 300
+                        System -> System: getStretchOfRoad(routeId, elapsedTime)
+                        System -> System: Tính distanceTraveled = (velocity * elapsedTime) / 3600
+                        System -> System: Nội suy vị trí trên đoạn đường hiện tại
+                        System -> System: Cập nhật carMarkerPosition
+                        System -> System: Gọi callback với vị trí mới
+                        System --> Manager: Cập nhật UI với vị trí mới
+                    end
+                    
+                    deactivate System
+                end
+            end
+        end
+    end
+end
+
+@enduml
+

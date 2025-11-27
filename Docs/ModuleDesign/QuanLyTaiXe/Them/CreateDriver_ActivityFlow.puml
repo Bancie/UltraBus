@@ -1,0 +1,124 @@
+@startuml
+title Activity Flow Diagram - Tạo tài xế mới (Create Driver)
+
+|Quản lý|
+start
+:Nhấn nút "Thêm tài xế";
+
+|Hệ thống|
+:Hiển thị dialog form tạo tài xế;
+:Reset form về trạng thái ban đầu;
+
+|Quản lý|
+:Nhập họ và tên;
+
+|Hệ thống|
+:Lưu giá trị vào form state;
+
+|Quản lý|
+:Nhập số bằng lái;
+
+|Hệ thống|
+:Lưu giá trị vào form state;
+
+|Quản lý|
+:Nhập số điện thoại;
+
+|Hệ thống|
+:Lưu giá trị vào form state;
+
+|Quản lý|
+:Nhập email (tùy chọn);
+
+|Hệ thống|
+:Lưu giá trị vào form state;
+
+|Quản lý|
+:Nhập xe phụ trách (tùy chọn);
+
+|Hệ thống|
+:Lưu giá trị vào form state;
+
+|Quản lý|
+:Nhập tuyến đường (tùy chọn);
+
+|Hệ thống|
+:Lưu giá trị vào form state;
+
+|Quản lý|
+:Chọn trạng thái\n(đang thực hiện, chưa phân công);
+
+|Hệ thống|
+:Lưu trạng thái đã chọn\n(mặc định "đang thực hiện");
+
+|Quản lý|
+:Nhập kinh nghiệm (tùy chọn);
+
+|Hệ thống|
+:Lưu giá trị vào form state;
+
+|Quản lý|
+:Nhập đánh giá 0-5 (tùy chọn);
+
+|Hệ thống|
+:Lưu giá trị vào form state;
+
+|Quản lý|
+:Nhấn nút "Lưu tài xế";
+
+|Hệ thống|
+:Validate dữ liệu\n(kiểm tra tên, số bằng lái, số điện thoại không được trống);
+
+if (Thiếu thông tin bắt buộc?) then (Có)
+  :Hiển thị lỗi "Vui lòng nhập đầy đủ tên, số bằng lái và số điện thoại";
+  stop
+endif
+
+:Validate đánh giá\n(nếu có, phải từ 0 đến 5);
+
+if (Đánh giá không hợp lệ?) then (Có)
+  :Hiển thị lỗi "Đánh giá phải là số từ 0 đến 5";
+  stop
+endif
+
+:Chuẩn hóa dữ liệu\n(trim whitespace);
+
+if (Xe phụ trách trống?) then (Có)
+  :Mặc định "Chưa cập nhật";
+endif
+
+if (Tuyến đường trống?) then (Có)
+  :Mặc định "Chưa cập nhật";
+endif
+
+if (Kinh nghiệm trống?) then (Có)
+  :Mặc định "Chưa cập nhật";
+endif
+
+if (Đánh giá trống?) then (Có)
+  :Mặc định 0;
+else (Có giá trị)
+  :Làm tròn 1 chữ số thập phân;
+endif
+
+:Tạo DriverRecord mới với ID = Date.now();
+:Gọi driverController.addDriver();
+
+if (ID đã tồn tại?) then (Có)
+  :Ném exception "Driver with id {id} already exists";
+  :Hiển thị lỗi;
+  stop
+endif
+
+if (Có lỗi trong quá trình thêm?) then (Có)
+  :Hiển thị thông báo lỗi "Không thể thêm tài xế";
+  stop
+endif
+
+:Cập nhật danh sách tài xế trên giao diện;
+:Cập nhật thống kê tổng quan\n(tổng tài xế, đang thực hiện, chưa phân công, đánh giá trung bình);
+:Đóng dialog và reset form;
+stop
+
+@enduml
+

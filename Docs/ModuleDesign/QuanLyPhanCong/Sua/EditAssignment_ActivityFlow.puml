@@ -1,0 +1,56 @@
+@startuml
+title Activity Flow Diagram - Chỉnh sửa phân công (Edit Assignment)
+
+|Quản trị viên|
+start
+:Nhấn nút "Edit" trên một phân công;
+
+|Hệ thống|
+:Lấy thông tin phân công theo ID;
+:Tìm kiếm ID tương ứng của bus, driver, route từ tên;
+
+if (Không tìm thấy ID?) then (Có)
+  :Để trống field tương ứng trong form;
+endif
+
+:Điền sẵn form với dữ liệu hiện tại;
+:Mở dialog chỉnh sửa;
+
+|Quản trị viên|
+:Chỉnh sửa thông tin\n(xe, tài xế, tuyến đường, số học sinh, trạng thái);
+
+|Hệ thống|
+:Cập nhật form data theo thay đổi của người dùng;
+
+|Quản trị viên|
+:Nhấn nút "Cập nhật phân công";
+
+|Hệ thống|
+:Validate dữ liệu\n(kiểm tra đã chọn đầy đủ xe, tài xế, tuyến đường);
+
+if (Dữ liệu hợp lệ?) then (Không)
+  :Hiển thị lỗi "Vui lòng chọn đầy đủ xe, tài xế và tuyến đường";
+  stop
+endif
+
+:Kiểm tra phân công có tồn tại không;
+
+if (Phân công tồn tại?) then (Không)
+  :Hiển thị lỗi "Không tìm thấy phân công cần chỉnh sửa";
+  stop
+endif
+
+:Gọi assignController.editAssign();
+
+if (Exception?) then (Có)
+  :Ném exception "Assignment with id {id} does not exist";
+  :Hiển thị lỗi;
+  stop
+endif
+
+:Cập nhật danh sách phân công trên giao diện;
+:Đóng dialog và reset form;
+stop
+
+@enduml
+

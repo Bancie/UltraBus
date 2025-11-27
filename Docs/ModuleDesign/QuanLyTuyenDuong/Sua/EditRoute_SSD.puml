@@ -1,0 +1,66 @@
+@startuml
+title SSD for Edit Route Use Case
+
+actor "Quản lý" as Manager
+participant ":System" as System
+
+Manager -> System: clickEditButton(routeId)
+activate System
+System -> System: getRouteById(routeId)
+System -> System: extractDistanceNumber(distance)
+opt [Không thể trích xuất số]
+    System -> System: setDistanceFieldEmpty()
+end
+System -> System: extractTimeNumber(avgTime)
+opt [Không thể trích xuất số]
+    System -> System: setTimeFieldEmpty()
+end
+System -> System: populateForm(routeData)
+System --> Manager: Dialog chỉnh sửa với dữ liệu đã điền
+
+Manager -> System: updateFormData(name, stops, distance, avgTime, buses)
+System -> System: updateFormState(data)
+System --> Manager: Xác nhận cập nhật form
+
+Manager -> System: updateRoute()
+System -> System: validateData()
+
+alt [Tên tuyến đường trống]
+    System --> Manager: Lỗi: "Vui lòng nhập tên tuyến đường"
+    deactivate System
+else [Dữ liệu hợp lệ]
+    System -> System: normalizeDistance(distance)
+    opt [Khoảng cách trống]
+        System -> System: setDistance("0 km")
+    end
+    
+    System -> System: normalizeAvgTime(avgTime)
+    opt [Thời gian trống]
+        System -> System: setAvgTime("0 min")
+    end
+    
+    System -> System: checkRouteExists(routeId)
+    
+    alt [Tuyến đường không tồn tại]
+        System --> Manager: Lỗi: "Không tìm thấy tuyến đường cần chỉnh sửa"
+        deactivate System
+    else [Tuyến đường tồn tại]
+        System -> System: editRoute(routeId, updatedRoute)
+        
+        alt [Exception xảy ra]
+            System --> Manager: Exception: "Route with id {id} does not exist"
+            System --> Manager: Lỗi
+            deactivate System
+        else [Không có exception]
+            System -> System: updateRouteList()
+            System --> Manager: Xác nhận cập nhật tuyến đường thành công
+            System -> System: closeDialog()
+            System -> System: resetForm()
+            System --> Manager: Dialog đã đóng
+            deactivate System
+        end
+    end
+end
+
+@enduml
+

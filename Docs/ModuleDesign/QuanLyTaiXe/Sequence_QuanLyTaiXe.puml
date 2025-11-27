@@ -1,0 +1,77 @@
+@startuml
+title Driver Management - Sequence Diagram
+
+actor "Quản lý" as ql
+participant "~~:Driver~~" as dr
+
+== Lấy danh sách tài xế ==
+ql -> dr : getDrivers()
+activate dr
+dr -> dr : [...this.drivers]
+dr --> ql : DriverRecord[]
+deactivate dr
+
+== Lấy tài xế theo ID ==
+ql -> dr : getDriverbyId(id: number)
+activate dr
+dr -> dr : drivers.find((driver) => driver.id === id)
+dr --> ql : DriverRecord | undefined
+deactivate dr
+
+== Tạo tài xế mới ==
+ql -> dr : addDriver(driver: DriverRecord)
+activate dr
+dr -> dr : getDriverbyId(driver.id)
+activate dr
+dr --> dr : DriverRecord | undefined
+deactivate dr
+
+alt [Tài xế với id đã tồn tại]
+    dr --> ql : Error: "Driver with id {id} already exists"
+else [Tài xế hợp lệ]
+    dr -> dr : drivers.push(driver)
+    dr --> ql : DriverRecord
+end
+deactivate dr
+
+== Chỉnh sửa tài xế ==
+ql -> dr : getDriverbyId(id: number)
+activate dr
+dr -> dr : drivers.find((driver) => driver.id === id)
+dr --> ql : DriverRecord | undefined
+deactivate dr
+
+ql -> dr : editDriver(id: number, updatedDriver: Partial<DriverRecord>)
+activate dr
+dr -> dr : drivers.findIndex((driver) => driver.id === id)
+activate dr
+dr --> dr : number (index)
+deactivate dr
+
+alt [Tài xế không tồn tại]
+    dr --> ql : Error: "Driver with id {id} does not exist"
+else [Tài xế tồn tại]
+    dr -> dr : drivers[index] = {...drivers[index], ...updatedDriver, id}
+    dr --> ql : DriverRecord
+end
+deactivate dr
+
+== Xóa tài xế ==
+ql -> dr : removeDriver(id: number)
+activate dr
+dr -> dr : drivers.findIndex((driver) => driver.id === id)
+activate dr
+dr --> dr : number (index)
+deactivate dr
+
+alt [Tài xế không tồn tại]
+    dr --> ql : Error: "Driver with id {id} does not exist"
+else [Tài xế tồn tại]
+    dr -> dr : drivers.splice(index, 1)
+    dr --> ql : void
+end
+deactivate dr
+
+@enduml
+
+

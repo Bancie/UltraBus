@@ -1,0 +1,74 @@
+@startuml
+title Activity Flow Diagram - Tạo phân công mới (Create Assignment)
+
+|Quản trị viên|
+start
+:Nhấn nút "Tạo phân công mới";
+
+|Hệ thống|
+:Hiển thị dialog form tạo phân công;
+:Tải danh sách xe buýt, tài xế và tuyến đường vào các dropdown;
+
+if (Có dữ liệu?) then (Không)
+  :Hiển thị thông báo lỗi\nvà không cho phép tạo phân công;
+  stop
+endif
+
+|Quản trị viên|
+:Chọn xe buýt từ dropdown;
+
+|Hệ thống|
+:Lưu ID xe buýt đã chọn;
+
+|Quản trị viên|
+:Chọn tài xế từ dropdown;
+
+|Hệ thống|
+:Lưu ID tài xế đã chọn;
+
+|Quản trị viên|
+:Chọn tuyến đường từ dropdown;
+
+|Hệ thống|
+:Lưu ID tuyến đường đã chọn;
+
+|Quản trị viên|
+:Nhập số lượng học sinh;
+
+|Hệ thống|
+:Validate số học sinh (phải >= 0);
+if (Số học sinh < 0?) then (Có)
+  :Tự động đặt về 0;
+endif
+
+|Quản trị viên|
+:Chọn trạng thái (hoạt động, bảo trì, tạm dừng);
+
+|Hệ thống|
+:Lưu trạng thái đã chọn;
+
+|Quản trị viên|
+:Nhấn nút "Tạo phân công";
+
+|Hệ thống|
+:Validate dữ liệu\n(kiểm tra đã chọn đầy đủ xe, tài xế, tuyến đường);
+
+if (Dữ liệu hợp lệ?) then (Không)
+  :Hiển thị lỗi "Vui lòng chọn đầy đủ xe, tài xế và tuyến đường";
+  stop
+endif
+
+:Tạo AssignRecord mới với ID = Date.now();
+:Gọi assignController.addAssign();
+
+if (ID đã tồn tại?) then (Có)
+  :Ném exception và hiển thị lỗi\n"Route with id {id} already exists";
+  stop
+endif
+
+:Cập nhật danh sách phân công trên giao diện;
+:Đóng dialog và reset form;
+stop
+
+@enduml
+

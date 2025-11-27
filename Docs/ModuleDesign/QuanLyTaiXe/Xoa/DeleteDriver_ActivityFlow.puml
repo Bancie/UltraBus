@@ -1,0 +1,45 @@
+@startuml
+title Activity Flow Diagram - Xóa tài xế (Delete Driver)
+
+|Quản lý|
+start
+:Nhấn nút "Xóa" trong dialog chỉnh sửa;
+
+|Hệ thống|
+:Hiển thị AlertDialog xác nhận xóa;
+:Hiển thị thông báo\n"Bạn có chắc chắn muốn xóa tài xế này?\nHành động này không thể hoàn tác.";
+
+|Quản lý|
+if (Xác nhận xóa?) then (Hủy)
+  |Hệ thống|
+  :Đóng AlertDialog, giữ nguyên dialog chỉnh sửa;
+  stop
+endif
+
+|Quản lý|
+:Nhấn nút "Xóa" để xác nhận;
+
+|Hệ thống|
+:Gọi driverController.removeDriver() với ID tài xế;
+
+if (Tài xế tồn tại?) then (Không)
+  :Ném exception "Driver with id {id} does not exist";
+  :Hiển thị lỗi "Không thể xóa tài xế";
+  stop
+endif
+
+if (Có lỗi trong quá trình xóa?) then (Có)
+  :Hiển thị thông báo lỗi và không xóa tài xế;
+  stop
+endif
+
+:Xóa tài xế khỏi danh sách;
+:Cập nhật danh sách tài xế trên giao diện;
+:Cập nhật thống kê tổng quan;
+:Đóng AlertDialog và dialog chỉnh sửa;
+:Reset form;
+:Xóa editingDriverId (set về null);
+stop
+
+@enduml
+

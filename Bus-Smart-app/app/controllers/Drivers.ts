@@ -41,4 +41,30 @@ export default class Driver {
     this.drivers.push(driver);
     return driver;
   }
+
+  editDriver(id: number, updatedDriver: Partial<DriverRecord>): DriverRecord {
+    const index = this.drivers.findIndex((driver) => driver.id === id);
+
+    if (index === -1) {
+      throw new Error(`Driver with id ${id} does not exist.`);
+    }
+
+    this.drivers[index] = {
+      ...this.drivers[index],
+      ...updatedDriver,
+      id, // Ensure id is not changed
+    };
+
+    return this.drivers[index];
+  }
+
+  removeDriver(id: number): void {
+    const index = this.drivers.findIndex((driver) => driver.id === id);
+
+    if (index === -1) {
+      throw new Error(`Driver with id ${id} does not exist.`);
+    }
+
+    this.drivers.splice(index, 1);
+  }
 }

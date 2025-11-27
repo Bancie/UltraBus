@@ -1,0 +1,47 @@
+@startuml
+title Assign Management - Implement Diagram
+
+class "<<Controller>> AssignController" as co {
+    - assignments: AssignRecord[]
+    - routesController: Routes
+    - driverController: Driver
+    - busController: Bus
+    + getAssign(): AssignRecord[]
+    + getAssignById(id: number): AssignRecord | undefined
+    + addAssign(assign: AssignRecord): AssignRecord
+    + editAssign(id: number, updatedAssign: Partial<AssignRecord>): AssignRecord
+    + removeAssign(id: number): void
+    + getRoutes(): RouteRecord[]
+    + getRouteById(id: number): RouteRecord | undefined
+    + getDrivers(): DriverRecord[]
+    + getDriverById(id: number): DriverRecord | undefined
+    + getBus(): BusRecord[]
+    + getBusById(id: number): BusRecord | undefined
+    + getSchedule(): AssignRecord[]
+    + getScheduleById(id: number): AssignRecord | undefined
+}
+
+class "<<Controller>> Routes" as ro {
+    - routes: RouteRecord[]
+    + getRoutes(): RouteRecord[]
+    + getRouteById(id: number): RouteRecord | undefined
+    + getWayPoints(id: number): Waypoint[] | undefined
+}
+
+class "<<Controller>> Driver" as dr {
+    - drivers: DriverRecord[]
+    + getDrivers(): DriverRecord[]
+    + getDriverbyId(id: number): DriverRecord | undefined
+}
+
+class "<<Controller>> Bus" as bu {
+    - buses: BusRecord[]
+    + getBus(): BusRecord[]
+    + getBusbyId(id: number): BusRecord | undefined
+}
+
+co --> ro : uses
+co --> dr : uses
+co --> bu : uses
+
+@enduml

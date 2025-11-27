@@ -1,0 +1,73 @@
+@startuml
+title SSD for Create Route Use Case
+
+actor "Quản lý" as Manager
+participant ":System" as System
+
+Manager -> System: Nhấn nút "Tạo tuyến đường"
+activate System
+System --> Manager: Dialog form tạo tuyến đường
+System -> System: resetForm()
+
+Manager -> System: enterRouteName(routeName)
+System -> System: saveRouteName(routeName)
+System --> Manager: Xác nhận đã nhập tên tuyến đường
+
+Manager -> System: enterStops(stops)
+System -> System: validateStops(stops)
+opt [Số điểm dừng < 0]
+    System -> System: setStops(0)
+end
+System --> Manager: Xác nhận số điểm dừng hợp lệ
+
+Manager -> System: enterDistance(distance)
+System -> System: saveDistance(distance)
+System --> Manager: Xác nhận đã nhập khoảng cách
+
+Manager -> System: enterAvgTime(avgTime)
+System -> System: saveAvgTime(avgTime)
+System --> Manager: Xác nhận đã nhập thời gian trung bình
+
+Manager -> System: enterBuses(buses)
+System -> System: validateBuses(buses)
+opt [Số xe < 0]
+    System -> System: setBuses(0)
+end
+System --> Manager: Xác nhận số xe hợp lệ
+
+Manager -> System: createRoute()
+System -> System: validateData()
+
+alt [Tên tuyến đường trống]
+    System --> Manager: Lỗi: "Vui lòng nhập tên tuyến đường"
+    deactivate System
+else [Dữ liệu hợp lệ]
+    System -> System: normalizeDistance(distance)
+    opt [Khoảng cách trống]
+        System -> System: setDistance("0 km")
+    end
+    
+    System -> System: normalizeAvgTime(avgTime)
+    opt [Thời gian trống]
+        System -> System: setAvgTime("0 min")
+    end
+    
+    System -> System: createRouteRecord(id, name, stops, distance, avgTime, buses)
+    System -> System: addRoute(route)
+    
+    alt [ID đã tồn tại]
+        System --> Manager: Exception: "Route with id {id} already exists"
+        System --> Manager: Lỗi: "Không thể tạo tuyến đường"
+        deactivate System
+    else [ID chưa tồn tại]
+        System -> System: updateRouteList()
+        System --> Manager: Xác nhận tạo tuyến đường thành công
+        System -> System: closeDialog()
+        System -> System: resetForm()
+        System --> Manager: Dialog đã đóng
+        deactivate System
+    end
+end
+
+@enduml
+

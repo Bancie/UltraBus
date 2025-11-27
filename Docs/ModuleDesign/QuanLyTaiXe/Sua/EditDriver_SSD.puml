@@ -1,0 +1,87 @@
+@startuml
+title SSD for Edit Driver Use Case
+
+actor "Quản lý" as Manager
+participant ":System" as System
+
+Manager -> System: clickEditButton(driverId)
+activate System
+System -> System: getDriverById(driverId)
+
+alt [Tài xế không tồn tại]
+    System --> Manager: Lỗi: "Không tìm thấy tài xế"
+    deactivate System
+else [Tài xế tồn tại]
+    System -> System: convertRatingToString(rating)
+    System -> System: populateForm(driverData)
+    System --> Manager: Dialog chỉnh sửa với dữ liệu đã điền
+    System -> System: setEditingDriverId(driverId)
+    
+    Manager -> System: updateFormData(name, license, phone, email, bus, route, status, experience, rating)
+    System -> System: updateFormState(data)
+    System -> System: resetFormError()
+    System --> Manager: Xác nhận cập nhật form
+    
+    Manager -> System: updateDriver()
+    System -> System: validateData()
+    
+    alt [Thiếu thông tin bắt buộc]
+        System --> Manager: Lỗi: "Vui lòng nhập đầy đủ tên, số bằng lái và số điện thoại"
+        deactivate System
+    else [Dữ liệu hợp lệ]
+        System -> System: validateRating(rating)
+        
+        alt [Đánh giá không hợp lệ]
+            System --> Manager: Lỗi: "Đánh giá phải là số từ 0 đến 5"
+            deactivate System
+        else [Đánh giá hợp lệ hoặc không có]
+            System -> System: checkDriverExists(driverId)
+            
+            alt [Tài xế không tồn tại]
+                System --> Manager: Lỗi: "Không tìm thấy tài xế cần chỉnh sửa"
+                deactivate System
+            else [Tài xế tồn tại]
+                System -> System: normalizeData()
+                opt [Xe phụ trách trống]
+                    System -> System: setBus("Chưa cập nhật")
+                end
+                
+                opt [Tuyến đường trống]
+                    System -> System: setRoute("Chưa cập nhật")
+                end
+                
+                opt [Kinh nghiệm trống]
+                    System -> System: setExperience("Chưa cập nhật")
+                end
+                
+                opt [Đánh giá trống]
+                    System -> System: setRating(0)
+                else [Có đánh giá]
+                    System -> System: roundRating(rating, 1)
+                end
+                
+                System -> System: editDriver(driverId, updatedDriver)
+                
+                alt [Tài xế không tồn tại]
+                    System --> Manager: Exception: "Driver with id {id} does not exist"
+                    System --> Manager: Lỗi: "Không thể cập nhật tài xế"
+                    deactivate System
+                else [Có lỗi trong quá trình cập nhật]
+                    System --> Manager: Lỗi: "Không thể cập nhật tài xế"
+                    deactivate System
+                else [Cập nhật thành công]
+                    System -> System: updateDriverList()
+                    System -> System: updateStatistics()
+                    System --> Manager: Xác nhận cập nhật tài xế thành công
+                    System -> System: closeDialog()
+                    System -> System: resetForm()
+                    System --> Manager: Dialog đã đóng
+                    deactivate System
+                end
+            end
+        end
+    end
+end
+
+@enduml
+

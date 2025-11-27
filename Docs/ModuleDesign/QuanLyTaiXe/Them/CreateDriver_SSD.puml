@@ -1,0 +1,103 @@
+@startuml
+title SSD for Create Driver Use Case
+
+actor "Quản lý" as Manager
+participant ":System" as System
+
+Manager -> System: Nhấn nút "Thêm tài xế"
+activate System
+System --> Manager: Dialog form tạo tài xế
+System -> System: resetForm()
+
+Manager -> System: enterName(name)
+System -> System: saveName(name)
+System --> Manager: Xác nhận đã nhập tên
+
+Manager -> System: enterLicense(license)
+System -> System: saveLicense(license)
+System --> Manager: Xác nhận đã nhập số bằng lái
+
+Manager -> System: enterPhone(phone)
+System -> System: savePhone(phone)
+System --> Manager: Xác nhận đã nhập số điện thoại
+
+Manager -> System: enterEmail(email)
+System -> System: saveEmail(email)
+System --> Manager: Xác nhận đã nhập email
+
+Manager -> System: enterBus(bus)
+System -> System: saveBus(bus)
+System --> Manager: Xác nhận đã nhập xe phụ trách
+
+Manager -> System: enterRoute(route)
+System -> System: saveRoute(route)
+System --> Manager: Xác nhận đã nhập tuyến đường
+
+Manager -> System: selectStatus(status)
+System -> System: saveStatus(status)
+System --> Manager: Xác nhận đã chọn trạng thái\n(mặc định "đang thực hiện")
+
+Manager -> System: enterExperience(experience)
+System -> System: saveExperience(experience)
+System --> Manager: Xác nhận đã nhập kinh nghiệm
+
+Manager -> System: enterRating(rating)
+System -> System: saveRating(rating)
+System --> Manager: Xác nhận đã nhập đánh giá
+
+Manager -> System: createDriver()
+System -> System: validateData()
+
+alt [Thiếu thông tin bắt buộc]
+    System --> Manager: Lỗi: "Vui lòng nhập đầy đủ tên, số bằng lái và số điện thoại"
+    deactivate System
+else [Dữ liệu hợp lệ]
+    System -> System: validateRating(rating)
+    
+    alt [Đánh giá không hợp lệ]
+        System --> Manager: Lỗi: "Đánh giá phải là số từ 0 đến 5"
+        deactivate System
+    else [Đánh giá hợp lệ hoặc không có]
+        System -> System: normalizeData()
+        opt [Xe phụ trách trống]
+            System -> System: setBus("Chưa cập nhật")
+        end
+        
+        opt [Tuyến đường trống]
+            System -> System: setRoute("Chưa cập nhật")
+        end
+        
+        opt [Kinh nghiệm trống]
+            System -> System: setExperience("Chưa cập nhật")
+        end
+        
+        opt [Đánh giá trống]
+            System -> System: setRating(0)
+        else [Có đánh giá]
+            System -> System: roundRating(rating, 1)
+        end
+        
+        System -> System: createDriverRecord(id, name, license, phone, email, bus, route, status, experience, rating)
+        System -> System: addDriver(driver)
+        
+        alt [ID đã tồn tại]
+            System --> Manager: Exception: "Driver with id {id} already exists"
+            System --> Manager: Lỗi
+            deactivate System
+        else [Có lỗi trong quá trình thêm]
+            System --> Manager: Lỗi: "Không thể thêm tài xế"
+            deactivate System
+        else [Thêm thành công]
+            System -> System: updateDriverList()
+            System -> System: updateStatistics()
+            System --> Manager: Xác nhận tạo tài xế thành công
+            System -> System: closeDialog()
+            System -> System: resetForm()
+            System --> Manager: Dialog đã đóng
+            deactivate System
+        end
+    end
+end
+
+@enduml
+

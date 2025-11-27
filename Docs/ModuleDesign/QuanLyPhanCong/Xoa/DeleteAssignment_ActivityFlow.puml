@@ -1,0 +1,43 @@
+@startuml
+title Activity Flow Diagram - Xóa phân công (Delete Assignment)
+
+|Quản trị viên|
+start
+:Nhấn nút "Xóa" trong dialog chỉnh sửa;
+
+|Hệ thống|
+:Hiển thị AlertDialog xác nhận xóa;
+:Hiển thị thông báo\n"Bạn có chắc chắn muốn xóa phân công này?\nHành động này không thể hoàn tác.";
+
+|Quản trị viên|
+if (Xác nhận xóa?) then (Hủy)
+  |Hệ thống|
+  :Đóng AlertDialog, giữ nguyên dialog chỉnh sửa;
+  stop
+endif
+
+|Quản trị viên|
+:Nhấn nút "Xóa" để xác nhận;
+
+|Hệ thống|
+:Gọi assignController.removeAssign() với ID phân công;
+
+if (Phân công tồn tại?) then (Không)
+  :Ném exception "Assignment with id {id} does not exist";
+  :Hiển thị lỗi "Không thể xóa phân công";
+  stop
+endif
+
+if (Có lỗi trong quá trình xóa?) then (Có)
+  :Hiển thị thông báo lỗi và không xóa phân công;
+  stop
+endif
+
+:Xóa phân công khỏi danh sách;
+:Cập nhật danh sách phân công trên giao diện;
+:Đóng AlertDialog và dialog chỉnh sửa;
+:Reset form;
+stop
+
+@enduml
+

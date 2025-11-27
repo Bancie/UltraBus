@@ -1,0 +1,53 @@
+@startuml
+title SSD for Edit Assignment Use Case
+
+actor "Quản lý" as Manager
+participant ":System" as System
+
+Manager -> System: clickEditButton(assignmentId)
+activate System
+System -> System: getAssignById(assignmentId)
+System -> System: findBusIdByName(busName)
+System -> System: findDriverIdByName(driverName)
+System -> System: findRouteIdByName(routeName)
+
+opt [Không tìm thấy ID tương ứng]
+    System -> System: setFieldEmpty(fieldName)
+end
+
+System -> System: populateForm(assignmentData)
+System --> Manager: Dialog chỉnh sửa với dữ liệu đã điền
+
+Manager -> System: updateFormData(busId, driverId, routeId, students, status)
+System --> Manager: Xác nhận cập nhật form
+
+Manager -> System: updateAssignment()
+System -> System: validateData()
+
+alt [Dữ liệu không hợp lệ]
+    System --> Manager: Lỗi: "Vui lòng chọn đầy đủ xe, tài xế và tuyến đường"
+    deactivate System
+else [Dữ liệu hợp lệ]
+    System -> System: checkAssignmentExists(assignmentId)
+    
+    alt [Phân công không tồn tại]
+        System --> Manager: Lỗi: "Không tìm thấy phân công cần chỉnh sửa"
+        deactivate System
+    else [Phân công tồn tại]
+        System -> System: editAssign(assignmentId, updatedAssign)
+        
+        alt [Exception xảy ra]
+            System --> Manager: Exception: "Assignment with id {id} does not exist"
+            deactivate System
+        else [Không có exception]
+            System -> System: updateAssignmentsList()
+            System --> Manager: Xác nhận cập nhật phân công thành công
+            System -> System: closeDialog()
+            System --> Manager: Dialog đã đóng
+            deactivate System
+        end
+    end
+end
+
+@enduml
+
